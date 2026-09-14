@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">MyTextApplication</string>
+    <string name="hello">Hello World!</string>
+    <color name="green">#00ff00</color>
+    <color name="purple_200">#FFBB86FC</color>
+    <color name="purple_500">#FF6200EE</color>
+    <color name="purple_600">#FF5555EE</color>
+    <color name="black">#000000</color>
+
+</resources>

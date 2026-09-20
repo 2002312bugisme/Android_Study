@@ -1,10 +1,218 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="300dp"
     tools:context=".MainRelativeLayoutActivity">
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    <TextView
+        android:id="@+id/tx_center_horizontal_top"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:background="@color/green"
+        android:text="我在顶部水平中间" />
+
+    <TextView
+        android:id="@+id/tx_center_vertical_left"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:background="@color/green"
+        android:text="我在左边垂直中间" />
+
+    <TextView
+        android:id="@+id/tx_center"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:background="@color/green"
+        android:text="我在中间" />
+
+    <!--默认左上角-->
+    <TextView
+        android:id="@+id/tx_left_top"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:background="@color/green"
+        android:text="我在左上角" />
+
+    <TextView
+        android:id="@+id/tx_right_top"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:background="@color/green"
+        android:text="我在右上角" />
+
+    <TextView
+        android:id="@+id/tx_center_vertical_right"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:background="@color/green"
+        android:text="我在右边垂直中间" />
+
+    <TextView
+        android:id="@+id/tx_left_bottom"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentBottom="true"
+        android:background="@color/green"
+        android:text="我在左下角" />
+
+    <TextView
+        android:id="@+id/tx_right_bottom"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentBottom="true"
+        android:background="@color/green"
+        android:text="我在右下角" />
+
+    <TextView
+        android:id="@+id/tx_center_horizontal_bottom"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_alignParentBottom="true"
+        android:background="@color/green"
+        android:text="我在底部水平中间" />
+
+    <TextView
+        android:id="@+id/tx_toLeftOF"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/hello"
+        android:layout_toLeftOf="@+id/tx_center_horizontal_top"
+        android:textColor="@color/purple_500"
+        android:textSize="12sp"
+        />
+
+    <TextView
+        android:id="@+id/tx_toRightOf"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_toRightOf="@+id/tx_center_horizontal_bottom"
+        android:text="@string/hello"
+        android:textColor="@color/purple_500"
+        android:textSize="12sp" />
+
+    <TextView
+        android:id="@+id/tx_above"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/tx_center_vertical_left"
+        android:text="@string/hello"
+        android:textColor="@color/purple_500"
+        android:textSize="12sp"
+        />
+
+    <TextView
+        android:id="@+id/tx_below"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/tx_center_vertical_right"
+        android:text="@string/hello"
+        android:textColor="@color/purple_500"
+        android:textSize="12sp"
+        />
+
+    <TextView
+        android:id="@+id/tx_alignLeft"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/hello"
+        android:textColor="@color/purple_500"
+        android:textSize="12sp"
+        android:layout_above="@+id/tx_center"
+        android:layout_alignLeft="@+id/tx_center"
+        />
+
+    <TextView
+        android:id="@+id/tx_alignRight"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tx_center"
+        android:layout_centerHorizontal="true"
+        android:layout_alignRight="@+id/tx_center"
+        android:text="@string/hello"
+        android:textColor="@color/purple_500"
+        android:textSize="12sp"
+        />
+
+    <TextView
+        android:id="@+id/tx_alignTop"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/hello"
+        android:textColor="@color/purple_500"
+        android:layout_toLeftOf="@+id/tx_center"
+        android:layout_centerVertical="true"
+        android:textSize="10sp"
+        android:layout_alignTop="@+id/tx_center"
+        />
+
+    <TextView
+        android:id="@+id/tx_alignBottom"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/hello"
+        android:textColor="@color/purple_500"
+        android:textSize="10sp"
+        android:layout_toRightOf="@+id/tx_center"
+        android:layout_centerVertical="true"
+        android:layout_alignBottom="@+id/tx_center"
+        />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</RelativeLayout>

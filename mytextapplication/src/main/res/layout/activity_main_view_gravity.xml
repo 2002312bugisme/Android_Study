@@ -1,10 +1,47 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainViewGravityActivity">
+    tools:context=".MainViewGravityActivity"
+    android:orientation="horizontal"
+    android:background="#ffff99">
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    <!-- 第一个子布局背景为红色，它在上级视图中朝下对齐，它的下级视图则靠左对齐-->
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="300dp"
+        android:layout_weight="1"
+        android:background="#ff0000"
+        android:layout_margin="10dp"
+        android:padding="10dp"
+        android:layout_gravity="top"
+        android:gravity="left|top">
+
+        <View
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:background="#00ffff"/>
+
+    </LinearLayout>
+
+    <!-- 第二个子布局背景为红色，它在上级视图中朝上对齐，它的下级视图则靠右对齐-->
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="300dp"
+        android:layout_weight="1"
+        android:background="#ff0000"
+        android:layout_margin="10dp"
+        android:padding="10dp"
+        android:layout_gravity="bottom"
+        android:gravity="right|bottom">
+
+        <View
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:background="#00ffff"/>
+
+    </LinearLayout>
+</LinearLayout>

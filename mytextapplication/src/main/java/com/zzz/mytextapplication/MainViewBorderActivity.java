@@ -12,7 +12,7 @@ import androidx.core.view.WindowInsetsCompat;
 
 import com.zzz.mytextapplication.utils.Utils;
 
-public class MainTextBorderActivity extends AppCompatActivity {
+public class MainViewBorderActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

@@ -1,10 +1,18 @@
 <resources>
     <string name="app_name">MyTextApplication</string>
     <string name="hello">Hello World!</string>
+    <string name="clickEvent">点击事件</string>
     <color name="green">#00ff00</color>
     <color name="purple_200">#FFBB86FC</color>
     <color name="purple_500">#FF6200EE</color>
     <color name="purple_600">#FF5555EE</color>
     <color name="black">#000000</color>
+    <color name="yellow_100">#CCFF00</color>
+    <color name="yellow">#FFFF00</color>
+    <color name="orange">#FFCC00</color>
+    <color name="pink">#FF99CC</color>
+    <color name="blue">#3399FF</color>
+    <color name="blue_100">#3333FF</color>
+
 
 </resources>

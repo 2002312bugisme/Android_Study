@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#F5F7FA"
+    android:orientation="vertical"
+    android:padding="20dp">
+
+    <!-- 页面标题 -->
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="24dp"
+        android:gravity="center"
+        android:text="按钮状态控制"
+        android:textColor="#202124"
+        android:textSize="26sp"
+        android:textStyle="bold" />
+
+
+    <!-- 启用 / 禁用控制 -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/btn_enabled"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="6dp"
+            android:layout_weight="1"
+            android:text="@string/btn_enable"
+            android:textAllCaps="false"
+            android:textColor="@color/pink"
+            android:textSize="18sp" />
+
+        <Button
+            android:id="@+id/btn_unenabled"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="6dp"
+            android:layout_weight="1"
+            android:text="@string/btn_unenabled"
+            android:textAllCaps="false"
+            android:textColor="@color/pink"
+            android:textSize="18sp" />
+
+    </LinearLayout>
+
+
+    <!-- 测试按钮 -->
+    <Button
+        android:id="@+id/btn_test"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:enabled="false"
+        android:text="@string/btn_test"
+        android:textAllCaps="false"
+        android:textColor="@color/pink"
+        android:textSize="22sp" />
+
+
+    <!-- 点击结果 -->
+    <TextView
+        android:id="@+id/btn_result"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:background="@color/green"
+        android:gravity="center"
+        android:minHeight="60dp"
+        android:padding="14dp"
+        android:text="点击测试按钮后的结果会显示在这里"
+        android:textColor="#333333"
+        android:textSize="18sp" />
+
+</LinearLayout>

@@ -1,0 +1,250 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp"
+    android:background="#F5F7FA">
+
+    <!-- 标题 -->
+    <TextView
+        android:id="@+id/tv_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginBottom="16dp"
+        android:text="@string/easy_calculator"
+        android:textColor="#202124"
+        android:textSize="24sp"
+        android:textStyle="bold" />
+
+    <!-- 计算器显示区域 -->
+    <TextView
+        android:id="@+id/tv_display"
+        android:layout_width="match_parent"
+        android:layout_height="110dp"
+        android:layout_marginBottom="16dp"
+        android:padding="16dp"
+        android:background="#FFFFFF"
+        android:gravity="right|bottom"
+        android:text="@string/_0"
+        android:textColor="#202124"
+        android:textSize="32sp"
+        android:textStyle="bold" />
+
+    <!-- 按钮区域 -->
+    <GridLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:columnCount="4"
+        android:rowCount="5"
+        android:alignmentMode="alignMargins"
+        android:useDefaultMargins="true">
+
+        <!-- 第一行 -->
+
+        <Button
+            android:id="@+id/btn_clear_entry"
+            android:layout_width="0dp"
+            android:layout_height="60dp"
+            android:layout_columnWeight="1"
+            android:text="CE"
+            android:textColor="#202124"
+            android:textSize="18sp"
+            android:textAllCaps="false" />
+
+        <Button
+            android:id="@+id/btn_divide"
+            android:layout_width="0dp"
+            android:layout_height="60dp"
+            android:layout_columnWeight="1"
+            android:text="/"
+            android:textColor="#202124"
+            android:textSize="22sp" />
+
+        <Button
+            android:id="@+id/btn_multiply"
+            android:layout_width="0dp"
+            android:layout_height="60dp"
+            android:layout_columnWeight="1"
+            android:text="×"
+            android:textColor="#202124"
+            android:textSize="22sp" />
+
+        <Button
+            android:id="@+id/btn_clear"
+            android:layout_width="0dp"
+            android:layout_height="60dp"
+            android:layout_columnWeight="1"
+            android:text="C"
+            android:textColor="#202124"
+            android:textSize="18sp" />
+
+        <!-- 第二行 -->
+
+        <Button
+            android:id="@+id/btn_7"
+            android:layout_width="0dp"
+            android:layout_height="60dp"
+            android:layout_columnWeight="1"
+            android:text="7"
+            android:textColor="#202124"
+            android:textSize="22sp" />
+
+        <Button
+            android:id="@+id/btn_8"
+            android:layout_width="0dp"
+            android:layout_height="60dp"
+            android:layout_columnWeight="1"
+            android:text="8"
+            android:textColor="#202124"
+            android:textSize="22sp" />
+
+        <Button
+            android:id="@+id/btn_9"
+            android:layout_width="0dp"
+            android:layout_height="60dp"
+            android:layout_columnWeight="1"
+            android:text="9"
+            android:textColor="#202124"
+            android:textSize="22sp" />
+
+        <Button
+            android:id="@+id/btn_add"
+            android:layout_width="0dp"
+            android:layout_height="60dp"
+            android:layout_columnWeight="1"
+            android:text="+"
+            android:textColor="#202124"
+            android:textSize="22sp" />
+
+        <!-- 第三行 -->
+
+        <Button
+            android:id="@+id/btn_4"
+            android:layout_width="0dp"
+            android:layout_height="60dp"
+            android:layout_columnWeight="1"
+            android:text="4"
+            android:textColor="#202124"
+            android:textSize="22sp" />
+
+        <Button
+            android:id="@+id/btn_5"
+            android:layout_width="0dp"
+            android:layout_height="60dp"
+            android:layout_columnWeight="1"
+            android:text="5"
+            android:textColor="#202124"
+            android:textSize="22sp" />
+
+        <Button
+            android:id="@+id/btn_6"
+            android:layout_width="0dp"
+            android:layout_height="60dp"
+            android:layout_columnWeight="1"
+            android:text="6"
+            android:textColor="#202124"
+            android:textSize="22sp" />
+
+        <Button
+            android:id="@+id/btn_subtract"
+            android:layout_width="0dp"
+            android:layout_height="60dp"
+            android:layout_columnWeight="1"
+            android:text="-"
+            android:textColor="#202124"
+            android:textSize="22sp" />
+
+        <!-- 第四行 -->
+
+        <Button
+            android:id="@+id/btn_1"
+            android:layout_width="0dp"
+            android:layout_height="60dp"
+            android:layout_columnWeight="1"
+            android:text="1"
+            android:textColor="#202124"
+            android:textSize="22sp" />
+
+        <Button
+            android:id="@+id/btn_2"
+            android:layout_width="0dp"
+            android:layout_height="60dp"
+            android:layout_columnWeight="1"
+            android:text="2"
+            android:textColor="#202124"
+            android:textSize="22sp" />
+
+        <Button
+            android:id="@+id/btn_3"
+            android:layout_width="0dp"
+            android:layout_height="60dp"
+            android:layout_columnWeight="1"
+            android:text="3"
+            android:textColor="#202124"
+            android:textSize="22sp" />
+
+        <!-- 开根号 -->
+        <Button
+            android:id="@+id/btn_sqrt"
+            android:layout_width="0dp"
+            android:layout_height="60dp"
+            android:layout_columnWeight="1"
+            android:text="√"
+            android:textSize="24sp"
+            android:textColor="#202124" />
+
+        <!-- 第五行 -->
+
+        <Button
+            android:id="@+id/btn_reciprocal"
+            android:layout_width="0dp"
+            android:layout_height="60dp"
+            android:layout_columnWeight="1"
+            android:text="1/X"
+            android:textColor="#202124"
+            android:textSize="18sp"
+            android:textAllCaps="false" />
+
+        <Button
+            android:id="@+id/btn_0"
+            android:layout_width="0dp"
+            android:layout_height="60dp"
+            android:layout_columnWeight="1"
+            android:text="0"
+            android:textColor="#202124"
+            android:textSize="22sp" />
+
+        <Button
+            android:id="@+id/btn_decimal"
+            android:layout_width="0dp"
+            android:layout_height="60dp"
+            android:layout_columnWeight="1"
+            android:text="."
+            android:textColor="#202124"
+            android:textSize="22sp" />
+
+        <Button
+            android:id="@+id/btn_equal"
+            android:layout_width="0dp"
+            android:layout_height="60dp"
+            android:layout_columnWeight="1"
+            android:text="="
+            android:textColor="#202124"
+            android:textSize="22sp" />
+
+    </GridLayout>
+
+</LinearLayout>
+
+        <!-- 开根号 -->
+<!--        <ImageButton-->
+<!--            android:layout_width="0dp"-->
+<!--            android:layout_height="60dp"-->
+<!--            android:layout_columnWeight="1"-->
+<!--            android:src="@drawable/sqrt"-->
+<!--            android:scaleType="centerInside"-->
+<!--            android:contentDescription="平方根" />-->

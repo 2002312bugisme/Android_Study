@@ -25,3 +25,4 @@ dependencyResolutionManagement {
 rootProject.name = "MyFirstApp"
 include(":app")
 include(":mytextapplication")
+include(":myactivityapplication")

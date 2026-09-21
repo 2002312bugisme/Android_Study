@@ -2,6 +2,12 @@
     <string name="app_name">MyTextApplication</string>
     <string name="hello">Hello World!</string>
     <string name="clickEvent">点击事件</string>
+    <string name="btn_enable">启用测试按钮</string>
+    <string name="btn_unenabled">禁用测试按钮</string>
+    <string name="btn_test">测试按钮</string>
+    <string name="image_description">这是一张图片</string>
+    <string name="_0">0</string>
+    <string name="easy_calculator">简易计算器</string>
     <color name="green">#00ff00</color>
     <color name="purple_200">#FFBB86FC</color>
     <color name="purple_500">#FF6200EE</color>
@@ -13,6 +19,7 @@
     <color name="pink">#FF99CC</color>
     <color name="blue">#3399FF</color>
     <color name="blue_100">#3333FF</color>
+    <color name="grey">#D3D3D3</color>
 
 
 </resources>

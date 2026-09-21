@@ -9,7 +9,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.MyFirstApp">
         <activity
-            android:name=".MainButtonClickActivity"
+            android:name=".CalculatorActivity"
             android:exported="true"
             android:windowSoftInputMode="adjustResize">
             <intent-filter>
@@ -18,10 +18,11 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
-            android:name=".MainTextSizeActivity"
-            android:exported="false"
-            android:windowSoftInputMode="adjustResize" />
+        <!-- <activity -->
+        <!-- android:name=".MainImageViewActivity" -->
+        <!-- android:exported="false" -->
+        <!-- android:windowSoftInputMode="adjustResize" /> -->
+
 
         <!-- <activity -->
         <!-- android:name=".MainTextColorActivity" -->
@@ -56,12 +57,20 @@
             android:name=".MainScrollViewActivity"
             android:exported="false"
             android:windowSoftInputMode="adjustResize" />
-         <activity
-         android:name=".MainButtonStyleActivity"
-         android:exported="false"
-         android:windowSoftInputMode="adjustResize" />
+        <activity
+            android:name=".MainButtonStyleActivity"
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize" />
+        <activity
+            android:name=".MainButtonClickActivity"
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize" />
+        <activity
+            android:name=".MainButtonEnabledActivity"
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize" />
 <!--        <activity-->
-<!--            android:name=".MainButtonClickActivity"-->
+<!--            android:name=".CalculatorActivity"-->
 <!--            android:exported="false"-->
 <!--            android:windowSoftInputMode="adjustResize" />-->
     </application>

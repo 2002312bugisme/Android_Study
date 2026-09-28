@@ -9,31 +9,62 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.MyFirstApp">
         <activity
-            android:name=".StartupmodeActivity"
+            android:name=".ReadResourceActivity"
             android:exported="true"
             android:windowSoftInputMode="adjustResize">
+
+            <meta-data
+                android:name="metadata"
+                android:value="Hello World!" />
+        </activity>
+
+        <activity
+            android:name=".ActStartActivity"
+            android:exported="true"
+            android:windowSoftInputMode="adjustResize">
+
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+
+            <meta-data
+                android:name="android.app.shortcuts"
+                android:resource="@xml/shortcuts" />
         </activity>
-        <!-- <activity -->
-        <!-- android:name=".ActStartActivity" -->
-        <!-- android:exported="false" -->
-        <!-- android:windowSoftInputMode="adjustResize" /> -->
+        <!--        <activity-->
+        <!--            android:name=".ActStartActivity"-->
+        <!--            android:exported="false"-->
+        <!--            android:windowSoftInputMode="adjustResize" />-->
         <activity
             android:name=".ActFinishActivity"
-            android:exported="false"
+            android:exported="true"
             android:windowSoftInputMode="adjustResize" />
-<!--        <activity-->
-<!--            android:name=".StartupmodeActivity"-->
-<!--            android:exported="false"-->
-<!--            android:windowSoftInputMode="adjustResize" />-->
+        <activity
+            android:name=".StartupmodeActivity"
+            android:exported="true"
+            android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".StartupmodefinishActivity"
             android:exported="false"
             android:windowSoftInputMode="adjustResize" />
+        <activity
+            android:name=".IntentActivity"
+            android:exported="true"
+            android:windowSoftInputMode="adjustResize" />
+        <activity
+            android:name=".BundleSendActivity"
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize" />
+        <activity
+            android:name=".BundleReceiveActivity"
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize" />
+        <!--        <activity-->
+        <!--            android:name=".ReadResourceActivity"-->
+        <!--            android:exported="false"-->
+        <!--            android:windowSoftInputMode="adjustResize" />-->
     </application>
 
 </manifest>

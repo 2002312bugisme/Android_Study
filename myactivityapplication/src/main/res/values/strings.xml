@@ -1,3 +1,11 @@
 <resources>
     <string name="app_name">MyActivityApplication</string>
+    <string name="string_data">Hello world!</string>
+    <string name="first_long">启停活动</string>
+    <string name="first_short">first</string>
+    <string name="second_long">来回跳转</string>
+    <string name="second_short">second</string>
+    <string name="third_long">Zzz</string>
+    <string name="third_short">third</string>
+
 </resources>

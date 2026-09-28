@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="20dp"
+    android:background="#F5F6FA">
+
+    <!-- 页面标题 -->
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Bundle 数据传递"
+        android:textSize="28sp"
+        android:textStyle="bold"
+        android:textColor="#222222" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="接收方 Activity"
+        android:textSize="15sp"
+        android:textColor="#777777"
+        android:layout_marginTop="4dp"
+        android:layout_marginBottom="24dp" />
+
+    <!-- 接收到的数据 -->
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="📥 接收到的数据"
+        android:textSize="17sp"
+        android:textStyle="bold"
+        android:textColor="#333333"
+        android:layout_marginBottom="8dp" />
+
+    <TextView
+        android:id="@+id/tv_receive_receive"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:minHeight="70dp"
+        android:gravity="center_vertical"
+        android:padding="16dp"
+        android:text="等待接收数据..."
+        android:textSize="18sp"
+        android:textColor="#444444"
+        android:background="#FFFFFF"
+        android:layout_marginBottom="20dp" />
+
+    <!-- 返回的数据 -->
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="📤 待返回的数据"
+        android:textSize="17sp"
+        android:textStyle="bold"
+        android:textColor="#333333"
+        android:layout_marginBottom="8dp" />
+
+    <TextView
+        android:id="@+id/waiting_for_returning"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:minHeight="70dp"
+        android:gravity="center_vertical"
+        android:padding="16dp"
+        android:text="待返回的消息为："
+        android:textSize="18sp"
+        android:textColor="#444444"
+        android:background="#FFFFFF"
+        android:layout_marginBottom="20dp" />
+
+    <!-- 返回响应 -->
+    <Button
+        android:id="@+id/btn_send_receive"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Returning a response"
+        android:textSize="17sp"
+        android:textAllCaps="false" />
+
+</LinearLayout>

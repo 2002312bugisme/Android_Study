@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="5dp">
+
+    <!--
+        注意：这里必须用 AppCompatButton。
+        本项目的主题是 Theme.Material3.*，Material 主题会把布局里的 <Button>
+        在充气（inflate）时替换成 com.google.android.material.button.MaterialButton，
+        而 MaterialButton 自己管理背景，会覆盖掉 android:background，
+        导致 .9 图完全不显示。
+        AppCompatButton 是普通按钮，会正常使用 android:background。
+    -->
+    <androidx.appcompat.widget.AppCompatButton
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:background="@drawable/nine_origin"
+        android:text="@string/nine_image"
+        android:textColor="@android:color/white"
+        android:layout_marginBottom="5dp" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:background="@drawable/origin"
+        android:text="@string/normal_image"
+        android:textColor="@android:color/white"
+        android:layout_marginTop="5dp" />
+
+</LinearLayout>

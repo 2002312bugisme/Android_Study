@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="5dp">
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:background="@drawable/btn_nine_selector"
+        android:text="@string/nine_image"
+        android:textColor="@android:color/white"
+        android:layout_marginBottom="5dp" />
+
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:text="@string/btn_normal"
+        android:textColor="@android:color/white"
+        android:layout_marginTop="5dp" />
+
+</LinearLayout>

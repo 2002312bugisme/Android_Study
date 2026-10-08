@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="oval">
+<!--    默认是矩形 rectangle-->
+
+<!--    指定内部的填充颜色-->
+<solid
+    android:color="#ff66aa"
+    />
+<!--    指定形状轮廓的粗细与颜色-->
+    <stroke
+        android:width="3dp"
+        android:color="@color/black"
+        />
+
+    <gradient
+        android:angle="0"
+        android:type="linear"
+        android:centerColor="#ff66aa"
+        android:endColor="#00E7FF"
+        android:useLevel="false"
+        />
+
+</shape>

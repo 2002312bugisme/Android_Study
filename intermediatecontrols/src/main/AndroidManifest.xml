@@ -9,7 +9,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.MyFirstApp">
         <activity
-            android:name=".DrawableStateActivity"
+            android:name=".DatePickerActivity"
             android:exported="true"
             android:windowSoftInputMode="adjustResize">
             <intent-filter>
@@ -18,16 +18,48 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-         <activity
-         android:name=".DrawableActivity"
-         android:exported="false"
-         android:windowSoftInputMode="adjustResize" />
-         <activity
-         android:name=".DrawableNineActivity"
-         android:exported="false"
-         android:windowSoftInputMode="adjustResize" />
+        <activity
+            android:name=".DrawableActivity"
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize" />
+        <activity
+            android:name=".DrawableNineActivity"
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize" />
+        <activity
+            android:name=".DrawableStateActivity"
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize" />
+        <activity
+            android:name=".CheckBoxActivity"
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize" />
+        <activity
+            android:name=".SwitchActivity"
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize" />
+        <activity
+            android:name=".RadioButtonActivity"
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize" />
+        <activity
+            android:name=".EditTextActivity"
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize" />
+        <activity
+            android:name=".EditTextFocusActivity"
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize" />
+        <!-- <activity -->
+        <!-- android:name=".EditHideActivity" -->
+        <!-- android:exported="false" -->
+        <!-- android:windowSoftInputMode="adjustResize" /> -->
+        <!-- <activity -->
+        <!-- android:name=".AlertDialogActivity" -->
+        <!-- android:exported="false" -->
+        <!-- android:windowSoftInputMode="adjustResize" /> -->
 <!--        <activity-->
-<!--            android:name=".DrawableStateActivity"-->
+<!--            android:name=".DatePickerActivity"-->
 <!--            android:exported="false"-->
 <!--            android:windowSoftInputMode="adjustResize" />-->
     </application>

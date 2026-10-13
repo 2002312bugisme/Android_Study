@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Please choose your gender: "
+        android:textSize="20sp"
+        android:layout_marginBottom="10dp"
+        />
+
+    <RadioGroup
+        android:id="@+id/radioBtn_gender"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <RadioButton
+            android:id="@+id/radioBtn_man"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Man"
+            android:textSize="15sp"
+            />
+
+        <RadioButton
+            android:id="@+id/radioBtn_woman"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Woman"
+            android:textSize="15sp"
+            />
+
+    </RadioGroup>
+
+    <TextView
+        android:id="@+id/radioBtn_choice"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Your Choice :"
+        android:textSize="20sp"
+        android:layout_marginTop="10dp"
+        />
+
+
+
+
+</LinearLayout>

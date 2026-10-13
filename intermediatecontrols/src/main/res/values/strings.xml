@@ -3,4 +3,8 @@
     <string name="normal_image">普通图片背景</string>
     <string name="nine_image">九宫格图片背景</string>
     <string name="btn_normal">默认样式的按钮</string>
+    <string name="sys_checkbox">这是系统的CheckBox</string>
+    <string name="custom_checkbox">这是另一个系统的CheckBox</string>
+    <string name="switch_state">Switch开关:</string>
+    <string name="switch_desc">当前Switch开关状态为：关</string>
 </resources>

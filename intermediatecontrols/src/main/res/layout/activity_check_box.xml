@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <CheckBox
+        android:id="@+id/sys_checkbox"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/sys_checkbox" />
+
+    <!--
+        关键修复：android:buttonTint="@null" / app:buttonTint="@null"
+
+        本主题是 Theme.Material3.*，它的 checkboxStyle
+        (Widget.Material3.CompoundButton.CheckBox) 会给 checkbox 设上 buttonTint，
+        且 tintMode 是 SRC_IN。这个 tint 会作用到 android:button 指定的图片上，
+        把图片里所有像素统一染成 colorPrimary（紫色），只保留 alpha ——
+        结果就是「蓝色方块 + 白勾」变成一块纯紫色方块，勾看不见了。
+
+        把 buttonTint 显式置空，就能让图片按自己的颜色显示。
+        两个命名空间都写上是为了稳妥（AppCompat 读的是 res-auto 那个槽位，
+        而 Material 主题可能写在 android: 槽位）。
+    -->
+    <androidx.appcompat.widget.AppCompatCheckBox
+        android:id="@+id/custom_checkbox"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:checked="true"
+        android:button="@drawable/checkbox_selector"
+        android:buttonTint="@null"
+        app:buttonTint="@null"
+        android:text="@string/custom_checkbox"
+        android:textSize="25sp" />
+
+</LinearLayout>

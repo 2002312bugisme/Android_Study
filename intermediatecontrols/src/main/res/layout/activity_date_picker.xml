@@ -5,28 +5,34 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
+    <!--加一个对话框，点击对话框，弹出来一个日期选择器-->
+    <Button
+        android:id="@+id/btn_choose_date"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Choose Date"
+        android:textSize="20sp"
+        />
+
     <DatePicker
         android:id="@+id/dialog_date_picker"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:datePickerMode="spinner"
         android:calendarViewShown="false"
-        />
+        android:datePickerMode="spinner" />
 
     <Button
         android:id="@+id/btn_submit"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Submit"
-        android:textSize="20sp"
-        />
+        android:textSize="20sp" />
 
     <TextView
         android:id="@+id/tv_date"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textSize="20sp"
         android:textColor="#CA1D1D"
-        />
+        android:textSize="20sp" />
 
 </LinearLayout>

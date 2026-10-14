@@ -1,6 +1,8 @@
 package com.zzz.intermediatecontrols;
 
+import android.app.DatePickerDialog;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
@@ -11,6 +13,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+
+import java.time.LocalDate;
+import java.time.Month;
 
 public class DatePickerActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -29,6 +34,8 @@ public class DatePickerActivity extends AppCompatActivity implements View.OnClic
         });
 
         dialog_date_picker = findViewById(R.id.dialog_date_picker);
+        Button btn_choose_date = findViewById(R.id.btn_choose_date);
+        btn_choose_date.setOnClickListener(this);
         Button btn_submit = findViewById(R.id.btn_submit);
         btn_submit.setOnClickListener(this);
 
@@ -43,6 +50,22 @@ public class DatePickerActivity extends AppCompatActivity implements View.OnClic
                     dialog_date_picker.getMonth() + 1,
                     dialog_date_picker.getDayOfMonth());
             tv_date.setText(desc);
+        } else if (v.getId() == R.id.btn_choose_date) {
+            LocalDate now = LocalDate.now();
+            int year = now.getYear();
+            Month monthNum = now.getMonth();
+            int month = monthNum.getValue() - 1;
+            int day = now.getDayOfMonth();
+            DatePickerDialog dialog = new DatePickerDialog(this, (view, year1, month1, dayOfMonth) -> {
+                String desc = String.format("The date you selected is %d year %d month %d day",
+                        year1,
+                        month1,
+                        dayOfMonth);
+                tv_date.setText(desc);
+            }, year, month, day);
+
+            dialog.show();
+
         }
 
     }

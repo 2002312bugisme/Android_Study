@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <!--加一个对话框，点击对话框，弹出来一个日期选择器-->
+    <Button
+        android:id="@+id/btn_choose_time"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Choose time"
+        android:textSize="20sp"
+        />
+
+    <TimePicker
+        android:id="@+id/dialog_time_picker"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:timePickerMode="spinner"
+        />
+
+    <Button
+        android:id="@+id/btn_submit_time"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Submit"
+        android:textSize="20sp" />
+
+    <TextView
+        android:id="@+id/tv_time"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="#CA1D1D"
+        android:textSize="20sp" />
+
+</LinearLayout>

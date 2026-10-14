@@ -1,4 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
+
+<!--
+    开关按钮（Switch）演示页布局
+    对应 Java：intermediatecontrols/src/main/java/com/zzz/intermediatecontrols/SwitchActivity.java
+
+    结构说明：上半部分是一个横向容器（左标题 + 右开关），下半部分是状态回显文字。
+
+    ⚠️ 文件末尾有一整段被注释符号包起来的旧版布局（内嵌 Switch + TextView 的写法），
+       是作者保留的历史版本，不参与编译。注意被注释掉的代码里也出现了 xml 声明——
+       由于它在注释内，不会导致解析错误。
+-->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/main"
     android:layout_width="match_parent"
@@ -7,6 +18,11 @@
     android:padding="16dp">
 
     <!-- 第一部分：开关标题 + Switch 控件 -->
+    <!--
+        横向容器。
+        关键属性：android:gravity="center_vertical" —— 让内部子控件在"垂直方向对齐到中线"，
+        这样 20sp 的文字和开关控件看起来是水平居中的，不会一高一低。
+    -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -14,6 +30,7 @@
         android:orientation="horizontal">
 
         <!-- 标题占据剩余空间 -->
+        <!-- 关键属性：width=0dp + weight=1 —— 独占本行除开关之外的全部宽度，把开关挤到最右侧 -->
         <TextView
             android:id="@+id/switch_title"
             android:layout_width="0dp"
@@ -23,6 +40,7 @@
             android:textSize="20sp" />
 
         <!-- 实际开关控件 -->
+        <!-- 关键属性：wrap_content —— 宽度交给控件自己决定，不参与权重分配 -->
         <Switch
             android:id="@+id/sys_switch"
             android:layout_width="wrap_content"
@@ -31,6 +49,7 @@
     </LinearLayout>
 
     <!-- 第二部分：当前开关状态 -->
+    <!-- 结果回显区：初始文案与 Java 里拼出的文案保持一致，避免"未操作时显示不一致" -->
     <TextView
         android:id="@+id/switch_state"
         android:layout_width="match_parent"

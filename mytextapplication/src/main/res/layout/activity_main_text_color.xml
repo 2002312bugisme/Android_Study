@@ -1,4 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
+
+<!--
+    文字颜色 / 背景颜色演示页布局
+    对应 Java：mytextapplication/src/main/java/com/zzz/mytextapplication/MainTextColorActivity.java
+
+    结构说明：六个 TextView，全部引用 colors.xml 里的颜色资源，覆盖两类用途——
+      ① 只设文字色：tv_color_code / tv_color_xml / tv_color_xml_purple_200 / tv_color_xml_purple_500
+      ② 再设背景色：tv_color_background_0（背景由 Java 设为 @color/black）
+                     tv_color_background_1（背景写在布局里）
+
+    关键概念：XML 里的颜色写法
+      ① 引用资源：@color/green  —— 推荐，颜色集中管理；
+      ② 内联色值："#RRGGBB" 或 "#AARRGGBB"（8 位时前两位是透明度，FF 为完全不透明）。
+
+    注意 tv_color_code 这个控件只设了字号、没设颜色，Java 里针对它的代码全被注释掉了，
+    所以它显示的是系统默认文字颜色（浅色主题下接近黑）——正好作为"没设颜色"的对照。
+-->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -8,6 +25,7 @@
     tools:context=".MainTextColorActivity"
     android:orientation="vertical">
 
+    <!-- ① 对照项：没有 android:textColor，显示系统默认色 -->
     <TextView
         android:id="@+id/tv_color_code"
         android:layout_width="wrap_content"
@@ -16,6 +34,7 @@
         android:textSize="30sp"
         />
     <!--  xml中 六位十六进制数，透明度 默认 ff  -->
+    <!-- 引用资源色 @color/green -->
     <TextView
         android:id="@+id/tv_color_xml"
         android:layout_width="wrap_content"
@@ -24,6 +43,7 @@
         android:textSize="30sp"
         android:textColor="@color/green"
         />
+    <!-- 同一种文字，换成浅一点的紫色 -->
     <TextView
         android:id="@+id/tv_color_xml_purple_200"
         android:layout_width="wrap_content"
@@ -32,6 +52,7 @@
         android:textSize="30sp"
         android:textColor="@color/purple_200"
         />
+    <!-- 换成深一点的紫色，用来对比同一色系不同明度 -->
     <TextView
         android:id="@+id/tv_color_xml_purple_500"
         android:layout_width="wrap_content"
@@ -40,7 +61,10 @@
         android:textSize="30sp"
         android:textColor="@color/purple_500"
         />
-
+    <!--
+        背景由 Java 设置（MainTextColorActivity 里 setBackgroundResource(R.color.black)）。
+        注意文字色是紫色、背景是黑色，两者对比度很低——真做产品时要避免这种组合。
+    -->
     <TextView
         android:id="@+id/tv_color_background_0"
         android:layout_width="wrap_content"
@@ -50,6 +74,7 @@
         android:textColor="@color/purple_500"
         />
 
+    <!-- 背景直接写在布局里：文字紫色 + 背景黑色，用来与上面那个（代码设背景）做对照 -->
     <TextView
         android:id="@+id/tv_color_background_1"
         android:layout_width="wrap_content"

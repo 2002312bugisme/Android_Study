@@ -1,10 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
+
+<!--
+    本模块的默认模板布局
+    对应 Java：myactivityapplication/src/main/java/com/zzz/myactivityapplication/MainActivity.java
+
+    说明：本布局与 Java 里的 MainActivity 一样，属于<b>未使用的模板遗留</b>——
+         本模块的 launcher 是 ActStartActivity，MainActivity 并未在 Manifest 中注册，
+         所以这个布局永远不会被显示出来。保留它不影响运行。
+-->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
 
+    <!--
+        嵌套结构说明：外层 LinearLayout（vertical）里只有一个 RelativeLayout，
+        RelativeLayout 里只有一个按钮——三层套一个按钮，是模板生成的冗余嵌套，
+        等价于直接用 RelativeLayout 作根布局。
+        关键属性：android:layout_centerInParent="true" 让按钮在父容器正中（相对布局的常用属性）
+    -->
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">

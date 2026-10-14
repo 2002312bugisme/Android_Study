@@ -1,7 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
+
+<!--
+    按钮"按下换图"状态选择器（selector / StateListDrawable）
+    使用位置：res/layout/activity_drawable_state.xml 中 AppCompatButton 的 android:background
+
+    工作原理：selector 是一张"路由表"——从上到下逐条检查 <item> 的 state_* 条件，
+    命中第一个成立的条目就用它的 drawable 来画。所以顺序很关键：
+      第 1 条：按住时（state_pressed=true）→ 用点九图 nine_origin
+      第 2 条：兜底（无任何条件）→ 松手状态，用普通图 origin
+
+    参考：@drawable/nine_origin 引用的是 nine_origin.9.png，点九图按"去掉 .9 的资源名"引用。
+    使用前提：给按钮用这个背景时，控件必须写成 androidx.appcompat.widget.AppCompatButton；
+    写成 <Button> 会被 Material 主题替换成 MaterialButton 而吞掉 background（详见布局注释）。
+-->
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
 
+    <!-- 条件：正被按下 → 换成点九图（比普通图更清晰，且拉伸不变形） -->
     <item android:drawable="@drawable/nine_origin" android:state_pressed="true" />
+    <!-- 兜底条目：不带 state 条件，代表"其它所有状态"，必须放在最后 -->
     <item android:drawable="@drawable/origin" />
 
 </selector>

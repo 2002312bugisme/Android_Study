@@ -1,9 +1,29 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
+    <!--
+        主题的"基类"定义（浅色 / 日间模式）。
+        parent="Theme.Material3.DayNight.NoActionBar" 逐段含义：
+          Material3    —— 使用 Material Design 3 规范的控件外观
+          DayNight     —— 自动跟随系统深色模式（切到深色时改用 values-night/ 下的同名主题）
+          NoActionBar  —— 不显示系统自带标题栏，各页自行控制顶部区域
+
+        ⚠️ 本项目的两个已知坑都源自 Material3：
+          1) 布局里的 <Button> 会被替换为 MaterialButton，android:background 被吞掉
+             → 需要自定义背景图的按钮请写 androidx.appcompat.widget.AppCompatButton；
+          2) CheckBox / RadioButton 会被设上 buttonTint(SRC_IN)，把自定义 button 图染成纯色块
+             → 需要显式 android:buttonTint="@null" 与 app:buttonTint="@null"。
+        （本模块未演示这两点，对应的实验在 :intermediatecontrols 模块里。）
+    -->
     <style name="Base.Theme.MyFirstApp" parent="Theme.Material3.DayNight.NoActionBar">
         <!-- Customize your light theme here. -->
+        <!-- 在此覆盖浅色模式下的主题属性，例如替换 colorPrimary 为品牌色 -->
         <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
     </style>
 
+    <!--
+        应用真正使用的主题名，由 AndroidManifest.xml 的 <application android:theme="..."> 引用。
+        "两层主题"写法的好处：公共配置放在 Base.*，夜间专用配置放 values-night/ 的 Base.*，
+        Theme.* 本体保持不动，Manifest 也就不必跟着改。
+    -->
     <style name="Theme.MyFirstApp" parent="Base.Theme.MyFirstApp" />
 </resources>

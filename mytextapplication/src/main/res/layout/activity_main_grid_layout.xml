@@ -1,4 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
+
+<!--
+    网格布局（GridLayout）演示页布局
+    对应 Java：mytextapplication/src/main/java/com/zzz/mytextapplication/MainGridLayoutActivity.java
+
+    结构说明：4 个彩色 TextView 填满 2 列 2 行，重点看<b>列权重</b>的效果：
+      第 1 格 columnWeight=1  → 占本行 1/5 宽度
+      第 2 格 columnWeight=2  → 占本行 2/5 宽度（明显更宽，紫底那一块）
+      第 3、4 格 columnWeight=1（各自独占一行，因为第 2 格吃掉两列宽度后第一行满了）
+
+    GridLayout 与 LinearLayout 权重的区别：
+      · LinearLayout 的 layout_weight 作用于"排列方向"的那一维；
+      · GridLayout 用 layout_columnWeight / layout_rowWeight 分别控制列宽、行高比例，
+        其中"列权重"是 API 21 起才可靠支持（本项目 minSdk 28，没问题）。
+    同样地，用列权重时宽度必须写 0dp。
+-->
 <GridLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
@@ -8,6 +24,7 @@
     android:columnCount="2"
     android:rowCount="2">
 
+    <!-- 第 1 格：绿底，列权重 1 -->
     <TextView
         android:layout_width="0dp"
         android:layout_height="50dp"
@@ -18,6 +35,7 @@
         android:gravity="center"
         />
 
+    <!-- 第 2 格：浅紫底，列权重 2 → 宽度是第 1 格的 2 倍，用来直观对比权重 -->
     <TextView
         android:layout_width="0dp"
         android:layout_height="50dp"
@@ -28,6 +46,7 @@
         android:gravity="center"
         />
 
+    <!-- 第 3 格：粉底。第 1 行的空间已被"1 份 + 2 份"占满，所以它自动换到第 2 行 -->
     <TextView
         android:layout_width="0dp"
         android:layout_height="50dp"
@@ -38,6 +57,7 @@
         android:gravity="center"
         />
 
+    <!-- 第 4 格：蓝底，列权重 1，与第 3 格同占第 2 行 -->
     <TextView
         android:layout_width="0dp"
         android:layout_height="50dp"
@@ -47,10 +67,5 @@
         android:background="@color/blue"
         android:gravity="center"
         />
-
-
-
-
-
 
 </GridLayout>

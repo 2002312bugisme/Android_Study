@@ -1,24 +1,54 @@
 <?xml version="1.0" encoding="utf-8"?>
+
+<!--
+    滚动视图演示页布局
+    对应 Java：mytextapplication/src/main/java/com/zzz/mytextapplication/MainScrollViewActivity.java
+
+    结构说明：上下两块互不干扰的滚动区
+      ① HorizontalScrollView（高 200dp）：内部横向 LinearLayout 里放两个宽 300dp 的色块
+         → 两块合计 600dp 超过屏幕宽度，所以可以左右拖动（蓝、粉）
+      ② ScrollView：内部纵向 LinearLayout 里放两个高 400dp 的 View
+         → 合计 800dp 超过可视高度，所以可以上下滚动（绿、粉）
+
+    三条硬规则（初学最容易踩）：
+      1. ScrollView / HorizontalScrollView <b>只能有一个直接子控件</b>，
+         放两个会直接抛 IllegalStateException 崩溃 —— 所以这里都套了一层 LinearLayout；
+      2. 它内部子控件的 android:layout_height="match_parent" 指的是"滚动视图自身的可视高度"，
+         不是所有内容的总高度；
+      3. 想"内容不足时也撑满"可加 android:fillViewport="true"，本文件没加，
+         所以内容比可视区短时不会拉伸。
+
+    提示：垂直 ScrollView 里再套横向滚动是允许的；但"纵向套纵向"会因手势冲突而失效。
+-->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
 
+    <!--
+        ① 横向滚动。
+        关键属性：
+          android:layout_width="wrap_content"  宽度随内容，不撑满（滚动容器本身的宽度取内容宽）
+          android:layout_height="200dp"        滚动区可视高度写死，超出的部分需左右拖动才能看到
+    -->
     <HorizontalScrollView
         android:layout_width="wrap_content"
         android:layout_height="200dp">
 
+        <!-- 唯一的直接子控件：横向排列的内部容器（满足"只能有一个子控件"的限制） -->
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:orientation="horizontal">
 
+            <!-- 第 1 块：宽 300dp、蓝底、无内容，纯靠背景色显示范围 -->
             <TextView
                 android:layout_width="300dp"
                 android:layout_height="match_parent"
                 android:background="@color/blue" />
 
+            <!-- 第 2 块：宽 300dp、粉底。两块相加 600dp > 屏幕宽 → 触发横向滚动 -->
             <TextView
                 android:layout_width="300dp"
                 android:layout_height="match_parent"
@@ -30,21 +60,30 @@
 
     </HorizontalScrollView>
 
+    <!--
+        ② 纵向滚动。
+        关键属性：
+          android:layout_height="wrap_content"  高度随内容增长，超出屏幕后由父容器/本容器滚动
+        注意两个内部 View 都用 match_parent 宽 + 400dp 高：宽度撑满可视宽，高度写死以便超出
+    -->
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
+        <!-- 唯一的直接子控件：纵向排列的内部容器 -->
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
+            <!-- 第 1 块：绿底、高 400dp。用 View 而不是 TextView，因为不需要任何内容 -->
             <View
                 android:layout_width="match_parent"
                 android:layout_height="400dp"
                 android:background="@color/green"
                 />
 
+            <!-- 第 2 块：粉底、高 400dp。两块合计 800dp > 可视高度 → 可上下滚动 -->
             <View
                 android:layout_width="match_parent"
                 android:layout_height="400dp"

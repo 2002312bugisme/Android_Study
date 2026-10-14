@@ -1,10 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
+
+<!--
+    启动模式演示页 —— A 页布局
+    对应 Java：myactivityapplication/src/main/java/com/zzz/myactivityapplication/StartupmodeActivity.java
+
+    结构说明：极简，只要"一句话 + 一个按钮"，因为本页的重点完全在<b>跳转行为</b>（Flag 对返回栈的影响），
+    而不是界面本身。做实验时看的是"按几次返回键才退出"，界面越简单越好数。
+-->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
 
+    <!-- 页面标识文字：明确自己是 A 页，方便对照栈里的顺序 -->
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -13,6 +22,7 @@
         android:textSize="20sp"
         />
 
+    <!-- 跳转按钮：Java 里点击后带 FLAG_ACTIVITY_REORDER_TO_FRONT 打开 B 页 -->
     <Button
         android:id="@+id/btn_jump_toB"
         android:layout_width="match_parent"

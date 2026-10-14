@@ -1,5 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
+
+<!--
+    本模块的颜色资源表（文本与控件 :mytextapplication）
+    说明：本文件目前只保留了 white，black 被注释掉了（见下），
+         而项目里实际用到的黑色等颜色写在了 strings.xml 里 —— 这是个值得注意的"约定偏移"。
+
+    Android 的资源系统并不强制颜色必须放在 colors.xml：
+    aapt 只要求"资源文件名合法、标签合法"，所以 <color> 写在 strings.xml 里也能正常编译与引用。
+    不过按通用约定，颜色统一放 colors.xml 更清晰，也便于后续改主题色。
+-->
 <resources>
 <!--    <color name="black">#FF000000</color>-->
+    <!-- 纯白（不透明）：被 activity_main_button_style.xml 的标题文字色、edit 相关样式等引用 -->
     <color name="white">#FFFFFFFF</color>
 </resources>

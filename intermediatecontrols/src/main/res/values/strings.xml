@@ -1,10 +1,29 @@
+<!--
+    本模块的字符串资源表（中间控件 :intermediatecontrols）
+    作用：所有界面文案集中在此，XML 用 @string/xxx、Java 用 R.string.xxx 引用。
+    好处：① 改文案不用动布局和代码；② 后续要做多语言时只需再建 values-en/strings.xml。
+
+    命名习惯：本文件按"控件_用途"命名（如 sys_checkbox = 系统样式的复选框）。app_name 是固定项。
+-->
 <resources>
+    <!-- 应用名：桌面图标下方显示的名称，也是最近任务列表里的标题 -->
     <string name="app_name">IntermediateControls</string>
+
+    <!-- 图形 Drawable 示例页：普通图片作为背景的说明文字（DrawableActivity 使用） -->
     <string name="normal_image">普通图片背景</string>
+    <!-- 图形 Drawable 示例页：九宫格(点九)图片作为背景的说明文字 -->
     <string name="nine_image">九宫格图片背景</string>
+    <!-- 图形 Drawable 示例页：默认样式按钮的文案 -->
     <string name="btn_normal">默认样式的按钮</string>
+
+    <!-- 复选框示例页：系统默认样式 CheckBox 的文字（布局 activity_check_box.xml） -->
     <string name="sys_checkbox">这是系统的CheckBox</string>
+    <!-- 复选框示例页：自定义外观 CheckBox 的文字。
+         注意：文案里的"系统"只是图省事的叫法——它其实是 AppCompatCheckBox + 自定义 selector 图形 -->
     <string name="custom_checkbox">这是另一个系统的CheckBox</string>
+
+    <!-- 开关按钮示例页：Switch 前面的固定标签 -->
     <string name="switch_state">Switch开关:</string>
+    <!-- 开关按钮示例页：显示当前开关状态的文字，Java 会在状态变化时动态替换它 -->
     <string name="switch_desc">当前Switch开关状态为：关</string>
 </resources>

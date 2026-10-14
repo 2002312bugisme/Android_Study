@@ -1,10 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
+
+<!--
+    单选按钮（RadioButton + RadioGroup）演示页布局
+    对应 Java：intermediatecontrols/src/main/java/com/zzz/intermediatecontrols/RadioButtonActivity.java
+
+    结构说明：提示文字 + 一个 RadioGroup（内含两个 RadioButton）+ 结果 TextView。
+
+    关键概念：RadioButton 单独摆出来是"各自独立"的，只有放进 RadioGroup 里才会互斥。
+    本例的监听器挂在 RadioGroup（radioBtn_gender）上，而不是每个 RadioButton 上。
+-->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
 
+    <!-- 提示文字：无 id，纯展示 -->
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -13,12 +24,19 @@
         android:layout_marginBottom="10dp"
         />
 
+    <!--
+        单选组（互斥容器）。
+        关键属性：android:orientation="vertical" —— 组内选项纵向排列；
+        改成 horizontal 则横向排列。互斥逻辑由 RadioGroup 自身实现，与排列方向无关。
+        注意 id 是 radioBtn_gender：Java 里把监听器挂在这个 id 上。
+    -->
     <RadioGroup
         android:id="@+id/radioBtn_gender"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
+        <!-- 选项一：Man。id 会在 Java 回调里与 checkedId 比对，用于判断选中了谁 -->
         <RadioButton
             android:id="@+id/radioBtn_man"
             android:layout_width="wrap_content"
@@ -27,6 +45,7 @@
             android:textSize="15sp"
             />
 
+        <!-- 选项二：Woman。同一组内选中它会自动取消 Man 的选中态 -->
         <RadioButton
             android:id="@+id/radioBtn_woman"
             android:layout_width="wrap_content"
@@ -37,6 +56,10 @@
 
     </RadioGroup>
 
+    <!--
+        结果回显区：初始文字是 "Your Choice :"，选中任一项后被 Java 改写成 "Your Choice: Man/Woman"。
+        注意此处 id 名 radioBtn_choice 沿用了按钮的命名习惯，但它其实是个 TextView——命名不够精确，但功能正常。
+    -->
     <TextView
         android:id="@+id/radioBtn_choice"
         android:layout_width="wrap_content"

@@ -1,13 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
+
+<!--
+    按钮背景 —— 按下换色选择器（selector / StateListDrawable）
+    说明：本文件在本项目的布局里<b>没有被引用</b>（全项目搜索不到 @drawable/btn_background），
+         属于作者写好备用、但尚未接上的图形资源。保留它没有副作用。
+
+    它和 intermediatecontrols 模块里那几个 selector 的写法略有不同：
+    这里的 <item> 把 <shape> <b>内联写在自己的标签体里</b>，而不是用 android:drawable 引用另一个文件。
+    两种写法都合法：
+      · 内联写法：一个文件搞定，适合形状简单、只此一处用；
+      · 引用写法（android:drawable="@drawable/xxx"）：shape 可被多处复用，便于统一改样式。
+
+    使用本文件时同样要注意 Material3 主题的坑：控件要写成
+    androidx.appcompat.widget.AppCompatButton，否则 background 会被 MaterialButton 吞掉。
+-->
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
     <!-- 按钮被按下时的状态（变成浅灰色） -->
     <item android:state_pressed="true">
         <shape android:shape="rectangle">
+            <!-- 填充色比默认态略深，形成"按下去"的视觉反馈 -->
             <solid android:color="#E0E0E0" />
+            <!-- 圆角与默认态保持一致，否则按下瞬间边角会跳变 -->
             <corners android:radius="8dp" />
         </shape>
     </item>
     <!-- 按钮默认状态（白色背景） -->
+    <!-- 兜底条目：不带 state 条件，必须放最后 -->
     <item>
         <shape android:shape="rectangle">
             <solid android:color="#FFFFFF" />

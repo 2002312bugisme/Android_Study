@@ -1,4 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
+
+<!--
+    图形 Drawable 演示页布局（用 shape 当背景）
+    对应 Java：intermediatecontrols/src/main/java/com/zzz/intermediatecontrols/DrawableActivity.java
+    对应图形：res/drawable/shape_rectangle.xml、shape_oval.xml
+
+    结构说明：垂直排列
+      ① view_content —— 一块 200dp 高的空 View，本页的主角，背景由 Java 动态替换
+      ② 一个横向 LinearLayout，里面并排两个 1:1 宽度的按钮，分别换成"圆角矩形"和"椭圆"
+
+    注意：View 是 Android 里所有控件的基类，它自己没有内容、只能靠背景色/背景图显示出来，
+         在这里正好用来"展示一张图"。
+-->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/main"
     android:layout_width="match_parent"
@@ -6,6 +19,12 @@
     android:orientation="vertical"
     android:padding="5dp">
 
+    <!--
+        被换背景的 View。Java 里通过 setBackgroundResource() 给它设置 shape 图形。
+        关键属性：
+          android:layout_height="200dp"  固定高度，让这张背景图有明确的显示区域
+          （这里没有设置 background，初始由 Java 在 onCreate 里设成 shape_rectangle）
+    -->
     <View
         android:id="@+id/view_content"
         android:layout_width="match_parent"
@@ -13,12 +32,22 @@
 
         />
 
+    <!--
+        按钮区：横向 LinearLayout 作为"一行容器"
+        关键属性：android:layout_marginTop="5dp" 与上方图形块拉开一点间距
+    -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:layout_marginTop="5dp">
 
+        <!--
+            左按钮：换"圆角矩形"背景。
+            关键属性（等分宽度三件套）：
+              android:layout_width="0dp"     宽度交给权重计算，必须写 0dp（写成 wrap_content 权重会失效）
+              android:layout_weight="1"      横向剩余空间按权重分配，两个都写 1 → 各占一半
+        -->
         <Button
             android:id="@+id/btn_view_rectangle"
             android:layout_width="0dp"
@@ -29,6 +58,7 @@
             android:textSize="20sp"
             />
 
+        <!-- 右按钮：换"椭圆"背景，等分属性同上 -->
         <Button
             android:id="@+id/btn_view_oval"
             android:layout_width="0dp"

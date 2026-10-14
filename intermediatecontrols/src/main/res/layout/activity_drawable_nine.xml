@@ -1,4 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
+
+<!--
+    九宫格（点九 / .9.png）图形演示页布局
+    对应 Java：intermediatecontrols/src/main/java/com/zzz/intermediatecontrols/DrawableNineActivity.java
+    对应图形：res/drawable/nine_origin.9.png（点九图）、res/drawable/origin.png（同源普通图）
+
+    结构说明：两个等大的按钮上下排列，唯一区别是背景图——上面用点九图，下面用普通图，
+    按钮高度都固定 100dp，放大后就能直观看出"点九不糊、普通图边角被拉变形"。
+-->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/main"
     android:layout_width="match_parent"
@@ -13,6 +22,8 @@
         而 MaterialButton 自己管理背景，会覆盖掉 android:background，
         导致 .9 图完全不显示。
         AppCompatButton 是普通按钮，会正常使用 android:background。
+        另外 android:background="@drawable/nine_origin" 不带 .9 后缀——
+        引用点九图时按去掉 .9 的资源名引用，由 aapt 自动映射到 nine_origin.9.png。
     -->
     <androidx.appcompat.widget.AppCompatButton
         android:layout_width="match_parent"
@@ -22,6 +33,11 @@
         android:textColor="@android:color/white"
         android:layout_marginBottom="5dp" />
 
+    <!--
+        对照组：同一个图源但不含点九标记的普通 PNG，作为背景被拉伸到 100dp 高时会变形，
+        用来反衬点九图的价值。
+        @android:color/white 用的是系统内置颜色资源，不是本项目 colors.xml 里的。
+    -->
     <androidx.appcompat.widget.AppCompatButton
         android:layout_width="match_parent"
         android:layout_height="100dp"

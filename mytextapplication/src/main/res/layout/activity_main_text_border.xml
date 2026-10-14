@@ -1,4 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
+
+<!--
+    视图边框演示页布局（三种"设定宽高"的方式对比）
+    对应 Java：mytextapplication/src/main/java/com/zzz/mytextapplication/MainViewBorderActivity.java
+
+    结构说明：四个带底色的 TextView，用同样一段文字演示不同的宽高策略——
+      ① tv_border_wrap   wrap_content  —— 宽度只有文字那么宽
+      ② tv_border_match  match_parent  —— 宽度撑满屏幕
+      ③ tv_border        固定 200dp      —— 写死尺寸
+      ④ tv_border_coder  代码指定        —— 布局里写 wrap_content，由 Java 改成 300dp × 50dp
+    四个都加了背景色，这样"控件实际占多大"一眼就能看出来（背景色范围 = 控件自身范围）。
+
+    对照实验建议：把 Java 里 MainViewBorderActivity 的 setLayoutParams 那几行注释掉，
+    就会发现第 4 个控件立刻和文字一样宽 —— 这能直接证明代码改尺寸确实生效。
+-->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
@@ -7,6 +22,7 @@
     tools:context=".MainViewBorderActivity"
     android:orientation="vertical">
 
+    <!-- ① wrap_content：宽度随文字自适应 -->
     <TextView
         android:id="@+id/tv_border_wrap"
         android:layout_width="wrap_content"
@@ -18,6 +34,7 @@
         android:background="@color/purple_200"
         />
 
+    <!-- ② match_parent：宽度撑满父容器（父容器是 match_parent 的根布局，所以等于满屏） -->
     <TextView
         android:id="@+id/tv_border_match"
         android:layout_width="match_parent"
@@ -30,6 +47,7 @@
         />
 
     <!--固定大小-->
+    <!-- ③ 写死 200dp：与文字长度无关，永远这么宽 -->
     <TextView
         android:id="@+id/tv_border"
         android:layout_width="200dp"
@@ -43,6 +61,11 @@
 
 
     <!--通过代码指定宽高-->
+    <!--
+        ④ 交给代码改宽高。
+        布局里保持 wrap_content，Java 里通过 getLayoutParams → 改 width/height → setLayoutParams
+        把它变成 300dp × 50dp。注意 Java 里传给 LayoutParams 的是 px，所以要先 dp→px 换算。
+    -->
     <TextView
         android:id="@+id/tv_border_coder"
         android:layout_width="wrap_content"
@@ -53,8 +76,6 @@
         android:textColor="@color/green"
         android:background="@color/purple_500"
         />
-
-
 
 
 

@@ -1,8 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
+
+<!--
+    复选框自定义外观 —— 状态选择器（selector / StateListDrawable）
+    使用位置：res/layout/activity_check_box.xml 中 AppCompatCheckBox 的 android:button="@drawable/checkbox_selector"
+
+    工作原理：
+      selector 本身不画任何东西，它是一个"路由表"。控件（这里是 CheckBox）每次要绘制自己时，
+      系统从上到下逐条检查 <item>，命中第一个 state_* 条件成立的条目就取它的 drawable 来画，
+      因此条目的先后顺序会直接影响效果。
+
+    配套：因为是给 CheckBox 的「按钮图标」(android:button) 用的，所以条件用 state_checked；
+          若给普通 Button 当背景用，则应改用 state_pressed / state_enabled 等条件。
+    注意：使用本图的控件必须把 buttonTint 置空，否则 Material3 主题会按 SRC_IN 把图标整体染色，
+          细节会被抹平（详见 activity_check_box.xml 里的说明）。
+-->
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
 
+    <!-- 条件：已勾选（checked = true）→ 用"选中"图标（带勾的白/蓝图） -->
     <item android:state_checked="true" android:drawable="@drawable/checkbox_checked"/>
 
+    <!-- 兜底条目：必须放在最后且不带任何 state_* 条件，代表"以上都不匹配时"的默认外观 -->
     <item android:drawable="@drawable/checkbox_unchecked"/>
 
 </selector>

@@ -1,5 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
 
+<!--
+    图片显示（ImageView / ImageButton）演示页布局
+    对应 Java：mytextapplication/src/main/java/com/zzz/mytextapplication/MainImageViewActivity.java
+              （该 Activity 只负责加载本布局，所有效果都来自下面这些 XML 属性）
+
+    本页用同一张图（@drawable/tos_cn）演示 8 种 scaleType 的差别：
+
+      scaleType      行为
+      fitCenter      等比缩放到"能完整放下"并居中（ImageView 的默认值）
+      centerCrop     等比缩放到"铺满"，超出部分裁掉
+      center         不缩放，原图放中间，超出即裁掉
+      centerInside   只缩小不放大，完整显示并居中
+      fitXY          强行拉满宽高，不保持比例（会变形）
+      fitStart       同 fitCenter，但对齐到左上
+      fitEnd         同 fitCenter，但对齐到右下
+      matrix         用矩阵自行控制缩放平移，不自动适配
+
+    每个 ImageView 的公共属性：
+      android:layout_height="260dp"            固定高度，这样"缩放差异"才看得出来
+      android:background="#FFFFFF"             白底，便于看清图片实际占用的区域
+      android:contentDescription="@string/.."  无障碍描述，无文字控件必须给（否则 IDE 报警告）
+      android:src="@drawable/tos_cn"           图片源（静态图用 src；代码设图则用 setImageResource）
+
+    另外还演示了两种"图 + 文字"的组合：
+      ImageButton                      可点击的图片按钮，同样支持 scaleType
+      Button 的 android:drawableStart  在文字左侧嵌一张小图，配合 drawablePadding 控制间距
+-->
+
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/main"
     android:layout_width="match_parent"
@@ -34,6 +62,7 @@
             android:paddingBottom="20dp">
 
 
+            <!-- ① fitCenter：等比缩放且完整显示并居中（默认值）。注意上下或左右会留白 -->
             <!-- fitCenter -->
             <TextView
                 android:layout_width="match_parent"
@@ -55,6 +84,7 @@
                 android:src="@drawable/tos_cn" />
 
 
+            <!-- ② centerCrop：等比缩放并铺满整块区域，多余部分被裁掉（常用于头像/封面） -->
             <!-- centerCrop -->
             <TextView
             android:layout_width="match_parent"
@@ -74,6 +104,7 @@
                 android:contentDescription="@string/image_description"
                 android:scaleType="centerCrop"
                 android:src="@drawable/tos_cn" />
+            <!-- ③ center：完全不缩放，把原图居中放置，超出区域的部分直接裁掉 -->
             <!-- center -->
             <TextView
                 android:layout_width="match_parent"
@@ -85,6 +116,7 @@
                 android:textStyle="bold" />
 
 
+            <!-- ④ centerInside：只允许缩小、不允许放大，保证图片完整且居中 -->
             <!-- centerInside -->
             <ImageView
                 android:id="@+id/image_scale_center"
@@ -114,6 +146,7 @@
                 android:contentDescription="@string/image_description"
                 android:scaleType="centerInside"
                 android:src="@drawable/tos_cn" />
+            <!-- ⑤ fitXY：宽高各自独立拉伸到填满，会破坏原始宽高比（图中文字会被拉扁） -->
             <!-- fitXY -->
             <TextView
                 android:layout_width="match_parent"
@@ -135,6 +168,7 @@
                 android:src="@drawable/tos_cn" />
 
 
+            <!-- ⑥ fitStart：等比缩放完整显示，但对齐到左上角而非居中 -->
             <!-- fitStart -->
             <TextView
                 android:layout_width="match_parent"
@@ -156,6 +190,7 @@
                 android:src="@drawable/tos_cn" />
 
 
+            <!-- ⑦ fitEnd：等比缩放完整显示，但对齐到右下角 -->
             <!-- fitEnd -->
             <TextView
                 android:layout_width="match_parent"
@@ -177,6 +212,7 @@
                 android:src="@drawable/tos_cn" />
 
 
+            <!-- ⑧ matrix：不走自动适配，完全按 matrix（矩阵）变换绘制；不设 matrix 时相当于原尺寸 -->
             <!-- matrix -->
             <TextView
                 android:layout_width="match_parent"
@@ -197,6 +233,7 @@
                 android:scaleType="matrix"
                 android:src="@drawable/tos_cn" />
 
+            <!-- ⑨ ImageButton：可点击的图片控件，同样支持 scaleType（这里用 fitCenter） -->
             <!-- ImageButton -->
             <TextView
                 android:layout_width="match_parent"
@@ -217,6 +254,7 @@
                 android:scaleType="fitCenter"
                 android:src="@drawable/tos_cn" />
 
+            <!-- ⑩ Button + drawableStart：把图片嵌在文字左边；drawablePadding 控制图与文字的间距 -->
             <Button
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -230,6 +268,11 @@
 
     </ScrollView>
 
+    <!--
+        底部悬浮条（位于 ScrollView 之外，所以不随内容滚动）。
+        horizontal + gravity="center_vertical"：左图标右按钮，垂直居中对齐。
+        注意这个 ImageView 只有 40dp 见方并配 centerInside，属于"小图标"的典型用法。
+    -->
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -242,6 +285,7 @@
             android:src="@drawable/tos_cn"
             android:scaleType="centerInside" />
 
+        <!-- 底部条里的普通按钮：没有 id、也没有 onClick，纯静态展示 -->
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

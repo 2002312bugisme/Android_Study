@@ -1,4 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
+
+<!--
+    复选框（CheckBox）演示页布局
+    对应 Java：intermediatecontrols/src/main/java/com/zzz/intermediatecontrols/CheckBoxActivity.java
+    对应图形：res/drawable/checkbox_selector.xml（自定义勾选图）
+
+    结构说明：上下两个复选框，用来做"系统样式 vs 自定义图"的对照
+      ① sys_checkbox    —— 系统默认样式的 CheckBox（勾选框由主题提供）
+      ② custom_checkbox —— AppCompatCheckBox + 自定义 selector 图，并额外关闭 buttonTint
+
+    本文件是 Material3 主题下最值得反复看的一个布局：
+    下面那段关于 buttonTint 的说明，解释了"为什么自定义的勾选图会变成一块纯色"。
+-->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/main"
@@ -6,6 +19,13 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
+    <!--
+        系统默认样式的复选框（对照组）。
+        关键属性：
+          android:text="@string/sys_checkbox"  文字取自 strings.xml
+        注意：它没有 id 之外的特殊设置，勾选框外观完全由主题（Material3）决定。
+        Java 里给它挂了与下面那个相同的监听器，点击后会把自己的文字改成"您勾选了…"。
+    -->
     <CheckBox
         android:id="@+id/sys_checkbox"
         android:layout_width="match_parent"
@@ -24,6 +44,15 @@
         把 buttonTint 显式置空，就能让图片按自己的颜色显示。
         两个命名空间都写上是为了稳妥（AppCompat 读的是 res-auto 那个槽位，
         而 Material 主题可能写在 android: 槽位）。
+    -->
+    <!--
+        自定义外观的复选框（本页主角）。
+        关键属性：
+          android:checked="true"                       初始就是勾选状态
+          android:button="@drawable/checkbox_selector" 用 selector 指定"勾选框"的图（详见该 drawable 注释）
+          android:buttonTint="@null" + app:buttonTint="@null"  关键！关掉主题的染色，否则图变纯色块
+          android:textSize="25sp"                      字号偏大，便于看清图标与文字
+          （根标签必须声明 xmlns:app，否则 app:buttonTint 找不到命名空间会编译失败）
     -->
     <androidx.appcompat.widget.AppCompatCheckBox
         android:id="@+id/custom_checkbox"

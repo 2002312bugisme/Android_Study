@@ -1,7 +1,16 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
+    <!--
+        主题的"基类"定义 —— 夜间（深色）模式专用。
+        机制：系统切到深色模式时优先加载本目录同名资源（Base.Theme.MyFirstApp），
+             白天用 values/themes.xml 里的同名项。同名资源"按环境择一"，不叠加。
+
+        注意：本文件只覆盖 Base.Theme.MyFirstApp；
+             Theme.MyFirstApp 与父子关系定义在 values/themes.xml 里，此处无需重复。
+    -->
     <style name="Base.Theme.MyFirstApp" parent="Theme.Material3.DayNight.NoActionBar">
         <!-- Customize your dark theme here. -->
+        <!-- 在此覆盖深色模式下的主题属性 -->
         <!-- <item name="colorPrimary">@color/my_dark_primary</item> -->
     </style>
 </resources>

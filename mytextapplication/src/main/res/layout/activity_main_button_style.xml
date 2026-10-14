@@ -1,4 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
+
+<!--
+    按钮样式 + 「在布局里绑定点击事件」演示页布局
+    对应 Java：mytextapplication/src/main/java/com/zzz/mytextapplication/MainButtonStyleActivity.java
+
+    结构说明：标题 → 普通按钮（无事件）→ 有事件的按钮（tv_button）→ 结果区（tv_result）
+
+    ★ 本文件的重点是这一行：android:onClick="doClick"（写在 tv_button 上）
+      它把点击事件"写在布局里"，而不是在 Java 里 setOnClickListener。
+      工作原理：布局加载时，View 会通过反射到<b>当前 Activity</b> 上找名为 doClick 的方法并调用。
+      对应的 Java 方法必须满足：public + 只有一个 View 形参 + 返回 void。
+      名字写错、方法不可见、形参不对，都会在运行时抛异常（不是编译期报错，所以不易发现）。
+-->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/main"
     android:layout_width="match_parent"
@@ -8,6 +21,7 @@
     android:background="#F5F7FA">
 
     <!-- 标题区域 -->
+    <!-- 用"深色底 + 白字"做标题条：background 用蓝色资源色，textColor 用白色资源色 -->
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -21,6 +35,10 @@
         android:background="@color/blue" />
 
     <!-- 普通按钮 -->
+    <!--
+        对照组：没有 id、没有 onClick，所以它<b>完全点不动</b>（点了没任何反应）。
+        关键属性：android:minHeight="52dp" 保证按钮有足够点击热区（太小不利于手指点击）。
+    -->
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -32,6 +50,14 @@
         android:textAllCaps="false" />
 
     <!-- 点击事件按钮 -->
+    <!--
+        主角：唯一挂了 android:onClick 的按钮。
+        关键属性：
+          android:id="@+id/tv_button"      有 id（虽然本页 Java 没用到它，命名也沿用了 tv_ 前缀）
+          android:onClick="doClick"        ★ 唯一让按钮"活起来"的属性：字符串必须与 Java 方法名完全一致
+          注意本页 Java 里<b>没有</b>对应的 findViewById + setOnClickListener，
+          说明这两种挂事件的方式"二选一即可"，不要同时写（同时写会各触发一次，容易出 bug）
+    -->
     <Button
         android:id="@+id/tv_button"
         android:layout_width="match_parent"
@@ -45,6 +71,13 @@
         android:onClick="doClick" />
 
     <!-- 结果区域 -->
+    <!--
+        结果回显区，Java 里通过 tv_result 写入点击结果。
+        关键属性：
+          android:minHeight="100dp"        最小高度，没内容时也占住空间
+          android:gravity="center"         文字居中
+          android:background="#FFFFFF"     内联白色（这里没用资源色，属于可统一优化的地方）
+    -->
     <TextView
         android:id="@+id/tv_result"
         android:layout_width="match_parent"

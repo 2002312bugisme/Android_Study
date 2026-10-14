@@ -1,10 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
+
+<!--
+    提醒对话框（AlertDialog）演示页布局
+    对应 Java：intermediatecontrols/src/main/java/com/zzz/intermediatecontrols/AlertDialogActivity.java
+
+    结构说明：垂直排列的两个控件
+      ① btn_dialog   —— 触发按钮，点击后弹出 AlertDialog
+      ② tv_message   —— 结果区，对话框的肯定/否定按钮被点击后把文字写到这里
+
+    注意：对话框本身不写在布局里，它是运行时由 Java 代码创建并显示的，
+         所以本文件看不到任何"对话框"相关标签。
+-->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
 
+    <!--
+        触发按钮：Java 里用 setOnClickListener(this) 挂上本 Activity 的点击回调。
+        关键属性：
+          android:textSize="25sp"        文字 25sp（sp 会随系统字体大小缩放，文字一律用 sp）
+          android:textColor="@color/black"  引用本模块 colors.xml 中的颜色资源
+    -->
     <Button
         android:id="@+id/btn_dialog"
         android:layout_width="match_parent"
@@ -14,6 +32,10 @@
         android:textColor="@color/black"
         />
 
+    <!--
+        结果显示区：初始没有文字（没有 android:text），内容完全由 Java 在对话框回调里 setText 填入。
+        这里用 TextView 而不是 Button，因为它不需要被点击，只负责显示。
+    -->
     <TextView
         android:id="@+id/tv_message"
         android:layout_width="match_parent"

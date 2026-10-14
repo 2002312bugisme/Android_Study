@@ -1,4 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
+
+<!--
+    输入框（EditText）基础演示页布局
+    对应 Java：intermediatecontrols/src/main/java/com/zzz/intermediatecontrols/EditTextActivity.java
+
+    结构说明：一个标题 + 四个输入框，重点是对比四种"外观"：
+      ① 系统默认样式（带下划线）
+      ② android:background="@null" → 完全去掉系统背景，看起来"无边框"
+      ③ android:background="@drawable/edit_text" → 用 selector 自定义边框（获得焦点时换一张图）
+      ④ inputType="textPassword" → 密码输入框（内容以圆点显示）
+
+    注意：这四个 EditText 都没有 id，因为 Java 里不需要访问它们，纯粹用来"看效果"。
+-->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -7,6 +20,10 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
+    <!--
+        页面标题。
+        注意：本文件声明了 app: 与 tools: 两个命名空间但并没用到，属于模板残留，留着不影响运行。
+    -->
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -14,6 +31,10 @@
         android:text="下面是一些输入框："
         android:textSize="20sp" />
 
+    <!--
+        ① 系统默认样式：不写 background，主题自带的输入框外观（Material3 是底部一条线）。
+        inputType="text" 表示普通文本，系统会弹出普通字母键盘。
+    -->
     <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -21,6 +42,12 @@
         android:hint="Normal,默认输入框"
         android:inputType="text" />
 
+    <!--
+        ② 无边框效果。
+        关键属性：android:background="@null" —— 把系统默认背景整个置空；
+        写成 @null 而不是 @android:color/transparent 的区别：前者是"没有背景"（连按下反馈也一起没了），
+        后者是"有背景但透明"（仍保留触摸涟漪）。
+    -->
     <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -29,6 +56,12 @@
         android:hint="无边框"
         android:inputType="text" />
 
+    <!--
+        ③ 自定义边框。
+        关键属性：android:background="@drawable/edit_text" —— 指向一个 selector，
+        它会根据"是否获得焦点"自动换成不同的边框图（详见 res/drawable/edit_text.xml）。
+        这也是 EditText 唯一能靠 XML 实现"聚焦变色"的方式。
+    -->
     <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -37,6 +70,10 @@
         android:hint="自定义边框"
         android:inputType="text" />
 
+    <!--
+        ④ 密码框：inputType="textPassword" 让已输入字符显示为圆点。
+        hint 用中文，与上面三个英文 hint 混用——若要做规范的多语言，hint 也应统一抽到 strings.xml。
+    -->
     <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

@@ -1,10 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
+
+<!--
+    「输入满位数自动收起键盘」演示页布局
+    对应 Java：intermediatecontrols/src/main/java/com/zzz/intermediatecontrols/EditHideActivity.java
+
+    结构说明：两个输入框上下排列
+      ① edit_phone_hide    —— 手机号输入框，maxLength=11，输满 11 位自动收键盘
+      ② edit_password_hide —— 密码输入框，输满 6 位自动收键盘（位数上限写在 Java 里）
+      ③ btn_login_hide     —— 装饰用的 Login 按钮，本页没有给它挂任何逻辑
+
+    提醒：两个输入框的"几"位收键盘由 Java 的构造参数决定，布局里的 maxLength 只管"最多能输几位"。
+-->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
 
+    <!--
+        手机号输入框。
+        关键属性：
+          android:hint="..."          没输入内容时显示的灰色提示文字，一输入就消失
+          android:maxLength="11"      硬性限制最多输入 11 个字符，再多打也进不去（由 EditText 自身拦截）
+          android:inputType="phone"   关键：声明这是"电话"类型输入，系统会弹出带数字的电话键盘
+    -->
     <EditText
         android:id="@+id/edit_phone_hide"
         android:layout_width="match_parent"
@@ -15,6 +34,13 @@
         android:inputType="phone"
         />
 
+    <!--
+        密码输入框。
+        关键属性：
+          android:inputType="textPassword"  关键：普通文本键盘，但输入内容以圆点显示（不回显明文）
+        注意这里没写 maxLength —— "6 位就收键盘"完全由 Java 的构造参数控制，
+        所以用户仍可以继续输第 7 位，只是键盘已经被收起来了。
+    -->
     <EditText
         android:id="@+id/edit_password_hide"
         android:layout_width="match_parent"
@@ -25,6 +51,13 @@
         />
 
 
+    <!--
+        Login 按钮。
+        关键属性：
+          android:layout_width="wrap_content"              宽度自适应文字
+          android:layout_gravity="center_horizontal"       在纵向 LinearLayout 里，这个属性控制"水平居中"
+          （对照：android:gravity 控制的是控件内部内容的对齐，layout_gravity 控制的是自己在父容器里的对齐）
+    -->
     <Button
         android:id="@+id/btn_login_hide"
         android:layout_width="wrap_content"

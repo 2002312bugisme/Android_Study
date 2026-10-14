@@ -1,4 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
+
+<!--
+    读取资源演示页布局
+    对应 Java：myactivityapplication/src/main/java/com/zzz/myactivityapplication/ReadResourceActivity.java
+
+    结构说明：两张"白底卡片"，分别展示两类资源的读取结果
+      ① String Resource 卡片 → read_string  显示 getString(R.string.string_data) 的结果
+      ② Metadata 卡片        → read_metadata 显示从 AndroidManifest 的 meta-data 读到的值
+
+    ⚠️ 注意一个层级细节（很多初学者会踩）：
+      根节点是 ScrollView，而 android:id="@+id/main" 挂在<b>里面的 LinearLayout</b> 上。
+      所以 Java 里 findViewById(R.id.main) 找到的是内层布局，而不是根 ScrollView——
+      这也是为什么 Activity 里的系统栏内边距能正常生效（padding 加在内层布局上，
+      同时 ScrollView 自身高度是 match_parent，内容仍可滚动）。
+
+    为什么用 ScrollView 作根：内容在小屏上可能超出屏幕高度，套一层滚动容器是最省事的做法。
+    注意 ScrollView 只能有一个直接子控件，这里正是那个 LinearLayout。
+-->
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -30,6 +48,12 @@
             android:textSize="14sp" />
 
         <!-- String Resource -->
+        <!--
+            卡片一：读取字符串资源。
+            关键属性：
+              android:background="#FFFFFF"  白色卡片，与灰底页面形成层次
+              android:padding="16dp"        卡片内边距
+        -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -38,6 +62,7 @@
             android:orientation="vertical"
             android:padding="16dp">
 
+            <!-- 卡片内的小标题（说明这一块演示什么） -->
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -46,6 +71,10 @@
                 android:textSize="14sp"
                 android:textStyle="bold" />
 
+            <!--
+                结果展示控件（Java 里 id 为 read_string）。
+                注意本控件<b>没有</b>写 android:text —— 初始是空白的，内容完全由 Java 的 setText 填入。
+            -->
             <TextView
                 android:id="@+id/read_string"
                 android:layout_width="match_parent"
@@ -57,6 +86,7 @@
         </LinearLayout>
 
         <!-- Metadata -->
+        <!-- 卡片二：读取 Manifest 里的 meta-data，结构与卡片一完全一致 -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -73,6 +103,7 @@
                 android:textSize="14sp"
                 android:textStyle="bold" />
 
+            <!-- 结果展示控件（Java 里 id 为 read_metadata），同样由 Java 填内容 -->
             <TextView
                 android:id="@+id/read_metadata"
                 android:layout_width="match_parent"

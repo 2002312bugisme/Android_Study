@@ -1,4 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
+
+<!--
+    文本（TextView）最小演示页布局
+    对应 Java：mytextapplication/src/main/java/com/zzz/mytextapplication/MainTextActivity.java
+
+    结构说明：只有一个 TextView，是"最简可运行页面"的模板。
+    注意：Java 里还会调用 textView.setText(R.string.hello) 再设一次文字，
+         而这里已经写了同样的 android:text —— 两处效果完全一样，
+         所以那次 setText 属于"冗余演示"（作者本意就是展示"代码也能设文字"）。
+
+    另外注意根布局没有 android:orientation —— 因为只有一个子控件，
+    纵向/横向排列结果一样，所以省掉了这个属性。
+-->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -7,6 +20,12 @@
     android:layout_height="match_parent"
     tools:context=".MainTextActivity">
 
+    <!--
+        唯一的控件。
+        关键属性：
+          android:layout_width/height="wrap_content"  宽高都随文字自适应，是 TextView 的常见设置
+          android:text="@string/hello"               文字取自 strings.xml（值为 Hello world!）
+    -->
     <TextView
         android:id="@+id/tv_hello"
         android:layout_width="wrap_content"

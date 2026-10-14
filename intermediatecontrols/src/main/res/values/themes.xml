@@ -1,9 +1,31 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
+    <!--
+        主题的"基类"定义（浅色 / 日间模式）。
+        parent="Theme.Material3.DayNight.NoActionBar" 的含义拆开看：
+          Material3      —— 使用 Material Design 3 规范的控件外观
+          DayNight       —— 自动跟随系统深色模式（系统切深色时会改用 values-night/ 下的同名主题）
+          NoActionBar    —— 不显示系统自带的标题栏 ActionBar（因为各页往往自己画标题）
+
+        ⚠️ 本项目的两个已知坑都源于这个主题：
+          1) Material3 会把布局里的 <Button> 替换成 MaterialButton，android:background 被吞掉
+             → 需要自定义背景图时改写成 androidx.appcompat.widget.AppCompatButton；
+          2) Material3 会给 CheckBox/RadioButton 设 buttonTint(SRC_IN)，把自定义 button 图染成纯色块
+             → 需要显式 android:buttonTint="@null" + app:buttonTint="@null"。
+
+        ⚠️ 本文件只定义浅色版；深色版在 res/values-night/themes.xml，文件名相同、内容分白天/黑夜两套。
+    -->
     <style name="Base.Theme.MyFirstApp" parent="Theme.Material3.DayNight.NoActionBar">
         <!-- Customize your light theme here. -->
+        <!-- 在此覆盖浅色模式下的主题属性，例如把主色换成自己的品牌色 -->
         <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
     </style>
 
+    <!--
+        应用真正使用的主题名。
+        这是"两层主题"的常用写法：Base.* 放公共配置，Theme.* 直接被 Manifest 引用。
+        好处是将来要加夜间专用配置时，只需改 Base.* 或单独派生，不必动 Manifest。
+        本模块的 AndroidManifest.xml 里 <application android:theme="@style/Theme.MyFirstApp"> 用的就是它。
+    -->
     <style name="Theme.MyFirstApp" parent="Base.Theme.MyFirstApp" />
 </resources>

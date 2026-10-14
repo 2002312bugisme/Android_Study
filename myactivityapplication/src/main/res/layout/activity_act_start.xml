@@ -1,4 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
+
+<!--
+    launcher 页（应用首页）布局
+    对应 Java：myactivityapplication/src/main/java/com/zzz/myactivityapplication/ActStartActivity.java
+    说明：这也是本模块唯一声明了 action.MAIN + category.LAUNCHER 的页面，
+         以及长按桌面图标快捷方式 "first"（启停活动）的目标页，见 res/xml/shortcuts.xml。
+
+    结构说明：三段文字/按钮垂直排列，整体居中
+      ① 大标题 "Activity 页面跳转"
+      ② 副标题说明
+      ③ btn_next —— 跳转按钮，背景是自定义 shape
+-->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/main"
     android:layout_width="match_parent"
@@ -8,6 +20,14 @@
     android:padding="32dp"
     android:background="#F5F7FA">
 
+    <!--
+        关键属性：
+          android:gravity="center"  在根布局上写 gravity，会让<b>所有子控件</b>整体居中
+                                    （纵向排列时表现为水平居中，配合垂直方向也居中）
+          android:padding="32dp"    四周留白，避免内容贴边
+    -->
+
+    <!-- 主标题 -->
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -17,6 +37,7 @@
         android:textColor="#222222"
         android:layout_marginBottom="12dp" />
 
+    <!-- 副标题：字号更小、颜色更浅，形成视觉层次 -->
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -25,6 +46,13 @@
         android:textColor="#666666"
         android:layout_marginBottom="32dp" />
 
+    <!--
+        跳转按钮。
+        关键属性：
+          android:layout_width="220dp" / height="56dp"  写死尺寸，保证按钮够大够显眼
+          android:background="@drawable/bg_button_primary"  蓝色圆角 shape（详见该 drawable 注释）
+          android:textColor="@android:color/white"        白字配蓝底
+    -->
     <Button
         android:id="@+id/btn_next"
         android:layout_width="220dp"

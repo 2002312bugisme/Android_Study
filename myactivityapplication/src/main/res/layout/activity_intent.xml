@@ -1,10 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
+
+<!--
+    Intent 演示页布局
+    对应 Java：myactivityapplication/src/main/java/com/zzz/myactivityapplication/IntentActivity.java
+
+    结构说明：一个标题 + 四个满宽按钮，分别对应显式跳转与三种隐式跳转
+      btn_displayed_intent        显式 Intent → 跳转到 ActFinishActivity
+      btn_implicit_intent_tel     隐式 Intent → 打开拨号盘（ACTION_DIAL + tel:）
+      btn_implicit_intent_msg     隐式 Intent → 打开短信界面（ACTION_SENDTO + smsto:）
+      btn_implicit_intent_my      隐式 Intent → 自定义 action（当前 Manifest 无匹配，会崩溃，见 Java 注释）
+
+    ⚠️ 本文件有一处单位错误，顺手指出来：
+       标题 TextView 写的是 android:textSize="20dp"，而文字大小应当用 <b>sp</b>。
+       用 dp 的后果是它不随系统"字体大小"设置缩放，用户调大字体时这行字不变大。
+       （同理，控件尺寸才用 dp；见 :mytextapplication 模块的 activity_main_text_size.xml 对比实验。）
+-->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
 
+    <!--
+        页面标题。
+        关键属性：android:textSize="20dp" —— 单位写错了，应为 20sp（见文件头说明）
+    -->
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -12,6 +32,7 @@
         android:textSize="20dp"
         />
 
+    <!-- ① 显式跳转：目标写死在代码里，不需要任何 Intent 匹配 -->
     <Button
         android:id="@+id/btn_displayed_intent"
         android:layout_width="match_parent"
@@ -21,6 +42,7 @@
         android:textSize="20sp"
         />
 
+    <!-- ② 隐式跳转——拨号盘：ACTION_DIAL + Uri "tel:号码" -->
     <Button
         android:id="@+id/btn_implicit_intent_tel"
         android:layout_width="match_parent"
@@ -30,6 +52,7 @@
         android:textSize="20sp"
         />
 
+    <!-- ③ 隐式跳转——短信：ACTION_SENDTO + Uri "smsto:号码" -->
     <Button
         android:id="@+id/btn_implicit_intent_msg"
         android:layout_width="match_parent"
@@ -39,6 +62,7 @@
         android:textSize="20sp"
         />
 
+    <!-- ④ 隐式跳转——自定义 action "android.intent.action.ZZZ"（当前无组件匹配） -->
     <Button
         android:id="@+id/btn_implicit_intent_my"
         android:layout_width="match_parent"

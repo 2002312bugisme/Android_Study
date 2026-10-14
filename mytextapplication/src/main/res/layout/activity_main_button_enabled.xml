@@ -1,5 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 
+<!--
+    按钮启用/禁用演示页布局
+    对应 Java：mytextapplication/src/main/java/com/zzz/mytextapplication/MainButtonEnabledActivity.java
+
+    结构说明：
+      第一行：并排两个"遥控按钮"（btn_enabled 启用 / btn_unenabled 禁用），各占一半宽度
+      中间： btn_test —— 被遥控的测试按钮，<b>初始就是禁用状态</b>
+      下方： btn_result —— 点击结果回显区
+
+    关键属性：android:enabled="false"（写在 btn_test 上）
+      它让按钮一进页面就处于"灰色不可点"状态，并且<b>完全不响应点击</b>——
+      连 onClick 都不会回调。这正是本页要演示的核心：必须先点"启用"才能点测试按钮。
+-->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/main"
     android:layout_width="match_parent"
@@ -21,11 +34,20 @@
 
 
     <!-- 启用 / 禁用控制 -->
+    <!-- 横向容器：两个按钮等分本行宽度 -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
 
+        <!--
+            "启用"按钮。
+            关键属性：
+              android:layout_width="0dp" + layout_weight="1"   与兄弟按钮平分宽度
+              android:layout_marginEnd="6dp"                  结束方向留 6dp（用 End 而非 Right，
+                                                              以便在从右向左的语言里自动镜像）
+              android:textAllCaps="false"                     关掉"英文强制大写"
+        -->
         <Button
             android:id="@+id/btn_enabled"
             android:layout_width="0dp"
@@ -37,6 +59,7 @@
             android:textColor="@color/pink"
             android:textSize="18sp" />
 
+        <!-- "禁用"按钮：与上面完全对称，只是外边距写在 Start 侧 -->
         <Button
             android:id="@+id/btn_unenabled"
             android:layout_width="0dp"
@@ -52,6 +75,12 @@
 
 
     <!-- 测试按钮 -->
+    <!--
+        被遥控的目标按钮。
+        关键属性：android:enabled="false" —— 初始禁用（灰、点不动）。
+        Java 里用 setEnabled(true/false) 动态切换，并配合 setTextColor 改字色。
+        注意字号 22sp 比遥控按钮大，视觉上突出它是"主角"。
+    -->
     <Button
         android:id="@+id/btn_test"
         android:layout_width="match_parent"
@@ -65,6 +94,12 @@
 
 
     <!-- 点击结果 -->
+    <!--
+        结果回显区（虽然 id 叫 btn_result，但它是 TextView，不具备点击能力）。
+        关键属性：
+          android:minHeight="60dp"   给一个最小高度，即使没内容也不会塌成一条线
+          android:background="@color/green"  绿底便于看清区域范围
+    -->
     <TextView
         android:id="@+id/btn_result"
         android:layout_width="match_parent"

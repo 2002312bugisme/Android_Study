@@ -1,5 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 
+<!--
+    计算器演示页布局
+    对应 Java：mytextapplication/src/main/java/com/zzz/mytextapplication/CalculatorActivity.java
+
+    结构说明：
+      ① tv_title     —— 页面标题
+      ② tv_display   —— 显示区（结果与当前输入都显示在这里，Java 靠它读写）
+      ③ GridLayout   —— 4 列 5 行的按键区，共 20 个按钮
+
+    按键布局（与 Java 里 onClick 的分支一一对应）：
+      第 1 行：CE  /  ×  C
+      第 2 行：7  8  9  +
+      第 3 行：4  5  6  -
+      第 4 行：1  2  3  √
+      第 5 行：1/X 0 .  =
+
+    注意：所有按钮的 id 都必须与 Java 的 findViewById 完全一致，这是两边唯一的"接口"。
+-->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/main"
     android:layout_width="match_parent"
@@ -21,6 +39,16 @@
         android:textStyle="bold" />
 
     <!-- 计算器显示区域 -->
+    <!--
+        显示区。Java 里通过 tv_display 这个 id 对它 setText / append / getText。
+        关键属性：
+          android:layout_height="110dp"   固定高度，给数字留出足够空间
+          android:gravity="right|bottom"  关键：内容右下对齐（计算器的标准姿势，数字从右往左长）。
+                                          多个取值用 | 组合，写的是"内容在控件内怎么对齐"，
+                                          与 layout_gravity（控件在父容器里怎么对齐）不是一回事
+          android:text="@string/_0"       初始显示 0；字符串资源名以 _ 开头是因为资源名不能以数字开头
+          android:textSize="32sp"         字号最大，突出结果
+    -->
     <TextView
         android:id="@+id/tv_display"
         android:layout_width="match_parent"
@@ -35,6 +63,18 @@
         android:textStyle="bold" />
 
     <!-- 按钮区域 -->
+    <!--
+        按键网格。
+        关键属性：
+          android:columnCount="4" / rowCount="5"   4 列 5 行；
+             其实子控件数量已能推出行列数，显式写出便于阅读
+          android:alignmentMode="alignMargins"     按"外边距"对齐（默认也是它），
+             即让各控件的外边距对齐而不是内容对齐，网格看起来更整齐
+          android:useDefaultMargins="true"         自动给每个格子加默认间距，
+             省去给 20 个按钮逐个写 margin
+        每个按钮都写 android:layout_columnWeight="1" + width 0dp → 四列等宽
+        （这一点与 LinearLayout 的 layout_weight 同理：用权重的那一维必须写 0dp）
+    -->
     <GridLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -45,6 +85,7 @@
 
         <!-- 第一行 -->
 
+        <!-- CE：清除当前数字（保留运算符），Java 走 clearEntry() -->
         <Button
             android:id="@+id/btn_clear_entry"
             android:layout_width="0dp"
@@ -55,6 +96,7 @@
             android:textSize="18sp"
             android:textAllCaps="false" />
 
+        <!-- 除号。注意 text 直接写符号而不是文字，所以不受 textAllCaps 影响 -->
         <Button
             android:id="@+id/btn_divide"
             android:layout_width="0dp"
@@ -64,6 +106,7 @@
             android:textColor="#202124"
             android:textSize="22sp" />
 
+        <!-- 乘号。显示用的是全角 × 号，但 Java 里 setOperator 传的是半角 "*"，两者只是显示差异 -->
         <Button
             android:id="@+id/btn_multiply"
             android:layout_width="0dp"
@@ -73,6 +116,7 @@
             android:textColor="#202124"
             android:textSize="22sp" />
 
+        <!-- C：全部清除（含运算符），Java 走 clearAll() -->
         <Button
             android:id="@+id/btn_clear"
             android:layout_width="0dp"
@@ -199,6 +243,7 @@
 
         <!-- 第五行 -->
 
+        <!-- 1/X：求倒数。文字含大写 X 字母，所以需要 textAllCaps="false" 否则会被主题强制成全大写 -->
         <Button
             android:id="@+id/btn_reciprocal"
             android:layout_width="0dp"
@@ -241,6 +286,13 @@
 </LinearLayout>
 
         <!-- 开根号 -->
+<!--
+    上面这段是"用图片做开方键"的历史写法，被注释保留下来。
+    它原本写在 GridLayout 内部（因为这里位于根布局之外，仅作备份，不参与编译）。
+    如果启用，需要先在 res/drawable 里准备 sqrt 图片；
+    另外注意 ImageButton 用 android:src 而不是 android:text，且必须写 contentDescription
+    （无文字控件要给出无障碍描述，否则 IDE 会报警告）。
+-->
 <!--        <ImageButton-->
 <!--            android:layout_width="0dp"-->
 <!--            android:layout_height="60dp"-->

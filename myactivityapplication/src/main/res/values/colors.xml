@@ -1,5 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
+
+<!--
+    本模块的颜色资源表（Activity 与 Intent :myactivityapplication）
+    本模块的颜色管理比较规范：<color> 全部集中在这里（对比 :mytextapplication 把颜色混放在 strings.xml 里）。
+
+    色值格式 #AARRGGBB：A = 透明度（FF 为完全不透明），后六位为 RGB。
+-->
 <resources>
+    <!-- 纯黑（不透明）。被 activity_intent.xml、activity_startupmode.xml、
+         activity_startupmodefinish.xml 的文字颜色引用 -->
     <color name="black">#FF000000</color>
+    <!-- 纯白（不透明）。保留备用（本模块布局更多用的是 @android:color/white 系统内置白色） -->
     <color name="white">#FFFFFFFF</color>
 </resources>

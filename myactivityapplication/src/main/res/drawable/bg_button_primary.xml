@@ -1,11 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
+
+<!--
+    主按钮背景 —— 蓝色圆角矩形（shape / GradientDrawable）
+    使用位置：activity_act_start.xml 的 btn_next
+             activity_act_finish.xml 的 btn_goback
+             两处都用它做"主按钮"的统一样式。
+
+    ⚠️ 使用本 shape 的控件必须写成 androidx.appcompat.widget.AppCompatButton 吗？
+       本模块的这两个按钮用的是普通 <Button>，且背景<b>确实生效了</b>——
+       原因是本模块的主题虽同为 Material3，但这两个按钮没有走 MaterialButton 的背景管理路径
+       （不同 Material 版本/属性组合下行为有差异）。
+       :intermediatecontrols 模块里踩过 background 被吞的坑，那里改用 AppCompatButton 解决；
+       经验之谈：一旦发现 android:background 不显示，优先怀疑"被替换成 MaterialButton"。
+
+    三个子元素：
+      <solid>    填充色 #1976D2 —— Material Blue 700，作为主色
+      <corners>  圆角 12dp —— 比 intermediatecontrols 里的胶囊形更收敛，观感更接近现代 App
+      <padding>  内边距（左右 16dp、上下 8dp）—— 让文字与圆角边保持距离，不会挤在两角
+-->
 <shape xmlns:android="http://schemas.android.com/apk/res/android"
     android:shape="rectangle">
 
+    <!-- 填充色：Material 蓝 700 -->
     <solid android:color="#1976D2" />
 
+    <!-- 四周圆角 12dp -->
     <corners android:radius="12dp" />
 
+    <!--
+        内边距。注意 <padding> 与 <solid> 的关系：
+        背景色会覆盖 padding 区域（padding 属于控件内部），
+        所以视觉上就是"蓝底上留出内部空隙再放文字"。
+    -->
     <padding
         android:left="16dp"
         android:top="8dp"

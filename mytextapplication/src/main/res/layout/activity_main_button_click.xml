@@ -1,5 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 
+<!--
+    按钮点击事件演示页布局
+    对应 Java：mytextapplication/src/main/java/com/zzz/mytextapplication/MainButtonClickActivity.java
+
+    页面结构：垂直方向的一列，共三组「说明文字 + 按钮 + 结果文字」：
+      第 1 组 btn_single —— 单个按钮的点击事件
+      第 2 组 btn_all    —— 多个按钮共用同一个监听器
+      第 3 组 btn_long   —— 按钮的长按事件
+    每个结果 TextView 上都会把事件类型写出来，用来观察回调是否被触发。
+
+    说明：XML 注释不能写在标签内部的属性之间，所以每个控件的「关键属性」统一在
+    控件上方的注释块里说明。
+-->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/main"
     android:layout_width="match_parent"
@@ -8,7 +21,7 @@
     android:orientation="vertical"
     android:padding="20dp">
 
-    <!-- 标题 -->
+    <!-- 页面标题：仅作说明，没有 id，Java 里不需要引用 -->
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -19,7 +32,10 @@
         android:textSize="26sp"
         android:textStyle="bold" />
 
-    <!-- 单个点击事件 -->
+    <!--
+        第一组：单个点击事件
+        · 小节标题文字（无 id，仅显示）
+    -->
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -29,6 +45,13 @@
         android:textSize="18sp"
         android:textStyle="bold" />
 
+    <!--
+        被测试的按钮，Java 里用 setOnClickListener 挂单一点击回调。
+        关键属性：
+          android:text="@string/hello"    文字取自 strings.xml，避免硬编码（值为 Hello world!）
+          android:textAllCaps="false"     关键！Material 主题默认把按钮英文文字强制转大写，
+                                          中文不受影响，但显式关闭才是本例的预期效果
+    -->
     <Button
         android:id="@+id/btn_single"
         android:layout_width="match_parent"
@@ -37,6 +60,13 @@
         android:textAllCaps="false"
         android:textSize="18sp" />
 
+    <!--
+        结果显示区：初始文案"点击事件"，点击后被 Java 改成"您点击了按钮"之类。
+        关键属性：
+          android:gravity="center"        让文字在自身矩形内水平 + 垂直居中
+          android:background="@color/green"  背景色引用 colors.xml，不是内联色值
+          android:padding="14dp"          有背景色时必须留内边距，否则文字贴边很难看
+    -->
     <TextView
         android:id="@+id/tv_message_single"
         android:layout_width="match_parent"
@@ -50,7 +80,7 @@
         android:textSize="18sp" />
 
 
-    <!-- 多个按钮点击事件 -->
+    <!-- 第二组：多个按钮点击事件（多个按钮共用同一个监听器） -->
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -61,6 +91,7 @@
         android:textSize="18sp"
         android:textStyle="bold" />
 
+    <!-- 被测试的按钮：Java 里用"Activity 实现 View.OnClickListener + 逐个 setOnClickListener(this)"处理 -->
     <Button
         android:id="@+id/btn_all"
         android:layout_width="match_parent"
@@ -81,7 +112,7 @@
         android:textColor="#333333"
         android:textSize="18sp" />
 
-    <!-- 按钮长按点击事件 -->
+    <!-- 第三组：按钮长按点击事件 -->
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -92,6 +123,11 @@
         android:textSize="18sp"
         android:textStyle="bold" />
 
+    <!--
+        被测试的按钮，Java 里用 setOnLongClickListener 挂长按回调。
+        关键点：长按监听器的 onLongClick 必须返回 boolean ——
+                返回 true 表示"事件我消费了"，返回 false 会继续往下走（可能连带触发点击）
+    -->
     <Button
         android:id="@+id/btn_long"
         android:layout_width="match_parent"

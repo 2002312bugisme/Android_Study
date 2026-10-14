@@ -1,4 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
+
+<!--
+    "返回上一页"演示页布局
+    对应 Java：myactivityapplication/src/main/java/com/zzz/myactivityapplication/ActFinishActivity.java
+
+    结构说明（三段式，非常值得借鉴的常规页面骨架）：
+      ① 顶部栏（高 64dp）：返回图标 btn_image_goback + 标题文字
+      ② 内容区（height=0dp + weight=1）：占满"除顶栏和底部按钮之外"的全部剩余高度
+      ③ 底部按钮 btn_goback：大号"完成"按钮，与顶部图标做的是同一件事（finish）
+
+    关键技巧：内容区用 layout_height="0dp" + layout_weight="1"，
+    这样无论顶栏/底栏多高，它都会自动吃掉中间所有剩余空间 —— 是"上下固定、中间自适应"的标准写法。
+-->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/main"
     android:layout_width="match_parent"
@@ -7,6 +20,14 @@
     android:background="#F5F7FA">
 
     <!-- 顶部返回区域 -->
+    <!--
+        顶栏。
+        关键属性：
+          android:layout_height="64dp"                固定高度，模仿系统标题栏
+          android:gravity="center_vertical"           内部控件垂直居中（图标与文字不会一高一低）
+          android:paddingStart/End="16dp"             用 Start/End 而非 Left/Right，支持 RTL 语言自动镜像
+          android:background="@android:color/white"   系统内置白色，与下方灰底区分
+    -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="64dp"
@@ -16,6 +37,14 @@
         android:paddingEnd="16dp"
         android:background="@android:color/white">
 
+        <!--
+            返回图标（本页的"主角"之一，Java 里给它挂了点击监听器）。
+            关键属性：
+              android:layout_width/height="40dp"    点击热区 40dp，达到可点击的最小推荐尺寸
+              android:padding="8dp"                 图标与热区边缘留白，实际图形约 24dp
+              android:contentDescription="返回"     无文字控件必须给无障碍描述，读屏时会念出来
+            注意：这里用的是 ImageView 而不是 ImageButton，靠 Java 的 setOnClickListener 实现点击。
+        -->
         <ImageView
             android:id="@+id/btn_image_goback"
             android:layout_width="40dp"
@@ -24,6 +53,7 @@
             android:src="@drawable/goback"
             android:contentDescription="返回" />
 
+        <!-- 顶栏标题：无 id，纯展示（Java 没有引用它） -->
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -37,6 +67,12 @@
 
 
     <!-- 内容区域 -->
+    <!--
+        自适应内容区。
+        关键属性：
+          android:layout_height="0dp" + layout_weight="1"  吃满中间剩余空间（见文件头说明）
+          android:padding="24dp"                          内容四周留白
+    -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
@@ -44,6 +80,7 @@
         android:orientation="vertical"
         android:padding="24dp">
 
+        <!-- 内容区小标题 -->
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -53,6 +90,7 @@
             android:textColor="#222222"
             android:layout_marginBottom="16dp" />
 
+        <!-- 引导文字 -->
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -61,6 +99,13 @@
             android:textColor="#555555"
             android:layout_marginBottom="20dp" />
 
+        <!--
+            三条说明文字。
+            关键属性：
+              android:text 里用了 &#10; —— 这是 XML 的"换行符"实体写法（十进制 10 = \n）。
+                  XML 中直接敲回车会被折叠成空格，所以多行文字必须用 &#10; 或 \n 转义。
+              android:lineSpacingExtra="4dp"  行间距额外加 4dp，多行文字更易读
+        -->
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -73,6 +118,13 @@
 
 
     <!-- 底部按钮 -->
+    <!--
+        底部"完成"按钮（另一个主角）。
+        关键属性：
+          android:layout_marginStart/End="24dp"  与屏幕左右各留 24dp
+          android:layout_marginBottom="24dp"     与屏幕底部留白
+          三边都写了 margin 而没有写 marginTop —— 因为上方内容区已经用 weight 把按钮"顶"到底部了
+    -->
     <Button
         android:id="@+id/btn_goback"
         android:layout_width="match_parent"

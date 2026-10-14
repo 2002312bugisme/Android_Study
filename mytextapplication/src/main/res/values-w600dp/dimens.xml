@@ -1,3 +1,16 @@
+<!--
+    尺寸资源表 —— 最小宽度 >= 600dp 的设备专用
+    资源限定符 w600dp 的含义：设备"最小宽度"（smallest width，约等于竖屏时的可用宽度）
+    达到或超过 600dp 时启用本文件。典型对应：7 寸及以上的平板、折叠屏展开态。
+
+    Android 的选择规则：在所有"条件成立"的限定符目录里，取<b>限定最具体（数值最大）</b>的那个。
+    所以本文件的 fab_margin 会覆盖 values/dimens.xml，但会被 values-w1240dp/dimens.xml 继续覆盖
+    （前提是设备真的达到 1240dp）。
+
+    本文件的值 48dp 与默认值相同，属于模板生成的占位配置——
+    模板的本意是让平板上有更大的操作间距，但这里没有实际改动数值。
+-->
 <resources>
+    <!-- 悬浮按钮/右下角元素的外边距（fab = FloatingActionButton，模板遗留命名） -->
     <dimen name="fab_margin">48dp</dimen>
 </resources>

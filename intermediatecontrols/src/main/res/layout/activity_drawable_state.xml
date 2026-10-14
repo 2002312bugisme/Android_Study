@@ -1,4 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
+
+<!--
+    状态选择器（selector）演示页布局
+    对应 Java：intermediatecontrols/src/main/java/com/zzz/intermediatecontrols/DrawableStateActivity.java
+    对应图形：res/drawable/btn_nine_selector.xml（按下换图）
+
+    结构说明：两个等大按钮上下排列，做对照——
+      上面：背景是自定义 selector，按下时会换成点九图
+      下面：不设 background，用系统默认外观
+
+    ⚠️ 本文件是 Material3 主题下最容易踩坑的地方，务必留意类名：
+       必须写全限定名 androidx.appcompat.widget.AppCompatButton。
+       若写成 <Button>，Material 主题会在充气阶段把它替换成 MaterialButton，
+       而 MaterialButton 自己管理背景，android:background 会被吞掉 → 图完全不显示。
+-->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/main"
     android:layout_width="match_parent"
@@ -6,6 +21,13 @@
     android:orientation="vertical"
     android:padding="5dp">
 
+    <!--
+        自定义 selector 背景的按钮。
+        关键属性：
+          android:background="@drawable/btn_nine_selector"  按下/松开切换两张图（详见该 drawable 注释）
+          android:textColor="@android:color/white"          文字用系统内置白色，配深色背景更清楚
+          android:layout_height="100dp"                     固定高度，让背景图有足够展示空间
+    -->
     <androidx.appcompat.widget.AppCompatButton
         android:layout_width="match_parent"
         android:layout_height="100dp"
@@ -15,6 +37,11 @@
         android:layout_marginBottom="5dp" />
 
 
+    <!--
+        对照组：故意不写 android:background，看系统默认按钮长什么样。
+        注意这里也用了 AppCompatButton 而不是 <Button>——统一类名便于对比，
+        否则真会被 Material 主题替换成 MaterialButton，外观差异就不是"有没有背景图"了。
+    -->
     <androidx.appcompat.widget.AppCompatButton
         android:layout_width="match_parent"
         android:layout_height="100dp"

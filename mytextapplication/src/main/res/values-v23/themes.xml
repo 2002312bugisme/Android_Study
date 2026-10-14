@@ -1,5 +1,24 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
 
+    <!--
+        主题的 API 23+ 覆盖版本（values-v23/）。
+        资源限定符 v23 的含义：只在 API 级别 >= 23（Android 6.0）的设备上启用本文件。
+
+        为什么需要单独一份：下面这三个属性都是<b>API 21/23 之后才引入</b>的。
+        如果把 android:windowLightStatusBar 直接写进 values/themes.xml，
+        在低版本设备上会因"未知属性"而编译失败或行为异常，所以用版本限定符做安全隔离。
+
+        三个属性的作用（都是为"沉浸式 / 边到边"服务）：
+          ① android:windowLightStatusBar = ?attr/isLightTheme
+             让状态栏图标的颜色跟随当前主题的明暗：浅色主题 → 深色图标，深色主题 → 浅色图标。
+             ?attr/isLightTheme 是 Material 主题提供的布尔属性，避免自己写 day/night 两份。
+          ② android:navigationBarColor = transparent  导航栏透明，内容可以透到其下方
+          ③ android:statusBarColor     = transparent  状态栏透明
+
+        配合 Java 侧代码才完整：EdgeToEdge.enable(activity) 负责让内容延伸到系统栏下方，
+        这里负责把系统栏本身"变透明"，再用 setOnApplyWindowInsetsListener 补 padding 避免遮挡。
+        三者缺一，界面就会出现"白条"或"内容被系统栏盖住"的问题。
+    -->
     <style name="Theme.MyFirstApp" parent="Base.Theme.MyFirstApp">
         <!-- Transparent system bars for edge-to-edge. -->
         <item name="android:navigationBarColor">@android:color/transparent</item>

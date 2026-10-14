@@ -1,4 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
+
+<!--
+    本模块的默认模板布局（IDE 生成后未改动）
+    对应 Java：intermediatecontrols/src/main/java/com/zzz/intermediatecontrols/MainActivity.java
+
+    结构说明：一个 ConstraintLayout（约束布局），内部只有一个 TextView，
+    用四条约束把它钉在父容器的上下左右中点，从而实现「文字居中」——这是约束布局的基本用法。
+    注意本布局没有实际业务内容，各控件的演示页都在别的 activity_*.xml 里。
+-->
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -7,6 +16,12 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
+    <!--
+        居中文字。
+        关键属性（约束布局的核心）：四条 app:layout_constraint* 把控件四边分别对齐到 parent 的对应边，
+        四条同时成立时控件就被"挤"到正中间；少写一条就会跑到左上角。
+        tools:context 只是给 IDE 预览提示所属 Activity，不参与运行时逻辑。
+    -->
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

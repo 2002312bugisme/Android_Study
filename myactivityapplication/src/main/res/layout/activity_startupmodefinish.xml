@@ -1,10 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
+
+<!--
+    启动模式演示页 —— B 页布局
+    对应 Java：myactivityapplication/src/main/java/com/zzz/myactivityapplication/StartupmodefinishActivity.java
+
+    结构说明：与 A 页布局完全对称，只有文案和按钮 id 相反
+      · 文字："这是B页面"
+      · 按钮：btn_jump_toA，点击后带同样的 Flag 跳回 A 页
+
+    这种"两个几乎一样的页面互跳"的设计是刻意为之：
+    只有结构对称，观察返回栈行为时才不会被界面差异干扰。
+-->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
 
+    <!-- 页面标识文字：明确自己是 B 页 -->
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -13,6 +26,7 @@
         android:textSize="20sp"
         />
 
+    <!-- 跳转按钮：Java 里点击后带 FLAG_ACTIVITY_REORDER_TO_FRONT 打开 A 页 -->
     <Button
         android:id="@+id/btn_jump_toA"
         android:layout_width="match_parent"

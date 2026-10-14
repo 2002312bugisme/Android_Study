@@ -1,4 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
+
+<!--
+    文字大小演示页布局（重点是"单位"）
+    对应 Java：mytextapplication/src/main/java/com/zzz/mytextapplication/MainTextSizeActivity.java
+
+    三个 TextView 的文字内容、字号数值完全一样（都是 30），唯一区别是<b>单位</b>：
+      ① tv_px —— 30px   物理像素。同一数值在不同手机上显示大小不同，屏幕越密越小
+      ② tv_dp —— 30dp   密度无关像素，但与"用户设置的字体大小"无关
+      ③ tv_sp —— 30sp   与 dp 同源，但<b>会跟随系统字体大小设置缩放</b>
+
+    结论（可直接记住）：
+      · 文字大小一律用 sp —— 用户把系统字体调大时，App 的文字应当跟着变大；
+      · 控件尺寸/间距用 dp；
+      · px 几乎只用在非常底层的绘制场景，做布局时不要用。
+
+    实测建议：在手机设置里把"字体大小"调到最大后重新进入本页，
+    会看到只有 30sp 那行明显变大，另外两行纹丝不动。
+-->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -8,6 +26,7 @@
     tools:context=".MainTextSizeActivity"
     android:orientation="vertical">
 
+    <!-- ① 30px：物理像素，不推荐用于文字 -->
     <TextView
         android:id="@+id/tv_px"
         android:layout_width="wrap_content"
@@ -16,6 +35,7 @@
         android:textSize="30px"
         />
 
+    <!-- ② 30dp：随屏幕密度缩放，但不随系统字体设置变化 -->
     <TextView
         android:id="@+id/tv_dp"
         android:layout_width="wrap_content"
@@ -24,6 +44,7 @@
         android:textSize="30dp"
         />
 
+    <!-- ③ 30sp：推荐写法，随系统字体设置缩放 -->
     <TextView
         android:id="@+id/tv_sp"
         android:layout_width="wrap_content"

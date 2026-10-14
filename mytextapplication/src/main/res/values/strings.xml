@@ -1,24 +1,60 @@
+<!--
+    本模块的字符串资源表（文本与控件 :mytextapplication）
+    作用：界面文案集中在此，XML 用 @string/xxx、Java 用 R.string.xxx 引用。
+
+    ⚠️ 注意本文件的一个"约定偏移"：文件下半部分混放了 <color> 颜色定义。
+       Android 资源系统允许这么做（aapt 不限制 <color> 只能写在 colors.xml 里），
+       项目里大量 @color/green、@color/purple_200 等其实都来自这里，而不是 colors.xml。
+       代价是：想找某个颜色时没法直接想到这个文件。建议后续把颜色迁回 colors.xml。
+-->
 <resources>
+    <!-- 应用名：桌面图标下方显示的名称 -->
     <string name="app_name">MyTextApplication</string>
+
+    <!-- 通用演示文字：被十几个布局共用，几乎所有示例控件都显示它 -->
     <string name="hello">Hello World!</string>
+
+    <!-- 按钮样式演示页：有事件的那个按钮文字（activity_main_button_style.xml） -->
     <string name="clickEvent">点击事件</string>
+
+    <!-- 按钮启用/禁用演示页的三个按钮文字（activity_main_button_enabled.xml） -->
     <string name="btn_enable">启用测试按钮</string>
     <string name="btn_unenabled">禁用测试按钮</string>
     <string name="btn_test">测试按钮</string>
+
+    <!-- 图片演示页：ImageView / ImageButton 的无障碍描述（contentDescription 引用它） -->
     <string name="image_description">这是一张图片</string>
+
+    <!-- 计算器显示区的初始文字。资源名以 _ 开头是因为"资源名不能以数字开头"，
+         而作者想表达的内容正是数字 0 -->
     <string name="_0">0</string>
+    <!-- 计算器页面标题（activity_calculator.xml 里标题 TextView 引用它） -->
     <string name="easy_calculator">简易计算器</string>
+
+    <!-- ===== 以下为颜色定义（放在 strings.xml 属于约定偏移，见文件头说明） ===== -->
+    <!-- 纯绿 -->
     <color name="green">#00ff00</color>
+    <!-- Material 默认色板的浅紫 -->
     <color name="purple_200">#FFBB86FC</color>
+    <!-- Material 默认色板的深紫（主色） -->
     <color name="purple_500">#FF6200EE</color>
+    <!-- 自定义的紫色变体 -->
     <color name="purple_600">#FF5555EE</color>
+    <!-- 纯黑。注意 colors.xml 里同名定义被注释掉了，所以这里的才是生效的那一个 -->
     <color name="black">#000000</color>
+    <!-- 偏黄绿 -->
     <color name="yellow_100">#CCFF00</color>
+    <!-- 纯黄 -->
     <color name="yellow">#FFFF00</color>
+    <!-- 橙黄 -->
     <color name="orange">#FFCC00</color>
+    <!-- 粉色：布局里多处作为底色使用 -->
     <color name="pink">#FF99CC</color>
+    <!-- 蓝色 -->
     <color name="blue">#3399FF</color>
+    <!-- 深蓝 -->
     <color name="blue_100">#3333FF</color>
+    <!-- 浅灰 -->
     <color name="grey">#D3D3D3</color>
 
 

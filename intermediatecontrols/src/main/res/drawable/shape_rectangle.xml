@@ -1,4 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
+
+<!--
+    矩形形状 Drawable（shape / GradientDrawable）
+    用途：不借助任何图片，纯用 XML 描述一个"可缩放"的背景图形，常作为按钮或文本块的背景。
+
+    与「图片」的区别：shape 是矢量式描述，任意尺寸放大都不糊；也不需要准备多套密度切图。
+
+    子元素作用速查：
+      <solid>    填充色（背景底色）
+      <stroke>   描边（边框粗细 + 颜色）
+      <corners>  圆角半径
+      <gradient> 渐变填充（与 solid 二选一，同时写时 gradient 生效）
+-->
 <shape xmlns:android="http://schemas.android.com/apk/res/android">
 
     <!--    指定形状内部的填充颜色-->
@@ -8,10 +21,17 @@
     <stroke
         android:width="2dp"
         android:color="@color/black" />
-    <!--    指定形状四个圆角的半径-->
+    <!--    指定形状四个圆角的半径
+            半径取得比矩形本身还大（100dp），效果就是两端变成完整的半圆（胶囊形）-->
     <corners android:radius="100dp" />
 
-<!--    设置渐变-->
+    <!--    设置渐变
+            android:type="linear"  线性渐变，是默认值
+            android:angle="0"      渐变方向：0° = 从左到右（角度必须是 45 的倍数）
+            android:centerColor    中间色，让颜色多一段过渡
+            android:endColor       终点色
+            android:useLevel       false 表示"这是普通背景，不是进度条用的等级图"（level 类图形才置 true）
+            注意：写了 gradient 后，<solid> 的填充会被覆盖 -->
     <gradient
         android:angle="0"
         android:type="linear"

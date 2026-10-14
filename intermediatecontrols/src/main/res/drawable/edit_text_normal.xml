@@ -1,17 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
+
+<!--
+    输入框"失去焦点"（常态）时的边框样式（shape / GradientDrawable）
+    使用位置：由 res/drawable/edit_text.xml 这个 selector 在无匹配状态时（兜底）引用。
+
+    与 edit_text_focus.xml 的唯一区别是 <stroke> 用灰色，表示"当前没被选中"。
+-->
 <shape xmlns:android="http://schemas.android.com/apk/res/android">
-    <!--轮廓的粗细和颜色-->
+    <!--轮廓的粗细和颜色（灰色 = 常态/未聚焦）-->
     <stroke
         android:width="2dp"
         android:color="#aaaaaa" />
 
-    <!--填充颜色-->
+    <!--填充颜色：引用 colors.xml 里的白色-->
     <solid android:color="@color/white" />
 
-    <!--四个角半径-->
+    <!--四个角半径：5dp，必须与 focus 版保持一致，否则聚焦瞬间边框会"跳"一下-->
     <corners android:radius="5dp" />
 
-    <!--方向间距-->
+    <!--方向间距：与 focus 版保持一致，否则聚焦时文字会位移-->
     <padding
         android:bottom="2dp"
         android:left="2dp"

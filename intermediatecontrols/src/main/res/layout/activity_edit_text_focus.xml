@@ -1,10 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
+
+<!--
+    输入框焦点变化 + 手机号校验演示页布局
+    对应 Java：intermediatecontrols/src/main/java/com/zzz/intermediatecontrols/EditTextFocusActivity.java
+
+    结构说明：手机号输入框 + 密码输入框 + Login 按钮。
+    本页只有手机号输入框（edit_phone）在 Java 里挂了焦点监听器，另外两个控件没有逻辑。
+-->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
 
+    <!--
+        手机号输入框（本页主角）。
+        关键属性：
+          android:maxLength="11"     限制最多 11 位，从输入端保证不会超长
+          android:inputType="phone"  弹出电话键盘；同时它也会让 maxLength 之外的非法字符被过滤
+        固定高度 50dp 是为了让两个输入框高度一致，视觉整齐（默认 wrap_content 会随字体变高变矮）。
+    -->
     <EditText
         android:id="@+id/edit_phone"
         android:layout_width="match_parent"
@@ -15,6 +30,7 @@
         android:inputType="phone"
         />
 
+    <!-- 密码输入框：本页没有给它挂监听器，仅作为"焦点会在两个输入框之间转移"的对照组 -->
     <EditText
         android:id="@+id/edit_password"
         android:layout_width="match_parent"
@@ -25,6 +41,11 @@
         />
 
 
+    <!--
+        Login 按钮：本页<b>没有</b> setOnClickListener，所以点它没反应。
+        它的实际作用是"抢走焦点"——从手机号输入框点到这里，就能触发 edit_phone 的失焦校验。
+        关键属性：android:layout_gravity="center_horizontal" 让按钮在本行水平居中
+    -->
     <Button
         android:id="@+id/btn_login"
         android:layout_width="wrap_content"

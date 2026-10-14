@@ -1,5 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
+
+<!--
+    本模块的颜色资源表（中间控件 :intermediatecontrols）
+    作用：集中定义颜色值，XML 用 @color/xxx、Java 用 R.color.xxx 引用（Java 侧取到的是资源 id，
+          真正取颜色值要用 ContextCompat.getColor(context, R.color.xxx)）。
+
+    色值格式：#AARRGGBB —— A=Alpha 透明度、R/G/B 三原色，每段两位十六进制。
+              例：#FF000000 中 FF 是完全不透明，000000 是黑色。
+-->
 <resources>
+    <!-- 纯黑（不透明）：shape_rectangle.xml 的 <stroke> 描边色引用了它 -->
     <color name="black">#FF000000</color>
+    <!-- 纯白（不透明）：留给深色底上的文字/图标使用 -->
     <color name="white">#FFFFFFFF</color>
 </resources>

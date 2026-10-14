@@ -1,4 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
+
+<!--
+    外边距（margin）与内边距（padding）演示页布局
+    对应 Java：mytextapplication/src/main/java/com/zzz/mytextapplication/MainViewMarginPaddingActivity.java
+
+    结构说明（只有两层，非常干净）：
+      黄底(#ffff99) 外层 LinearLayout  —— 高 300dp，padding="40dp"
+      红底(#ff0000) 内层 TextView      —— 撑满可用空间，margin="20dp"
+
+    怎么一眼判断谁是谁（关键技巧）：
+      · padding 属于"自己"：黄底容器写 padding=40dp，所以它的背景色会一直铺到
+        距离内边缘 40dp 处，红块离黄块边框的那段"黄色缝"就是 padding；
+      · margin 属于"与别人的距离"：红块写 margin=20dp，所以红块挨着黄块的那段"黄缝"里
+        还包含 20dp 的 margin。
+      也就是：红块与黄块外边框之间的总黄色距离 = 40dp(padding) + 20dp(margin)。
+
+    再记一条：背景色覆盖的范围包含 padding，但不包含 margin（这是最实用的判断依据）。
+-->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -8,6 +26,13 @@
     android:orientation="horizontal"
     tools:context=".MainViewMarginPaddingActivity">
 
+    <!--
+        外层黄底容器。
+        关键属性：
+          android:layout_width="match_parent"  撑满屏幕宽（父布局是满屏的根布局）
+          android:layout_height="300dp"        固定高度，便于观察上下方向的间距
+          android:padding="40dp"               内边距：内部内容（红块）与自身边框的距离
+    -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="300dp"
@@ -15,6 +40,14 @@
         android:padding="40dp"
         >
 
+        <!--
+            内层红块。
+            关键属性：
+              android:layout_width/height="match_parent"  撑满黄底容器的"内容区"（已扣除 padding）
+              android:layout_margin="20dp"                外边距：与黄底容器边框的距离
+            注意：这里既写 match_parent 又写 margin 是可行的——margin 会先占位，
+            match_parent 再按剩余空间撑满，最终结果就是"四周各留 20dp 缝隙"。
+        -->
         <TextView
             android:layout_width="match_parent"
             android:layout_height="match_parent"

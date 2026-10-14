@@ -1,4 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
+
+<!--
+    日期选择演示页布局
+    对应 Java：intermediatecontrols/src/main/java/com/zzz/intermediatecontrols/DatePickerActivity.java
+
+    结构说明：四个控件纵向排列
+      ① btn_choose_date      —— 点击弹出 DatePickerDialog（日期对话框）
+      ② dialog_date_picker   —— 页面内嵌的 DatePicker，与对话框是两种不同用法
+      ③ btn_submit           —— 读取内嵌选择器当前值
+      ④ tv_date              —— 结果回显
+
+    注意 id 命名有点误导：带 dialog_ 前缀的 dialog_date_picker 其实是"嵌在页面里的"选择器，
+    真正弹出的对话框由 Java 新建，布局里没有它。
+-->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/main"
     android:layout_width="match_parent"
@@ -6,6 +20,10 @@
     android:orientation="vertical">
 
     <!--加一个对话框，点击对话框，弹出来一个日期选择器-->
+    <!--
+        触发按钮（Java 里用 onClick 按 id 分流）。
+        上面那句原注释表述反了：应是"点击按钮弹出对话框"，按钮本身不是对话框。
+    -->
     <Button
         android:id="@+id/btn_choose_date"
         android:layout_width="match_parent"
@@ -14,6 +32,14 @@
         android:textSize="20sp"
         />
 
+    <!--
+        页面内嵌的日期选择器（与"弹对话框"是两条不同的路）。
+        关键属性：
+          android:datePickerMode="spinner"    以"滚轮"形式显示（另一可选值是 calendar，月历网格）
+          android:calendarViewShown="false"   不显示月历视图。
+             该属性在新版本已废弃（现推荐由 datePickerMode 控制），但保留着不影响运行，
+             两属性配合才能稳定得到"纯滚轮"效果。
+    -->
     <DatePicker
         android:id="@+id/dialog_date_picker"
         android:layout_width="match_parent"
@@ -21,6 +47,10 @@
         android:calendarViewShown="false"
         android:datePickerMode="spinner" />
 
+    <!--
+        提交按钮：点击后读取内嵌 DatePicker 的年月日并回显。
+        注意 Java 里显示月份要 +1 —— getMonth() 返回的是 0~11。
+    -->
     <Button
         android:id="@+id/btn_submit"
         android:layout_width="match_parent"
@@ -28,6 +58,7 @@
         android:text="Submit"
         android:textSize="20sp" />
 
+    <!-- 结果回显区：无初始文字，由 Java 写入；红色文字便于和按钮区分 -->
     <TextView
         android:id="@+id/tv_date"
         android:layout_width="match_parent"

@@ -1,4 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+    相对布局（RelativeLayout）演示页布局
+    对应 Java：mytextapplication/src/main/java/com/zzz/mytextapplication/MainRelativeLayoutActivity.java
+
+    阅读方法：绿底的 TextView 是"演示主角"（中文说明自己所在位置），
+    purple_500 文字的是"相对兄弟控件"的示例（用默认文字 hello 演示方位关系）。
+
+    两大类属性：
+      A. 相对父容器：layout_alignParentLeft / Right / Bottom、layout_centerInParent、
+         layout_centerHorizontal / Vertical
+      B. 相对兄弟控件：layout_toLeftOf / toRightOf / above / below /
+         alignLeft / alignRight / alignTop / alignBottom
+
+    注意根布局高度写死 300dp —— 这样"垂直居中 / 贴底"才有参照物；
+    若写成 match_parent 会被上级撑满，反而不易观察。
+
+    文件末尾原本就有较多空行，为保持改动纯净（只加注释）未做清理。
+-->
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
@@ -6,6 +24,8 @@
     android:layout_height="300dp"
     tools:context=".MainRelativeLayoutActivity">
 
+    <!-- ===== A1. 相对父容器：水平居中 + 贴顶 ===== -->
+    <!-- layout_centerHorizontal="true" 让它在父容器里水平居中；不写垂直约束 → 默认贴顶 -->
     <TextView
         android:id="@+id/tx_center_horizontal_top"
         android:layout_width="wrap_content"
@@ -14,6 +34,8 @@
         android:background="@color/green"
         android:text="我在顶部水平中间" />
 
+    <!-- ===== A2. 相对父容器：垂直居中 + 贴左 ===== -->
+    <!-- layout_centerVertical="true" 垂直居中；不写水平约束 → 默认贴左 -->
     <TextView
         android:id="@+id/tx_center_vertical_left"
         android:layout_width="wrap_content"
@@ -22,6 +44,8 @@
         android:background="@color/green"
         android:text="我在左边垂直中间" />
 
+    <!-- ===== A3. 相对父容器：正中 ===== -->
+    <!-- layout_centerInParent="true" = 水平与垂直同时居中，等价于 centerHorizontal + centerVertical -->
     <TextView
         android:id="@+id/tx_center"
         android:layout_width="wrap_content"
@@ -30,6 +54,8 @@
         android:background="@color/green"
         android:text="我在中间" />
 
+    <!-- ===== A4. 相对父容器：左上角 ===== -->
+    <!-- 注意：什么都不写时控件默认就在父容器左上角；这里显式写 alignParentLeft 只为便于对照 -->
     <!--默认左上角-->
     <TextView
         android:id="@+id/tx_left_top"
@@ -39,6 +65,7 @@
         android:background="@color/green"
         android:text="我在左上角" />
 
+    <!-- ===== A5. 相对父容器：右上角 ===== -->
     <TextView
         android:id="@+id/tx_right_top"
         android:layout_width="wrap_content"
@@ -47,6 +74,8 @@
         android:background="@color/green"
         android:text="我在右上角" />
 
+    <!-- ===== A6. 组合约束：贴右 + 垂直居中 ===== -->
+    <!-- 一个控件可同时写多条约束，最终位置由它们共同决定（这里是"右边垂直中间"） -->
     <TextView
         android:id="@+id/tx_center_vertical_right"
         android:layout_width="wrap_content"
@@ -56,6 +85,7 @@
         android:background="@color/green"
         android:text="我在右边垂直中间" />
 
+    <!-- ===== A7. 组合约束：贴左 + 贴底 = 左下角 ===== -->
     <TextView
         android:id="@+id/tx_left_bottom"
         android:layout_width="wrap_content"
@@ -65,6 +95,7 @@
         android:background="@color/green"
         android:text="我在左下角" />
 
+    <!-- ===== A8. 组合约束：贴右 + 贴底 = 右下角 ===== -->
     <TextView
         android:id="@+id/tx_right_bottom"
         android:layout_width="wrap_content"
@@ -74,6 +105,7 @@
         android:background="@color/green"
         android:text="我在右下角" />
 
+    <!-- ===== A9. 组合约束：水平居中 + 贴底 ===== -->
     <TextView
         android:id="@+id/tx_center_horizontal_bottom"
         android:layout_width="wrap_content"
@@ -83,6 +115,9 @@
         android:background="@color/green"
         android:text="我在底部水平中间" />
 
+    <!-- ===== B1. 相对兄弟控件：位于 tx_center_horizontal_top 的左边 ===== -->
+    <!-- layout_toLeftOf 的值是"兄弟控件的 id"，必须写成 @+id/xxx；
+         它把本控件的右边缘贴到目标控件的左边缘 -->
     <TextView
         android:id="@+id/tx_toLeftOF"
         android:layout_width="wrap_content"
@@ -93,6 +128,7 @@
         android:textSize="12sp"
         />
 
+    <!-- ===== B2. 相对兄弟控件：位于 tx_center_horizontal_bottom 的右边 + 贴底 ===== -->
     <TextView
         android:id="@+id/tx_toRightOf"
         android:layout_width="wrap_content"
@@ -103,6 +139,8 @@
         android:textColor="@color/purple_500"
         android:textSize="12sp" />
 
+    <!-- ===== B3. 相对兄弟控件：位于 tx_center_vertical_left 的上方 ===== -->
+    <!-- above 把本控件的下边缘贴到目标控件的上边缘 -->
     <TextView
         android:id="@+id/tx_above"
         android:layout_width="wrap_content"
@@ -113,6 +151,8 @@
         android:textSize="12sp"
         />
 
+    <!-- ===== B4. 相对兄弟控件：位于 tx_center_vertical_right 的下方 + 贴右 ===== -->
+    <!-- below 把本控件的上边缘贴到目标控件的下边缘 -->
     <TextView
         android:id="@+id/tx_below"
         android:layout_width="wrap_content"
@@ -124,6 +164,8 @@
         android:textSize="12sp"
         />
 
+    <!-- ===== B5. 相对兄弟控件：与 tx_center 左边对齐 + 位于其上方 ===== -->
+    <!-- alignLeft 是"对齐左边缘"（尺寸可不同），与 toLeftOf 的"贴着左边"完全不同 -->
     <TextView
         android:id="@+id/tx_alignLeft"
         android:layout_width="wrap_content"
@@ -135,6 +177,8 @@
         android:layout_alignLeft="@+id/tx_center"
         />
 
+    <!-- ===== B6. 相对兄弟控件：与 tx_center 右边对齐 + 位于其下方 ===== -->
+    <!-- 这里同时写了 centerHorizontal，与 alignRight 叠加（横向居中后右对齐，实际以居中为准） -->
     <TextView
         android:id="@+id/tx_alignRight"
         android:layout_width="wrap_content"
@@ -147,6 +191,8 @@
         android:textSize="12sp"
         />
 
+    <!-- ===== B7. 相对兄弟控件：位于 tx_center 左边 + 垂直居中 + 与它顶边对齐 ===== -->
+    <!-- 三条约束叠加：横向由 toLeftOf 决定，纵向由 centerVertical 与 alignTop 共同作用 -->
     <TextView
         android:id="@+id/tx_alignTop"
         android:layout_width="wrap_content"
@@ -159,6 +205,7 @@
         android:layout_alignTop="@+id/tx_center"
         />
 
+    <!-- ===== B8. 相对兄弟控件：位于 tx_center 右边 + 垂直居中 + 与它底边对齐 ===== -->
     <TextView
         android:id="@+id/tx_alignBottom"
         android:layout_width="wrap_content"

@@ -1,4 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
+
+<!--
+    时间选择演示页布局
+    对应 Java：intermediatecontrols/src/main/java/com/zzz/intermediatecontrols/TimePickerActivity.java
+
+    结构说明：四个控件纵向排列，与日期页一一对应，便于对照学习
+      ① btn_choose_time     —— 点击弹出 TimePickerDialog（时间对话框）
+      ② dialog_time_picker  —— 页面内嵌的 TimePicker（24 小时制由 Java 设置）
+      ③ btn_submit_time     —— 读取内嵌选择器当前值
+      ④ tv_time             —— 结果回显
+
+    本布局是在 activity_date_picker.xml 基础上改的，所以那句原注释里写的"日期选择器"是笔误，
+    这里应为"时间选择器"。
+-->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/main"
     android:layout_width="match_parent"
@@ -6,6 +20,7 @@
     android:orientation="vertical">
 
     <!--加一个对话框，点击对话框，弹出来一个日期选择器-->
+    <!-- 触发按钮：点击后由 Java 弹出 TimePickerDialog。textSize 偏大，方便真机上看清 -->
     <Button
         android:id="@+id/btn_choose_time"
         android:layout_width="match_parent"
@@ -14,6 +29,11 @@
         android:textSize="20sp"
         />
 
+    <!--
+        页面内嵌的时间选择器。
+        关键属性：android:timePickerMode="spinner" 以"滚轮"形式显示。
+        "是否 24 小时制"在这里<b>没有</b>对应属性，必须由 Java 调 setIs24HourView(true) 设置。
+    -->
     <TimePicker
         android:id="@+id/dialog_time_picker"
         android:layout_width="match_parent"
@@ -21,6 +41,7 @@
         android:timePickerMode="spinner"
         />
 
+    <!-- 提交按钮：点击后读取内嵌 TimePicker 的时、分并回显 -->
     <Button
         android:id="@+id/btn_submit_time"
         android:layout_width="match_parent"
@@ -28,6 +49,7 @@
         android:text="Submit"
         android:textSize="20sp" />
 
+    <!-- 结果回显区：无初始文字，由 Java 写入；红色文字便于和按钮区分 -->
     <TextView
         android:id="@+id/tv_time"
         android:layout_width="match_parent"

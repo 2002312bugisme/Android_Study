@@ -1,4 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
+
+<!--
+    Bundle 数据传递 —— 发送方页面布局
+    对应 Java：myactivityapplication/src/main/java/com/zzz/myactivityapplication/BundleSendActivity.java
+
+    结构说明（两块"数据展示区"上下对照）：
+      ① waiting_for_sending —— 展示"即将发出去的内容"，点发送前先让用户看到
+      ② tv_receive          —— 展示"从 B 页返回来的结果"，初始为等待文案
+      中间是 btn_send 发送按钮。
+
+    注意 emoji（📤 / 📥）直接写在 android:text 里，Android 能正常渲染；
+    但若项目要做规范化，文案应当抽到 strings.xml。
+-->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/main"
     android:layout_width="match_parent"
@@ -16,6 +29,7 @@
         android:textStyle="bold"
         android:textColor="#222222" />
 
+    <!-- 副标题：说明本页在流程中的角色 -->
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -26,6 +40,7 @@
         android:layout_marginBottom="24dp" />
 
     <!-- 发送消息区域 -->
+    <!-- 区块小标题：emoji + 说明文字 -->
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -35,6 +50,13 @@
         android:textColor="#333333"
         android:layout_marginBottom="8dp" />
 
+    <!--
+        待发送内容展示区（Java 里 id 为 waiting_for_sending）。
+        关键属性：
+          android:minHeight="70dp"                最小高度，内容为空也不会塌掉
+          android:gravity="center_vertical"       文字垂直居中（水平方向默认靠左）
+          android:background="#FFFFFF"            白底"卡片"效果，与灰底页面区分
+    -->
     <TextView
         android:id="@+id/waiting_for_sending"
         android:layout_width="match_parent"
@@ -49,6 +71,7 @@
         android:layout_marginBottom="20dp" />
 
     <!-- 发送按钮 -->
+    <!-- 关键属性：android:textAllCaps="false" 防止中文/自定义文案被主题强制改写大小写 -->
     <Button
         android:id="@+id/btn_send"
         android:layout_width="match_parent"
@@ -68,6 +91,10 @@
         android:textColor="#333333"
         android:layout_marginBottom="8dp" />
 
+    <!--
+        返回结果展示区（Java 里 id 为 tv_receive）。
+        初始文案是"等待接收返回数据..."，等 B 页回传后由 Java 覆盖成真实内容。
+    -->
     <TextView
         android:id="@+id/tv_receive"
         android:layout_width="match_parent"

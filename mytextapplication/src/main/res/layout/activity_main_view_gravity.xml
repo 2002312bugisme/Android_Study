@@ -1,4 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
+
+<!--
+    对齐方式（gravity / layout_gravity）演示页布局
+    对应 Java：mytextapplication/src/main/java/com/zzz/mytextapplication/MainViewGravityActivity.java
+
+    这是理解"两个 gravity"的最佳例子，请对照颜色来看：
+      黄底(#ffff99) = 根布局          —— 横向排列的容器
+      红底(#ff0000) = 两个子容器      —— 各占一半宽度（weight=1）、高 300dp
+      青底(#00ffff) = 子容器里的小方块 —— 100dp × 100dp
+
+    属性含义对照（本文件同时在用，容易混）：
+      · android:layout_gravity  子容器"自己"在黄底父容器里靠哪边
+                                第 1 个写 top（贴顶），第 2 个写 bottom（贴底）
+      · android:gravity         子容器的"内部内容"（即青色方块）在红底容器里靠哪边
+                                第 1 个写 left|top，第 2 个写 right|bottom
+      · android:layout_margin   红底容器与外界（黄底/兄弟容器）的距离
+      · android:padding         红底容器边框与内部青色方块之间的距离
+
+    注意：红底容器高 300dp，青色方块只有 100dp，所以"对齐"效果才看得出来；
+         若两者等高，gravity 就没东西可移了。
+-->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -10,6 +31,13 @@
     android:background="#ffff99">
 
     <!-- 第一个子布局背景为红色，它在上级视图中朝下对齐，它的下级视图则靠左对齐-->
+    <!--
+        注意上面这句原注释与代码不符：layout_gravity 写的是 top（贴顶对齐），不是"朝下"。
+        关键属性：
+          android:layout_width="0dp" + layout_weight="1"  与兄弟容器平分根布局宽度
+          android:layout_gravity="top"                    自己在黄底里贴顶
+          android:gravity="left|top"                      内部青块贴左上
+    -->
     <LinearLayout
         android:layout_width="0dp"
         android:layout_height="300dp"
@@ -20,6 +48,7 @@
         android:layout_gravity="top"
         android:gravity="left|top">
 
+        <!-- 被摆放的小方块：宽高写死，且没有内容，纯粹靠背景色显示位置 -->
         <View
             android:layout_width="100dp"
             android:layout_height="100dp"
@@ -28,6 +57,10 @@
     </LinearLayout>
 
     <!-- 第二个子布局背景为红色，它在上级视图中朝上对齐，它的下级视图则靠右对齐-->
+    <!--
+        与上面完全对称：layout_gravity="bottom" 贴底、gravity="right|bottom" 内部贴右下。
+        （原注释里的"朝上对齐"同样与代码相反，实际是贴底 bottom）
+    -->
     <LinearLayout
         android:layout_width="0dp"
         android:layout_height="300dp"

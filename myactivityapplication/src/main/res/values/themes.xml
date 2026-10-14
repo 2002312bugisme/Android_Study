@@ -1,9 +1,25 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
+    <!--
+        主题的"基类"定义（浅色 / 日间模式）。
+        parent="Theme.Material3.DayNight.NoActionBar" 逐段含义：
+          Material3    —— Material Design 3 控件外观
+          DayNight     —— 自动跟随系统深色模式（切深色时改用 values-night/ 下的同名主题）
+          NoActionBar  —— 不显示系统自带标题栏
+
+        本模块的页面大多自绘顶部区域（例如 activity_act_finish.xml 里的 64dp 顶栏），
+        与 NoActionBar 的设定正好匹配。
+
+        ⚠️ Material3 的两个已知坑（本模块未演示，实验在 :intermediatecontrols 模块）：
+          1) <Button> 可能被替换为 MaterialButton，导致 android:background 不生效；
+          2) CheckBox / RadioButton 会被设 buttonTint(SRC_IN)，把自定义图染成纯色块。
+    -->
     <style name="Base.Theme.MyFirstApp" parent="Theme.Material3.DayNight.NoActionBar">
         <!-- Customize your light theme here. -->
+        <!-- 在此覆盖浅色模式下的主题属性 -->
         <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
     </style>
 
+    <!-- 应用真正使用的主题名，由 AndroidManifest 的 <application android:theme="..."> 引用 -->
     <style name="Theme.MyFirstApp" parent="Base.Theme.MyFirstApp" />
 </resources>

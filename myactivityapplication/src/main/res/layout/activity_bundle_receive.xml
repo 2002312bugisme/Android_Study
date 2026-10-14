@@ -1,4 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
+
+<!--
+    Bundle 数据传递 —— 接收方页面布局
+    对应 Java：myactivityapplication/src/main/java/com/zzz/myactivityapplication/BundleReceiveActivity.java
+
+    结构说明：与发送方布局几乎完全对称，便于对照看数据流向
+      ① tv_receive_receive     —— 展示"从上一页收到的内容"
+      ② waiting_for_returning  —— 展示"即将回传的内容"
+      ③ btn_send_receive       —— 回传按钮（Java 里执行 setResult + finish）
+
+    区别只在文案与 id：发送方是"发出去 + 等结果"，本页是"收进来 + 回结果"。
+-->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/main"
     android:layout_width="match_parent"
@@ -7,7 +19,7 @@
     android:padding="20dp"
     android:background="#F5F6FA">
 
-    <!-- 页面标题 -->
+    <!-- 页面标题：与发送方保持一致的视觉规范 -->
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -16,6 +28,7 @@
         android:textStyle="bold"
         android:textColor="#222222" />
 
+    <!-- 副标题：点明本页是流程中的"接收方" -->
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -35,6 +48,11 @@
         android:textColor="#333333"
         android:layout_marginBottom="8dp" />
 
+    <!--
+        收到内容展示区（Java 里 id 为 tv_receive_receive）。
+        初始是"等待接收数据..."，onCreate 里读 Intent 的 Bundle 后覆盖成真实内容。
+        关键属性同发送方：minHeight="70dp" 保证空内容不塌陷，gravity="center_vertical" 让文字垂直居中。
+    -->
     <TextView
         android:id="@+id/tv_receive_receive"
         android:layout_width="match_parent"
@@ -58,6 +76,10 @@
         android:textColor="#333333"
         android:layout_marginBottom="8dp" />
 
+    <!--
+        待回传内容展示区（Java 里 id 为 waiting_for_returning）。
+        让用户点按钮之前就知道"会返回什么"，是一种友好的交互设计。
+    -->
     <TextView
         android:id="@+id/waiting_for_returning"
         android:layout_width="match_parent"
@@ -72,6 +94,7 @@
         android:layout_marginBottom="20dp" />
 
     <!-- 返回响应 -->
+    <!-- 注意文字是英文（Returning a response），为此必须写 textAllCaps="false"，否则会被主题强制大写 -->
     <Button
         android:id="@+id/btn_send_receive"
         android:layout_width="match_parent"

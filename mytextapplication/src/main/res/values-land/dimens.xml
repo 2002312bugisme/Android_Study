@@ -1,3 +1,15 @@
+<!--
+    尺寸资源表 —— 横屏（land）专用
+    资源限定符 land 的含义：仅在设备处于<b>横屏</b>时启用本文件，竖屏时用 values/dimens.xml。
+
+    本文件只覆盖一个 fab_margin：横屏时 48dp，比竖屏（也是 48dp，见 values/dimens.xml）一样。
+    也就是说这个"横屏专用值"目前与默认值相同，属于模板生成的占位配置。
+    真正有用的场景举例：横屏高度紧张，需要把顶部间距调小；此时只改这里即可，不必动竖屏。
+
+    提示：限定符目录是"按环境择一加载"，同名资源不会叠加——
+         只有本文件里出现的 dimen 会被横屏替换，其它 dimen 仍沿用 values/dimens.xml。
+-->
 <resources>
+    <!-- 悬浮按钮/右下角元素的外边距（模板遗留命名 fab = FloatingActionButton） -->
     <dimen name="fab_margin">48dp</dimen>
 </resources>

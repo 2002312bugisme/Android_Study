@@ -1,10 +1,33 @@
+<!--
+    本模块的字符串资源表（Activity 与 Intent :myactivityapplication）
+    作用：界面文案与"快捷方式名称"集中在此。
+
+    两部分用途：
+      ① app_name —— 应用名，显示在桌面图标下方；
+      ② first_* / second_* / third_* —— <b>桌面长按快捷方式</b>的名称，
+         被 res/xml/shortcuts.xml 引用（该文件又由 AndroidManifest 中
+         ActStartActivity 的 <meta-data android:name="android.app.shortcuts"> 挂上）。
+         三个快捷方式分别指向三个页面：
+             first  → ActStartActivity       （启停活动）
+             second → StartupmodeActivity    （来回跳转）
+             third  → IntentActivity         （Zzz）
+         每对里 Long 是长按弹出列表里显示的完整名称，Short 是拖到桌面后图标下的短名称。
+
+    注意：本文件没有 <?xml ?> 声明（原文件如此，保留不动）。
+-->
 <resources>
+    <!-- 应用名：桌面图标下方显示 -->
     <string name="app_name">MyActivityApplication</string>
+    <!-- 读资源演示页用：getString(R.string.string_data) 就是读它 -->
     <string name="string_data">Hello world!</string>
+
+    <!-- ===== 快捷方式 1：长按标签 / 短标签 ===== -->
     <string name="first_long">启停活动</string>
     <string name="first_short">first</string>
+    <!-- ===== 快捷方式 2 ===== -->
     <string name="second_long">来回跳转</string>
     <string name="second_short">second</string>
+    <!-- ===== 快捷方式 3 ===== -->
     <string name="third_long">Zzz</string>
     <string name="third_short">third</string>
 

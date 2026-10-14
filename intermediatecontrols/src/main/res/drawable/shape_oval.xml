@@ -1,9 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
+
+<!--
+    椭圆形状 Drawable（shape / GradientDrawable）
+    使用位置：res/layout/activity_drawable.xml 中 DrawableActivity 通过
+              view_content.setBackgroundResource(R.drawable.shape_oval) 在代码里切换上来。
+
+    与 shape_rectangle.xml 的关系：两者结构一样，只是 android:shape 不同，
+    正好演示"改一行属性就从矩形变成椭圆"，以及"shape 会随控件尺寸自动缩放"。
+
+    <shape> 的 android:shape 可选值：rectangle（默认）| oval | line | ring
+-->
 <shape xmlns:android="http://schemas.android.com/apk/res/android"
     android:shape="oval">
 <!--    默认是矩形 rectangle-->
 
-<!--    指定内部的填充颜色-->
+<!--    指定内部的填充颜色
+        注意：下面又写了 <gradient>，按绘制顺序 gradient 会盖住 solid，
+        所以 solid 实际只作为"没有渐变时的保险"，这里不会被看到-->
 <solid
     android:color="#ff66aa"
     />
@@ -13,6 +26,14 @@
         android:color="@color/black"
         />
 
+    <!--
+        渐变填充：
+          android:type="linear"  线性渐变（默认值）
+          android:angle="0"      方向 0° = 从左到右；角度必须是 45 的整数倍
+          android:centerColor    中间过渡色，让颜色多一段变化
+          android:endColor       终点色
+          android:useLevel       false = 当作普通背景（只有 LevelListDrawable 那种进度类图形才置 true）
+    -->
     <gradient
         android:angle="0"
         android:type="linear"

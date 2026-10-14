@@ -1,4 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
+
+<!--
+    线性布局（LinearLayout）演示页布局
+    对应 Java：mytextapplication/src/main/java/com/zzz/mytextapplication/MainLinearLayoutActivity.java
+
+    结构说明：根容器纵向（vertical）放两个子容器，用来对比"两个方向的权重分配"：
+      ① 子容器 A 横向（horizontal）：两个 TextView 各 weight=1 → 左右各占一半宽度
+      ② 子容器 B 纵向（vertical）  ：两个 TextView 各 weight=1 → 上下各占一半高度
+
+    权重的核心规则（务必记住）：
+      · 用 weight 的<b>那一维</b>必须写 0dp，另一维照常写 wrap_content/match_parent；
+      · weight 分配的是"剩余空间"，所以比例只在同层兄弟之间才有意义。
+
+    ⚠️ 这里有一个"看起来对了、其实是巧合"的地方：
+      子容器 B 的 layout_width 是 wrap_content、高度也是 wrap_content，
+      而两个子 TextView 的高度是 0dp + weight=1。因为父容器高度是 wrap_content，
+      "剩余空间"计算出来的结果依赖于文字高度，实际表现是两块文字各占约一半高度。
+      更规范的做法是把子容器 B 的高度写成固定值（如 400dp）或 match_parent，
+      权重分配才有确定的分母。
+-->
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
@@ -9,11 +29,13 @@
     tools:context=".MainLinearLayoutActivity"
     android:orientation="vertical">
 
+  <!-- ① 横向平分：两个 TextView 各占一半宽度，颜色不同便于看出分界（purple_600 / purple_200） -->
   <LinearLayout
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
       android:orientation="horizontal">
 
+    <!-- 左半边：width=0dp + weight=1（用权重的那一维写 0dp） -->
     <TextView
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -23,6 +45,7 @@
         android:textSize="30sp" />
 
 
+    <!-- 右半边：同样 0dp + weight=1 → 与左半边等宽 -->
     <TextView
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -33,11 +56,13 @@
 
   </LinearLayout>
 
+  <!-- ② 纵向平分：两个 TextView 各占一半高度（green / black） -->
   <LinearLayout
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:orientation="vertical">
 
+    <!-- 上半部：height=0dp + weight=1（这次用权重的是"高度"这一维） -->
     <TextView
         android:layout_width="match_parent"
         android:layout_height="0dp"
@@ -48,6 +73,7 @@
         />
 
 
+    <!-- 下半部：同样 height=0dp + weight=1 -->
     <TextView
         android:layout_width="match_parent"
         android:layout_height="0dp"

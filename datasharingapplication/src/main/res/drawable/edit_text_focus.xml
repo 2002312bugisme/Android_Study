@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!--
+    输入框"获得焦点"时的边框样式（shape / GradientDrawable）
+    使用位置：由 res/drawable/edit_text.xml 这个 selector 在 state_focused=true 时引用。
+
+    与 edit_text_normal.xml 的区别只有 <stroke> 的颜色：
+      本文件 2dp 蓝色 #0000ff → 聚焦时的"高亮"效果
+      normal 2dp 灰色 #aaaaaa → 失焦时的"静默"效果
+    两个文件结构完全一致，只改颜色，这是最省事的"聚焦变色"做法。
+-->
+<shape xmlns:android="http://schemas.android.com/apk/res/android">
+    <!--轮廓的粗细和颜色（蓝色 = 聚焦高亮）-->
+    <stroke
+        android:width="2dp"
+        android:color="#0000ff" />
+
+    <!--填充颜色：引用 colors.xml 里的白色，保证深色背景上文字可读-->
+    <solid android:color="@color/white" />
+
+    <!--四个角半径：5dp 小幅圆角，看起来不那么生硬-->
+    <corners android:radius="5dp" />
+
+    <!--方向间距：用 <padding> 让文字与边框之间留出空隙（相当于给控件加内边距）-->
+    <padding
+        android:bottom="2dp"
+        android:left="2dp"
+        android:right="2dp"
+        android:top="2dp" />
+
+
+</shape>

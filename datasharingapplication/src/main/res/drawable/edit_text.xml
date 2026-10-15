@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!--
+    输入框自定义边框 —— 状态选择器（selector / StateListDrawable）
+    使用位置：res/layout/activity_edit_text.xml 中第三个 EditText 的 android:background="@drawable/edit_text"
+
+    工作原理：从上到下匹配条件，命中第一个成立的条目就用它的图形。
+      第 1 条：获得焦点（state_focused=true）→ 蓝色边框
+      第 2 条：兜底（无 state 条件）→ 灰色边框
+
+    这是 EditText "聚焦变色"最标准的做法，注意两个字面易错点：
+      条件名是 state_focused（焦点），不是 state_pressed（按下）——
+        EditText 的按下状态几乎瞬间结束，用 pressed 做高亮会闪一下就没；
+      两个 <item> 引用的 shape 必须"结构一致只换颜色"，否则聚焦/失焦切换时边框会跳动。
+-->
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- 条件：获得焦点 → 蓝色高亮边框 -->
+    <item android:state_focused="true" android:drawable="@drawable/edit_text_focus"/>
+    <!-- 兜底条目：其它情况（默认就是失去焦点）→ 灰色边框，必须放最后 -->
+    <item android:drawable="@drawable/edit_text_normal" />
+
+</selector>

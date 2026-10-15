@@ -9,7 +9,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.MyFirstApp">
         <activity
-            android:name=".TimePickerActivity"
+            android:name=".LoginMainActivity"
             android:exported="true"
             android:windowSoftInputMode="adjustResize">
             <intent-filter>
@@ -62,10 +62,18 @@
             android:name=".DatePickerActivity"
             android:exported="false"
             android:windowSoftInputMode="adjustResize" />
-        <!--        <activity-->
-        <!--            android:name=".TimePickerActivity"-->
-        <!--            android:exported="false"-->
-        <!--            android:windowSoftInputMode="adjustResize" />-->
+        <activity
+            android:name=".TimePickerActivity"
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize" />
+        <!-- <activity -->
+        <!-- android:name=".LoginMainActivity" -->
+        <!-- android:exported="false" -->
+        <!-- android:windowSoftInputMode="adjustResize" /> -->
+        <activity
+            android:name=".ForgetPasswordActivity"
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize" />
     </application>
 
 </manifest>

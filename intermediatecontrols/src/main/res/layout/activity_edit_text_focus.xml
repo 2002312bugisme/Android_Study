@@ -47,7 +47,7 @@
         关键属性：android:layout_gravity="center_horizontal" 让按钮在本行水平居中
     -->
     <Button
-        android:id="@+id/btn_login"
+        android:id="@+id/btn_login1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textSize="20sp"

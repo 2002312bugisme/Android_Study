@@ -62,7 +62,12 @@
         android:textSize="20sp"
         />
 
-    <!-- ④ 隐式跳转——自定义 action "android.intent.action.ZZZ"（当前无组件匹配） -->
+    <!--
+        ④ 隐式跳转——自定义 action "android.intent.action.ZZZ"。
+        本模块没有组件匹配它，但 :mytextapplication 模块的 CalculatorActivity 声明了该 action
+        且 exported=true，所以点击后会跳到"另一个 App"的页面（跨应用隐式跳转）。
+        若设备上没装 :mytextapplication，则会抛 ActivityNotFoundException。
+    -->
     <Button
         android:id="@+id/btn_implicit_intent_my"
         android:layout_width="match_parent"

@@ -32,14 +32,22 @@ import androidx.core.view.WindowInsetsCompat;
  *   "android.intent.action.ZZZ"      作者自定义的 action（无 data）
  * </pre>
  *
- * <p>⚠️ 照实说明一个会出问题的地方：第三个分支用的自定义 action
- * {@code "android.intent.action.ZZZ"} 在本项目的 {@code AndroidManifest.xml} 里
- * <b>没有任何 Activity 声明匹配它</b>（既没有该 action 的 intent-filter，
- * 也没有对应的 data）。隐式 Intent 找不到匹配组件时，{@code startActivity} 会抛出
- * {@code ActivityNotFoundException}，所以点这个按钮会崩溃。
- * 想让它跑通，需要在 Manifest 里给目标 Activity 加上
- * {@code <intent-filter><action android:name="android.intent.action.ZZZ"/><category android:name="android.intent.category.DEFAULT"/></intent-filter>}。
- * 稳妥的工程做法则是先 {@code intent.resolveActivity(getPackageManager())} 判空再启动。
+ * <p>第三个分支值得单独说明：它的 action {@code "android.intent.action.ZZZ"} 在<b>本模块</b>
+ * 的 {@code AndroidManifest.xml} 里确实没有组件声明匹配，但它在本仓库的
+ * {@code :mytextapplication} 模块里<b>有</b>匹配组件 —— 该模块的 {@code CalculatorActivity}
+ * 声明了 {@code <action android:name="android.intent.action.ZZZ"/>} 且 {@code android:exported="true"}。
+ *
+ * <p>这正是隐式 Intent 的关键特性：匹配范围是<b>全系统已安装的应用</b>，而不只是自己这个 App。
+ * 所以本按钮的实际效果是"跳到另一个 App 的页面"（跨应用跳转），前提是
+ * {@code :mytextapplication} 也装在同一台设备上；若没装，{@code startActivity} 会抛出
+ * {@code ActivityNotFoundException}。
+ *
+ * <p>工程上的稳妥写法是先判空再启动：
+ * <pre>
+ *   if (intent.resolveActivity(getPackageManager()) != null) {
+ *       startActivity(intent);
+ *   }
+ * </pre>
  *
  * <p>对应布局：{@code res/layout/activity_intent.xml}
  * <p>涉及 API：{@code Intent#setComponent/setAction/setData/addCategory}、
@@ -140,7 +148,9 @@ public class IntentActivity extends AppCompatActivity implements View.OnClickLis
             // category 用于进一步约束匹配。CATEGORY_DEFAULT 表示"这是默认处理这类意图的组件"，
             // 隐式 Intent 不带 category 时系统会自动补上 DEFAULT，所以这一行可写可不写
             intent.addCategory(Intent.CATEGORY_DEFAULT);
-            // 见类注释：当前 Manifest 里没有组件声明匹配此 action，这里会抛 ActivityNotFoundException
+            // 隐式 Intent 的匹配范围是全系统已安装应用：
+            // 本模块没有组件匹配该 action，但 :mytextapplication 的 CalculatorActivity 声明了它
+            // （exported=true），所以点击后会启动"另一个 App"的页面
             startActivity(intent);
         }
     }

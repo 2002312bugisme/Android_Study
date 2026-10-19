@@ -9,7 +9,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:padding="24dp">
+        android:padding="5dp">
 
         <!-- 表单标题（可选） -->
         <TextView
@@ -109,48 +109,58 @@
             android:layout_marginBottom="16dp" />
 
         <!-- 按钮区域：增删改查 -->
+
+        <!-- 操作结果展示区域 -->
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:weightSum="4">
+            android:weightSum="5">
 
             <Button
                 android:id="@+id/btn_add"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_marginEnd="1dp"
                 android:layout_weight="1"
-                android:text="增"
-                android:layout_marginEnd="4dp" />
+                android:text="增" />
 
             <Button
                 android:id="@+id/btn_delete"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="删"
                 android:layout_marginStart="4dp"
-                android:layout_marginEnd="4dp" />
+                android:layout_marginEnd="1dp"
+                android:layout_weight="1"
+                android:text="删" />
 
             <Button
                 android:id="@+id/btn_update"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="改"
                 android:layout_marginStart="4dp"
-                android:layout_marginEnd="4dp" />
+                android:layout_marginEnd="1dp"
+                android:layout_weight="1"
+                android:text="改" />
 
             <Button
                 android:id="@+id/btn_query"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="1dp"
                 android:layout_weight="1"
-                android:text="查"
-                android:layout_marginStart="4dp" />
+                android:text="查" />
+
+            <Button
+                android:id="@+id/btn_batch"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="1dp"
+                android:layout_weight="1"
+                android:text="事务" />
         </LinearLayout>
 
-        <!-- 操作结果展示区域 -->
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

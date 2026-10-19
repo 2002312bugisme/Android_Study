@@ -83,9 +83,18 @@ public class UserDBHelper extends SQLiteOpenHelper {
         db.execSQL(sql);
     }
 
+    // DB_VERSION 发生改变，便监听，进行触发
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+        // 数据库版本升级时调用
+        // oldVersion：升级前的版本号
+        // newVersion：升级后的版本号
 
+        // 从版本 1 升级到版本 2：新增 phone 和 password 两个字段
+//        if (oldVersion < 2) {
+//            db.execSQL("ALTER TABLE " + TABLE_NAME + " ADD COLUMN phone TEXT");
+//            db.execSQL("ALTER TABLE " + TABLE_NAME + " ADD COLUMN password TEXT");
+//        }
     }
 
     /**
@@ -199,4 +208,47 @@ public class UserDBHelper extends SQLiteOpenHelper {
         u.married = c.getInt(c.getColumnIndexOrThrow("married")) == 1;
         return u;
     }
+
+    /**
+     * 批量插入，带事务，返回是否全部成功
+     *
+     * @param userList 要插入的用户列表
+     * @return true 全部成功并提交；false 出现异常并回滚
+     */
+    public boolean insertBatchWithTransaction(java.util.List<User> userList) {
+        mWDB.beginTransaction();
+        try {
+            for (int i = 0; i < userList.size(); i++) {
+                User user = userList.get(i);
+
+                // 故意在第 2 条时抛异常，模拟失败
+                if (i == 1) {
+                    int x = 10 / 0;   // ArithmeticException
+                }
+
+                ContentValues values = new ContentValues();
+                values.put("name", user.name);
+                values.put("age", user.age);
+                values.put("height", user.height);
+                values.put("weight", user.weight);
+                values.put("married", user.married ? 1 : 0);
+
+                long rowId = mWDB.insert(TABLE_NAME, null, values);
+                if (rowId == -1) {
+                    // 任何一条插入失败，直接抛异常触发回滚
+                    throw new RuntimeException("插入失败：" + user.name);
+                }
+            }
+            // 全部成功，标记提交
+            mWDB.setTransactionSuccessful();
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        } finally {
+            mWDB.endTransaction();
+        }
+    }
+
+
 }

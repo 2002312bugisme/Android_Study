@@ -31,6 +31,7 @@ public class SqliteHelperActivity extends AppCompatActivity implements View.OnCl
     private Button btnDelete;
     private Button btnUpdate;
     private Button btnQuery;
+    private Button btnBatch;
 
     // ===== 结果展示 =====
     private TextView tvResult;
@@ -40,7 +41,7 @@ public class SqliteHelperActivity extends AppCompatActivity implements View.OnCl
 
 
     @Override
-    protected void onStart(){
+    protected void onStart() {
         super.onStart();
         //获取数据库帮助器的读写连接
         mHelper = UserDBHelper.getInstance(this);
@@ -69,18 +70,19 @@ public class SqliteHelperActivity extends AppCompatActivity implements View.OnCl
         });
 
         // ===== 绑定控件 id =====
-        etName    = findViewById(R.id.et_name);
-        etAge     = findViewById(R.id.et_age);
-        etHeight  = findViewById(R.id.et_height);
-        etWeight  = findViewById(R.id.et_weight);
+        etName = findViewById(R.id.et_name);
+        etAge = findViewById(R.id.et_age);
+        etHeight = findViewById(R.id.et_height);
+        etWeight = findViewById(R.id.et_weight);
         cbMarried = findViewById(R.id.cb_married);
 
-        btnAdd    = findViewById(R.id.btn_add);
+        btnAdd = findViewById(R.id.btn_add);
         btnDelete = findViewById(R.id.btn_delete);
         btnUpdate = findViewById(R.id.btn_update);
-        btnQuery  = findViewById(R.id.btn_query);
+        btnQuery = findViewById(R.id.btn_query);
+        btnBatch = findViewById(R.id.btn_batch);
 
-        tvResult  = findViewById(R.id.tv_result);
+        tvResult = findViewById(R.id.tv_result);
 
         etId = findViewById(R.id.et_id);
 
@@ -90,6 +92,7 @@ public class SqliteHelperActivity extends AppCompatActivity implements View.OnCl
         btnDelete.setOnClickListener(this);
         btnUpdate.setOnClickListener(this);
         btnQuery.setOnClickListener(this);
+        btnBatch.setOnClickListener(this);
     }
 
     // ===== 统一的点击回调 =====
@@ -104,6 +107,8 @@ public class SqliteHelperActivity extends AppCompatActivity implements View.OnCl
             onUpdateClick();
         } else if (id == R.id.btn_query) {
             onQueryClick();
+        } else if (id == R.id.btn_batch) {
+            onBatchInsertClick();
         }
     }
 
@@ -314,5 +319,37 @@ public class SqliteHelperActivity extends AppCompatActivity implements View.OnCl
     private String getText(EditText et) {
         return et.getText().toString().trim();
     }
+
+
+    // 单独的事务批量插入方法
+    private void onBatchInsertClick() {
+        java.util.List<User> userList = new java.util.ArrayList<>();
+
+        User u1 = new User();
+        u1.name = "张三";
+        u1.age = 25;
+        u1.height = 175;
+        u1.weight = 65.5f;
+        u1.married = true;
+        userList.add(u1);
+
+        User u2 = new User();
+        u2.name = "李四";
+        u2.age = 30;
+        u2.height = 180;
+        u2.weight = 72.0f;
+        u2.married = false;
+        userList.add(u2);
+
+        boolean ok = mHelper.insertBatchWithTransaction(userList);
+        if (ok) {
+            ToastUtil.show(this, "批量插入成功");
+            tvResult.setText("事务提交成功，共插入 " + userList.size() + " 条");
+        } else {
+            ToastUtil.show(this, "批量插入失败，已回滚");
+            tvResult.setText("事务回滚，数据库未发生变化");
+        }
+    }
+
 
 }

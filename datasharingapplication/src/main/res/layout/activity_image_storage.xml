@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center_horizontal"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <!-- 图片显示区域 -->
+    <ImageView
+        android:id="@+id/iv_content"
+        android:layout_width="280dp"
+        android:layout_height="280dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="24dp"
+        android:background="#EEEEEE"
+        android:contentDescription="图片预览"
+        android:scaleType="fitCenter"
+        android:src="@mipmap/ic_launcher" />
+
+    <!-- 保存按钮 -->
+    <Button
+        android:id="@+id/btn_save"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        android:text="保存图片到存储卡"
+        android:textSize="16sp" />
+
+    <!-- 读取按钮 -->
+    <Button
+        android:id="@+id/btn_read"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:text="从存储卡读取图片"
+        android:textSize="16sp" />
+
+</LinearLayout>

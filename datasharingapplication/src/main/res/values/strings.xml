@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">DatasharingApplication</string>
+    <string name="ZZ">请输入姓名</string>
 </resources>

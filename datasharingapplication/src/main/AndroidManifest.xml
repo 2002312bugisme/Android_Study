@@ -1,15 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
 
+    <!-- Android 10 (API 29) 以下访问公共外部存储需要 -->
+    <uses-permission
+        android:name="android.permission.WRITE_EXTERNAL_STORAGE"
+        android:maxSdkVersion="28" />
+    <uses-permission
+        android:name="android.permission.READ_EXTERNAL_STORAGE"
+        android:maxSdkVersion="32" />
+
     <application
+        android:name=".application.BookApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
+        android:requestLegacyExternalStorage="true"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.MyFirstApp">
         <activity
-            android:name=".SqliteHelperActivity"
+            android:name=".BookEntryActivity"
             android:exported="true"
             android:windowSoftInputMode="adjustResize">
             <intent-filter>
@@ -24,8 +34,28 @@
             android:exported="false"
             android:windowSoftInputMode="adjustResize" />
         -->
+        <!-- <activity -->
+        <!-- android:name=".SqliteHelperActivity" -->
+        <!-- android:exported="false" -->
+        <!-- android:windowSoftInputMode="adjustResize" /> -->
+        <!-- <activity -->
+        <!-- android:name=".ExternalStorageActivity" -->
+        <!-- android:exported="false" -->
+        <!-- android:windowSoftInputMode="adjustResize" /> -->
+        <!-- <activity -->
+        <!-- android:name=".ImageStorageActivity" -->
+        <!-- android:exported="false" -->
+        <!-- android:windowSoftInputMode="adjustResize" /> -->
+        <!-- <activity -->
+        <!-- android:name=".ApplicationActivity" -->
+        <!-- android:exported="false" -->
+        <!-- android:windowSoftInputMode="adjustResize" /> -->
 <!--        <activity-->
-<!--            android:name=".SqliteHelperActivity"-->
+<!--            android:name=".ShowActivity"-->
+<!--            android:exported="false"-->
+<!--            android:windowSoftInputMode="adjustResize" />-->
+<!--        <activity-->
+<!--            android:name=".BookEntryActivity"-->
 <!--            android:exported="false"-->
 <!--            android:windowSoftInputMode="adjustResize" />-->
     </application>

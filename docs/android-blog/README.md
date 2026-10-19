@@ -21,6 +21,11 @@
 2. **官方文档是技术依据** —— 涉及框架内部行为，核对与 `targetSdk 37` 相适配的官方文档。
 3. **博客是对两者的解释** —— 不得为了行文流畅而编造类、方法、功能或实验结果。
 
+> **范围（2026-10-19 补注）**：这套博客覆盖仓库前四个模块，共 14 章。同日新增的第 5 个模块
+> `:datasharingapplication`（SharedPreferences / SQLite / `SQLiteOpenHelper` / Room / 文件存储）
+> **暂未纳入章节规划**；其可用素材已登记在 [SOURCE_INDEX.md](SOURCE_INDEX.md) 第八节附录，
+> 是否新增"数据存储"一章待作者决定（见 [LEARNING_ROADMAP.md](LEARNING_ROADMAP.md) 的未决事项）。
+
 ---
 
 ## 目录导航

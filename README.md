@@ -24,9 +24,11 @@
 | `:mytextapplication` | Java | `CalculatorActivity` | 文本 / 字号 / 颜色、四大布局（Linear / Relative / Grid / Scroll）、边距与对齐、按钮点击的三种写法、ImageView 的 8 种 scaleType、简易计算器 |
 | `:myactivityapplication` | Java | `ActStartActivity` | Activity 跳转与 `finish`、显式 / 隐式 Intent、Bundle 传值与结果回传、启动模式与 Intent Flag、读取资源、桌面快捷方式 |
 | `:intermediatecontrols` | Java | `LoginMainActivity` | 登录 / 忘记密码流程、CheckBox / Switch / RadioButton、EditText 校验与焦点监听、AlertDialog、DatePicker / TimePicker、Drawable（shape / selector / 点九图） |
-| `:datasharingapplication` | Java | `SqliteHelperActivity` | 数据存储：SharedPreferences 读写、SQLite 建库删库、`SQLiteOpenHelper` 封装下的增删改查 |
+| `:datasharingapplication` | Java | `BookEntryActivity` | 数据存储：SharedPreferences、SQLite 建库与 `SQLiteOpenHelper` 增删改查、**Room 图书 CRUD**、Application 全局数据、内部 / 外部私有 / 外部公共三类目录读写与图片落盘 |
 
 > 各模块 `applicationId` 互不相同（均为 `com.zzz.*`），因此可以**同时安装到一台设备上**，方便横向对照。
+>
+> `:datasharingapplication` 的页面最多，launcher 只挂了 `BookEntryActivity`，其余 Activity 在清单里以注释形式保留 —— 想看哪个就取消对应注释或临时改 launcher。
 
 ---
 
@@ -154,13 +156,47 @@ values-w1240dp/   最小宽度 ≥ 1240dp（超大屏）
 
 ### 5. `:datasharingapplication` —— 数据存储
 
+本模块把 Android 侧最常用的数据存放方式都走了一遍：SharedPreferences → 手写 SQLite → `SQLiteOpenHelper` → Room，外加 Application 内存态与文件存储。
+
+**5.1 SharedPreferences 与 SQLite**
+
 | 文件 | 演示要点 |
 |---|---|
 | `SharedPreferencesActivity` | `getSharedPreferences("config", MODE_PRIVATE)`；进页面 `reload()` 把已存数据回填到控件，点确认用 `Editor` + `apply()` 保存 |
 | `SqliteActivity` | 直接用 `openOrCreateDatabase` / `deleteDatabase`，并把"应用文件目录"与"数据库实际路径"打印到界面 |
-| `SqliteHelperActivity` | 项目里封装最完整的一处：`SQLiteOpenHelper` 子类 + 增 / 删 / 改 / 查四个按钮，含非空校验、`NumberFormatException` 捕获、结果格式化输出 |
-| `database/UserDBHelper` | 单例 `getInstance`、读写连接分离（`openReadLink` / `openWriteLink`）、`closeLink`、建表 SQL、`insert` / `delete` / `update` / `queryById` / `queryAll`、`Cursor` → 对象映射 |
+| `SqliteHelperActivity` | `SQLiteOpenHelper` 子类 + 增 / 删 / 改 / 查 / **批量插入**五个按钮，含非空校验、`NumberFormatException` 捕获、结果格式化输出 |
+| `database/UserDBHelper` | 单例 `getInstance`、读写连接分离（`openReadLink` / `openWriteLink`）、`closeLink`、建表 SQL、`insert` / `delete` / `update` / `queryById` / `queryAll`、`Cursor` → 对象映射；另有 `insertBatchWithTransaction` 演示**事务 + 失败回滚**，`onUpgrade` 里留了加字段的迁移写法 |
 | `pojo/User` | 数据实体：`id` / `name` / `age` / `height(long)` / `weight(float)` / `married(boolean)` |
+
+**5.2 Room —— 图书录入 CRUD**
+
+| 文件 | 演示要点 |
+|---|---|
+| `pojo/BookInfo` | `@Entity(tableName = "book_info")` + `@PrimaryKey(autoGenerate = true)`；书名 / 作者 / 出版社 / 价格(double) / 页数(int) |
+| `dao/BookDao` | 四类注解全用上：`@Insert`（可变长参数 / 单条返回 rowId / `List` 批量）、`@Update`、`@Delete`、`@Query`（全量、`LIKE '%' \|\| :keyword \|\| '%'` 模糊查询、按 id 查、`DELETE FROM` 清空） |
+| `database/BookDataBase` | `@Database(entities = {BookInfo.class}, version = 1, exportSchema = true)`，只暴露 `bookDao()`；`BookDataBase_Impl` 由注解处理器生成，不手写 |
+| `application/BookApplication` | `Room.databaseBuilder(...).allowMainThreadQueries().build()` 单例持库；`allowMainThreadQueries()` 仅为演示方便，正式项目应放子线程 |
+| `BookEntryActivity` | 表单校验 → 单线程 `Executor` 落库 → `runOnUiThread` 回主线程刷新；`SimpleAdapter` + `Map` 承载行数据；另有清空输入、一键删除全部、已录入计数 |
+| `schemas/` | 注解处理器导出的建表 DDL 快照（`BookDataBase/1.json`），版本间 diff 与迁移测试的依据，**必须纳入版本控制**（不是构建产物） |
+
+> 本模块是纯 Java 模块，Room 注解处理器用 `annotationProcessor` 接入，**不需要 kapt / KSP**（那两个是 Kotlin 模块的方案）；导出位置写在 `defaultConfig.javaCompileOptions.annotationProcessorOptions` 里。
+
+**5.3 Application 全局数据**
+
+| 文件 | 演示要点 |
+|---|---|
+| `MyApplication` | `Application` 子类持有 `List<UserInfo>`，进程存活期间全局可读；含 `onCreate` / `onTerminate` / `onLowMemory` / `onTrimMemory` 四个回调的日志与"为什么 `onTerminate` 不可靠"的说明 |
+| `ApplicationActivity` | 表单提交后 `MyApplication.getInstance().addUserInfo(...)`，数据不随 Activity 销毁而丢失 |
+| `ShowActivity` | 读取全局列表并逐条拼接展示 |
+
+**5.4 文件与图片存储**
+
+| 文件 | 演示要点 |
+|---|---|
+| `ExternalStorageActivity` | 一次演示三类目录：内部 `getFilesDir()`、外部私有 `getExternalFilesDir(null)`、外部公共 `getExternalStoragePublicDirectory(DIRECTORY_DOCUMENTS)`；Android 6~9 动态申请存储权限，Android 10+ 走分区存储，`requestLegacyExternalStorage` 留给旧系统 |
+| `ImageStorageActivity` | `Bitmap.compress(PNG, 100, fos)` 落盘 + `BitmapFactory.decodeFile` 读回；重点处理 `getExternalFilesDir` 返回 `null`（存储卡未挂载）的情况 |
+| `util/FileUtil` | 文本与图片读写封装：`saveText` / `openText` / `saveImage` / `openImage` |
+| `util/ToastUtil` | 统一 Toast 封装 |
 
 **生命周期与数据库连接的配合**：`onStart()` 打开连接、`onStop()` 关闭连接（而不是在 `onCreate` 里开、`onDestroy` 里关），这样页面切到后台就释放数据库资源。
 
@@ -180,6 +216,7 @@ values-w1240dp/   最小宽度 ≥ 1240dp（超大屏）
 | Material Components | 1.10.0 |
 | ConstraintLayout | 2.1.4 |
 | Activity KTX | 1.13.0 |
+| Room | 2.8.5（`:datasharingapplication` 以 `annotationProcessor` 接入，`schemaLocation` 指向模块内 `schemas/`） |
 | Gradle 依赖集中管理 | `gradle/libs.versions.toml`（版本目录 / Version Catalog） |
 
 主题统一为 `Theme.Material3.DayNight.NoActionBar`（定义在各模块 `res/values/themes.xml`，深色版在 `values-night/themes.xml`）。
@@ -195,14 +232,17 @@ Android_Study/
 │   └── src/main/res/             # 含 land / night / v23 / w600dp / w1240dp 多套限定符
 ├── myactivityapplication/        # Activity 与 Intent / Bundle / 启动模式
 ├── intermediatecontrols/         # 登录流程 + 常用控件 + Drawable
-├── datasharingapplication/       # SharedPreferences + SQLite
+├── datasharingapplication/       # SharedPreferences / SQLite / Room / Application 全局数据 / 文件存储
+│   └── schemas/                  # Room 导出的建表 DDL 快照（随代码一起提交）
+├── docs/android-blog/            # 源码解读博客的写作工作区（结构分析 / 章节规划 / 草稿）
+├── img/                          # 界面截图等素材
 ├── gradle/libs.versions.toml     # 依赖版本目录
 ├── build.gradle.kts
 ├── settings.gradle.kts           # include 了以上 5 个模块
 └── README.md
 ```
 
-所有模块的 Java 包名均为 `com.zzz.<模块名>`，手写代码集中在包根目录下（`utils` / `pojo` / `database` / `util` 为辅助子包）。
+所有模块的 Java 包名均为 `com.zzz.<模块名>`，手写代码集中在包根目录下（`utils` / `util` / `pojo` / `database` / `dao` / `application` 为辅助子包）。
 
 ---
 
@@ -214,7 +254,7 @@ Android_Study/
    - 想看布局与计算器 → 选 `mytextapplication`
    - 想看 Intent / Bundle → 选 `myactivityapplication`
    - 想看登录流程与控件 → 选 `intermediatecontrols`
-   - 想看数据库 → 选 `datasharingapplication`
+   - 想看数据库与 Room → 选 `datasharingapplication`（launcher 是 `BookEntryActivity`；SharedPreferences / SQLite / 存储页面需先取消清单里的注释）
    - 想看 Compose → 选 `app`
 4. 命令行编译（不需要连设备）：
 
@@ -244,12 +284,15 @@ Android_Study/
 | 2026-10-14 | `8e282a1` | 时间选择器、日期选择对话框、Activity 注册整理 |
 | 2026-10-14 | `b7a674b` | 为三个 Java 模块的手写代码与资源**补全行级注释**（104 个文件） |
 | 2026-10-15 | `be3ef31` | 数据共享：SharedPreferences 与 SQLite |
+| 2026-10-19 | `c9098f4` | Room 图书管理、Application 全局数据、多存储目录读写与图片存储 |
 
 ---
 
-## ⚠️ 踩坑记录（Material3 主题下最值得记的两条）
+## ⚠️ 踩坑记录
 
-本仓库主题是 `Theme.Material3.DayNight.NoActionBar`，在这个主题下有两个非常容易踩的坑：
+### Material3 主题下的两条
+
+本仓库主题是 `Theme.Material3.DayNight.NoActionBar`，这个主题下有两个非常容易踩的坑：
 
 | 坑 | 表现 | 解法 |
 |---|---|---|
@@ -262,6 +305,14 @@ Android_Study/
 - `intermediatecontrols/src/main/res/layout/activity_drawable_state.xml`（不只是文字说明，还用同类控件做了对照组）
 - `intermediatecontrols/src/main/res/layout/activity_check_box.xml`
 
+### 构建与架构上的三条
+
+| 坑 | 表现 | 解法 |
+|---|---|---|
+| **纯 Java 模块照抄 Kotlin 教程加 `kapt` / `ksp`** | 工程里没有 Kotlin 插件，`kapt(...)` 直接报 DSL 找不到方法；为此再加 Kotlin 插件属于为注解处理器引入整套 Kotlin 编译链 | 纯 Java 模块用 `annotationProcessor("androidx.room:room-compiler:x.y.z")`；`kapt` / `ksp` 只适用于 Kotlin 模块 |
+| **不配 `room.schemaLocation`** | 不报错，只打一条 warning「Schema export directory is not provided…」，等到要写 `Migration` 时已无历史 DDL 可比对 | 在 `defaultConfig` 里配 `javaCompileOptions.annotationProcessorOptions.arguments["room.schemaLocation"] = "$projectDir/schemas"`，并把 `schemas/` 提交进版本库 |
+| **一个 APK 只能注册一个 `Application`** | 清单 `android:name` 只有一个；另一个 `Application` 子类的 `onCreate` 永不执行，其单例只能靠 `new` 手动创建，拿到的实例并未 attach `Context` | 全局状态统一放进已注册的那个 Application，不要再写第二套单例 |
+
 ---
 
 ## 📝 代码注释约定
@@ -272,7 +323,7 @@ Android_Study/
 - **XML**：根布局写页面结构总览，每个控件标注用途与引用关系，**关键属性在控件上方的注释块内逐条说明**；
 - 现有注释尽量保留，只做补充 —— 目的是让代码本身能当讲义读。
 
-> 注：`:datasharingapplication` 模块（2026-10-15 新增）目前尚未按上述规范补全注释，属于待办。
+> 注：`:datasharingapplication` 模块的 **Java 侧**已按上述规范补注释；新增的 `activity_book_entry.xml`、`item_book_list.xml` 等布局尚未逐条注释，属于待办。
 
 ---
 
@@ -281,3 +332,6 @@ Android_Study/
 - 仓库内的代码以**学习演示**为目的，多处刻意做了简化（如登录密码写死在代码里、验证码直接弹窗展示、数据库表结构简单），**不可直接用于生产**；
 - 部分页面在 `AndroidManifest.xml` 中的注册被注释掉了（例如两个 `MainActivity`），想看对应页面时取消注释或改一下 launcher 即可；
 - 个别已知但不影响运行的小问题（如误导入 `org.w3c.dom.Text`、某个 `textSize` 误用了 `dp`、`MainActivity` 未在清单中注册）已在对应文件的注释中说明。
+- `database/UserDBHelper#insertBatchWithTransaction` 在 `i == 1` 时故意执行 `10 / 0` 触发异常，用来演示事务回滚，因此该方法**当前必然返回 `false`** —— 是教学代码，不是可直接复用的接口。
+- `ShowActivity` 存在重复 import（`android.os.Bundle`、`AppCompatActivity` 各两次）且文件末尾缺换行，不影响编译，属于待清理。
+- 清单只注册了 `BookApplication`，`MyApplication` 的 `onCreate` 实际不会执行，而它的 `getInstance()` 用双重检查锁 `new` 了一个 Application 实例 —— `Application` 应由系统创建，后续若要保留这组全局数据演示，应把字段搬进 `BookApplication`。

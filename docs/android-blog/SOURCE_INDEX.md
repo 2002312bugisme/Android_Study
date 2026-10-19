@@ -10,7 +10,7 @@
 
 | 文件 | 职责 | 知识点 | 章节 | 状态 |
 |---|---|---|---|---|
-| `settings.gradle.kts` | 声明 rootProject 名与 4 个模块、仓库策略 | 多模块、`FAIL_ON_PROJECT_REPOS` | 01 | ✅ |
+| `settings.gradle.kts` | 声明 rootProject 名与 5 个模块、仓库策略 | 多模块、`FAIL_ON_PROJECT_REPOS` | 01 | ✅ |
 | `build.gradle.kts`（根） | 只声明插件 `apply false` | 根/模块构建脚本的分工 | 01 | ✅ |
 | `gradle/libs.versions.toml` | 版本目录：所有依赖与插件版本 | Version Catalog、`alias(libs.*)` | 01 | ✅ |
 | `mytextapplication/build.gradle.kts` | 该模块 Android 配置 | `compileSdk`/`minSdk`/`targetSdk`、`viewBinding` | 01 | ✅ |
@@ -18,7 +18,7 @@
 | `intermediatecontrols/build.gradle.kts` | 同上 | 同上 | 01 | ✅ |
 | `.gitignore` ⚠️ | 忽略构建产物与本机配置 | **缺 `.workbuddy/`** | — | ✅ |
 
-## 二、AndroidManifest.xml（4 份）
+## 二、AndroidManifest.xml（5 份）
 
 | 文件 | 可引用的具体内容 | 知识点 | 章节 |
 |---|---|---|---|
@@ -26,6 +26,7 @@
 | `myactivityapplication/.../AndroidManifest.xml` | `ActStartActivity` 的 launcher + `<meta-data android:name="android.app.shortcuts">`；`ReadResourceActivity` 的 `<meta-data android:name="metadata" android:value="Hello World!"/>` | meta-data、shortcuts、`exported=true` | 02 / 11 |
 | `intermediatecontrols/.../AndroidManifest.xml` | `EditHideActivity` 为 launcher；9 个 activity 全部 `exported=false` | 默认导出规则 | 02 |
 | `app/.../AndroidManifest.xml` | Compose 模块的入口 | 作为对照 | 01 |
+| `datasharingapplication/.../AndroidManifest.xml` | `WRITE_EXTERNAL_STORAGE`(`maxSdkVersion=28`) + `READ_EXTERNAL_STORAGE`(`maxSdkVersion=32`)；`android:requestLegacyExternalStorage="true"`；`android:name=".application.BookApplication"`；其余 7 个 activity 以注释保留 | 分区存储、`maxSdkVersion`、Application 注册唯一性 | 扩展（不在 14 章内） |
 
 ## 三、`:mytextapplication`（文本 / View / 布局 / 事件 / 图片）
 
@@ -125,18 +126,18 @@
 
 ## 七、明确**不存在**的知识点（禁止写成"项目已实现"）
 
-以下内容在全部已读源码中**均未出现**。若章节需要，只能作为"扩展知识"并显式标注：
+以下内容在**前四个模块**（`:app` / `:mytextapplication` / `:myactivityapplication` / `:intermediatecontrols`）的已读源码中**均未出现**。若章节需要，只能作为"扩展知识"并显式标注：
 
 | 知识点 | 证据 |
 |---|---|
 | Fragment / Navigation 组件登录代码 | 仅有依赖，无 `NavHostFragment`/`NavController` 使用 |
-| RecyclerView / ListView / Adapter | 无相关类与布局 |
+| RecyclerView / ListView / Adapter | 前四个模块无相关类与布局（`ListView` 出现在 `:datasharingapplication`） |
 | `ViewModel` / `LiveData` / `DataBinding` | 无相关导入 |
 | 网络请求（OkHttp / Retrofit / HttpURLConnection） | 无依赖、Manifest 无 `INTERNET` 权限 |
-| 本地存储（SharedPreferences / Room / SQLite / 文件读写） | 无相关代码 |
+| 本地存储（SharedPreferences / Room / SQLite / 文件读写） | 前四个模块无相关代码；`:datasharingapplication`（2026-10-19 新增）已完整实现，但不在 14 章规划范围内 |
 | `onStart`/`onResume`/`onPause`/`onStop`/`onDestroy` 覆写 | **所有 Activity 只覆写 `onCreate`** |
 | `onSaveInstanceState` / 状态恢复 | 无覆写（`savedInstanceState` 参数未被使用） |
-| 运行时权限申请 | Manifest 无任何 `<uses-permission>` |
+| 运行时权限申请 | 前四个模块 Manifest 无任何 `<uses-permission>`（`:datasharingapplication` 有存储读写权限） |
 | 自定义 View（继承 View 并重写 `onDraw`） | 只有自定义 Drawable，无自定义 View 类 |
 | `Parcelable` 序列化 | Bundle 中只放了 `String` |
 | 动画（`ObjectAnimator` / `ViewPropertyAnimator`） | 无 |
@@ -146,3 +147,22 @@
 > **这些"缺口"本身就是第 13 章和第 14 章的实验素材来源** —— 例如"自己给 Activity 加上
 > `onStart`/`onResume` 的 `Log` 覆写，观察调用顺序"，是项目当前**做不到直接演示**、
 > 必须动手加代码才能验证的实验。写作时按"实验任务"呈现，不要描述成已有行为。
+
+---
+
+## 八、附：`:datasharingapplication` 索引（2026-10-19 新增，**不在 14 章规划内**）
+
+仅登记可用素材，若日后决定新增"数据存储"一章，可直接从这里取材。**写作前仍需实际打开文件核对。**
+
+| 文件 | 可引用的具体内容 | 知识点 | 状态 |
+|---|---|---|---|
+| `pojo/BookInfo.java` | `@Entity(tableName = "book_info")` + `@PrimaryKey(autoGenerate = true)` + 5 个业务字段 | Room 实体声明 | ✅ |
+| `dao/BookDao.java` | `@Insert` 三种签名（可变长 / 返回 rowId / `List` 批量）、`@Update`、`@Delete`、`@Query` 四种（全量 / `LIKE '%' \|\| :keyword \|\| '%'` / 按 id / `DELETE FROM`） | DAO 注解全集、命名参数 `:keyword` | ✅ |
+| `database/BookDataBase.java` | `@Database(entities=..., version=1, exportSchema=true)`，只暴露 `bookDao()` | `_Impl` 由注解处理器生成 | ✅ |
+| `application/BookApplication.java` | `Room.databaseBuilder(...).allowMainThreadQueries().build()` 单例持库 | 数据库单例；`allowMainThreadQueries` 为何只适合演示 | ✅ |
+| `BookEntryActivity.java` | 表单校验 → `Executor` 单线程落库 → `runOnUiThread` 刷新 `SimpleAdapter` | 主线程不碰 IO、`ListView` + `SimpleAdapter` | ✅ |
+| `schemas/…BookDataBase/1.json` | 导出的 `createSql` / `identityHash` / `setupQueries` | schema 导出与迁移比对 | ✅ |
+| `database/UserDBHelper.java` | 读写连接分离、`Cursor` → 对象映射、`insertBatchWithTransaction` 事务回滚（内含故意 `10/0`） | 事务、`beginTransaction`/`setTransactionSuccessful` | ✅ |
+| `ExternalStorageActivity.java` | 内部 / 外部私有 / 外部公共三目录对照；Android 6~9 动态权限、10+ 分区存储 | 存储分区模型、`maxSdkVersion` | ✅ |
+| `ImageStorageActivity.java` | `Bitmap.compress` 落盘 + `decodeFile` 读回；`getExternalFilesDir` 可能返回 `null` | Bitmap 与文件 IO | ✅ |
+| `MyApplication.java` | 全局 `List<UserInfo>`、四个 Application 生命周期回调 | ⚠️ 该 Application **未在清单注册**，属反例素材 | ✅ |

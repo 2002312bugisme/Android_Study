@@ -4,6 +4,10 @@
 > 生成日期：2026-10-13
 > 代码基线：`main` 分支，最后一次提交 `e6271cd feature: Android 学习项目: 图形Drawable`
 > ⚠️ 分析时工作区存在**未提交改动**（见文末「工作区状态」），本文件描述的是**工作区当前内容**，不是 `HEAD`。
+>
+> 📌 **2026-10-19 补注**：本文档是 `e6271cd` 时点的**四模块快照**。此后新增了第 5 个模块
+> `:datasharingapplication`（数据存储：SharedPreferences / SQLite / Room / 文件存储），
+> **其内容不在本文档的详细分析范围内**（仅在下表补一行清单）；最新模块与功能清单以仓库根 `README.md` 为准。
 
 ---
 
@@ -27,7 +31,7 @@
 
 ### 2.1 模块清单
 
-`settings.gradle.kts` 中显式 include 了四个模块：
+`settings.gradle.kts` 中显式 include 了五个模块：
 
 | 模块 | namespace | 角色 | 启动 Activity | Activity 数 | Layout 数 |
 |---|---|---|---|---|---|
@@ -35,9 +39,14 @@
 | `:mytextapplication` | `com.zzz.mytextapplication` | 文本、View、布局、事件、图片 | `CalculatorActivity` | 15 | 15 |
 | `:myactivityapplication` | `com.zzz.myactivityapplication` | Activity、Intent、Bundle、启动模式、资源读取 | `ActStartActivity` | 9 | 9 |
 | `:intermediatecontrols` | `com.zzz.intermediatecontrols` | Drawable、复合控件、EditText、输入法 | `EditHideActivity` | 10 | 10 |
+| `:datasharingapplication` | `com.zzz.datasharingapplication` | 数据存储（📌 2026-10-19 新增，本文档不展开） | `BookEntryActivity` | 8 | 9 |
 
 > **`:app` 不在本博客范围内**：它是 Compose + Kotlin 模板，与"Java + XML View"主线无关。
 > 但它可以在第 01 章作为**对照**出现 —— 说明"同一个仓库里可以并存两种技术范式"。
+>
+> **`:datasharingapplication` 也不在本博客 14 章规划内**：它演示 SharedPreferences / SQLite /
+> `SQLiteOpenHelper` / Room / Application 全局数据 / 文件存储，与第 03～14 章依赖的 View 体系
+> 关系较弱。若要纳入，需单独新增"数据存储"一章，属未决事项（见 `LEARNING_ROADMAP.md`）。
 
 ### 2.2 技术栈实况表
 

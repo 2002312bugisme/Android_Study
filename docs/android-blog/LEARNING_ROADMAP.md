@@ -52,6 +52,12 @@
 
 **合计约 9 万字。** 这是一个需要持续投入的工程，不是一次对话能完成的量。
 
+> 📌 **未决事项（2026-10-19）**：仓库新增第 5 个模块 `:datasharingapplication`（数据存储：
+> SharedPreferences / SQLite / `SQLiteOpenHelper` / Room / Application 全局数据 / 文件存储，8 个 Activity）。
+> 它与现有 14 章依赖的 View 体系耦合很弱，若纳入需单开一章（候选：**第 15 章「数据存储：从 SQLite 到 Room」**），
+> 素材密度中高 —— Room 的 `@Entity` / `@Dao` 注解全集、`_Impl` 生成物、`schemas/*.json` 与迁移比对都是清晰的教学点。
+> **是否纳入由作者决定，本规划的 14 章结构暂不改动。**
+
 ### 依赖关系图
 
 ```mermaid

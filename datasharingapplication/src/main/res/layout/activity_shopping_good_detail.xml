@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="#F5F5F5">
+
+    <!-- ① 公共顶部栏 -->
+    <include layout="@layout/layout_top_bar" />
+
+    <!-- 可滚动内容区，防止小屏溢出
+         高度必须是 0dp + layout_weight=1（"占满顶部栏之外的剩余空间"），
+         写成 match_parent 会按整屏高度计算，和 50dp 的顶部栏叠加后把底部按钮挤出屏幕 -->
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:fillViewport="true">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <!-- ② 商品主图卡片 -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:background="#FFFFFF"
+                android:padding="16dp"
+                android:layout_marginBottom="10dp">
+
+                <ImageView
+                    android:id="@+id/iv_ProductImage"
+                    android:layout_width="match_parent"
+                    android:layout_height="240dp"
+                    android:scaleType="centerCrop"
+                    android:background="#EEEEEE"
+                    android:contentDescription="商品图片"
+                    android:src="@mipmap/ic_launcher" />
+            </LinearLayout>
+
+            <!-- ③ 价格 / 标题卡片 -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:background="#FFFFFF"
+                android:padding="16dp"
+                android:layout_marginBottom="10dp">
+
+                <!-- 价格行 -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical">
+
+                    <TextView
+                        android:id="@+id/tv_PriceLabel"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="价格："
+                        android:textSize="14sp"
+                        android:textColor="#666666" />
+
+                    <TextView
+                        android:id="@+id/tv_Price"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="¥ 0.00"
+                        android:textSize="22sp"
+                        android:textStyle="bold"
+                        android:textColor="#FF3B30" />
+                </LinearLayout>
+
+                <!-- 商品标题 -->
+                <TextView
+                    android:id="@+id/tv_Title"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:text="商品名称"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    android:textColor="#222222"
+                    android:maxLines="2"
+                    android:ellipsize="end" />
+            </LinearLayout>
+
+            <!-- ④ 描述卡片 -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:background="#FFFFFF"
+                android:padding="16dp"
+                android:layout_marginBottom="10dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="商品详情"
+                    android:textSize="15sp"
+                    android:textStyle="bold"
+                    android:textColor="#333333"
+                    android:layout_marginBottom="8dp" />
+
+                <TextView
+                    android:id="@+id/tv_Description"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="description"
+                    android:textSize="14sp"
+                    android:textColor="#666666"
+                    android:lineSpacingExtra="4dp" />
+            </LinearLayout>
+
+            <!-- ⑤ 底部加入购物车按钮 -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:background="#FFFFFF"
+                android:padding="16dp">
+
+                <Button
+                    android:id="@+id/btn_AddToCart"
+                    android:layout_width="match_parent"
+                    android:layout_height="48dp"
+                    android:text="加入购物车"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    android:textColor="#FFFFFF"
+                    android:backgroundTint="#FF9500"
+                    android:stateListAnimator="@null" />
+            </LinearLayout>
+
+        </LinearLayout>
+    </ScrollView>
+
+</LinearLayout>

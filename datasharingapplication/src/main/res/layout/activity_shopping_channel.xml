@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#F5F5F5"
+    android:orientation="vertical">
+
+    <!--
+        顶部栏：改为 include 公共组件
+        include 后 iv_back / tv_title / fl_cart / iv_cart / tv_cart_count 这些 id 依然可以直接 findViewById
+    -->
+    <include layout="@layout/layout_top_bar" />
+
+    <!-- 商品列表：ScrollView + GridLayout 两列 -->
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:fillViewport="true"
+        android:scrollbars="none">
+
+        <GridLayout
+            android:id="@+id/gl_goods"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:alignmentMode="alignMargins"
+            android:columnCount="2"
+            android:padding="8dp"
+            android:useDefaultMargins="false" />
+    </ScrollView>
+</LinearLayout>

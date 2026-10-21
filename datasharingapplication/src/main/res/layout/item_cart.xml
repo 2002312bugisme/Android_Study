@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    购物车列表项（一行 = 一个商品）
+    列宽必须和 activity_shopping_cart.xml 里的表头对齐：
+      图片 56dp + 8dp 间距 | 商品名 weight=1 | 单价 52dp | 数量 78dp | 小计 62dp
+-->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="#FFFFFF"
+    android:gravity="center_vertical"
+    android:orientation="horizontal"
+    android:padding="8dp">
+
+    <!-- 商品图片：ListView 复用 convertView 时由适配器重新 setImageBitmap -->
+    <ImageView
+        android:id="@+id/iv_cart_image"
+        android:layout_width="56dp"
+        android:layout_height="56dp"
+        android:layout_marginEnd="8dp"
+        android:background="#EEEEEE"
+        android:contentDescription="商品图片"
+        android:scaleType="centerCrop" />
+
+    <!-- 商品名（占满剩余宽度） -->
+    <TextView
+        android:id="@+id/tv_cart_name"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:ellipsize="end"
+        android:maxLines="2"
+        android:textColor="#333333"
+        android:textSize="13sp" />
+
+    <!-- 单价：60dp 够放 "¥3999.00"，maxLines=1 防止极窄屏换行 -->
+    <TextView
+        android:id="@+id/tv_unit_price"
+        android:layout_width="60dp"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:maxLines="1"
+        android:textColor="#666666"
+        android:textSize="11sp" />
+
+    <!-- 数量：减号 + 数字 + 加号 -->
+    <LinearLayout
+        android:layout_width="72dp"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="horizontal">
+
+        <!-- 减号：数量为 1 时点击等于"移除该商品" -->
+        <TextView
+            android:id="@+id/btn_minus"
+            android:layout_width="22dp"
+            android:layout_height="22dp"
+            android:background="@drawable/bg_qty_btn"
+            android:gravity="center"
+            android:text="−"
+            android:textColor="#666666"
+            android:textSize="13sp" />
+
+        <TextView
+            android:id="@+id/tv_qty"
+            android:layout_width="26dp"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="1"
+            android:textColor="#333333"
+            android:textSize="13sp" />
+
+        <!-- 加号 -->
+        <TextView
+            android:id="@+id/btn_plus"
+            android:layout_width="22dp"
+            android:layout_height="22dp"
+            android:background="@drawable/bg_qty_btn"
+            android:gravity="center"
+            android:text="+"
+            android:textColor="#666666"
+            android:textSize="13sp" />
+    </LinearLayout>
+
+    <!-- 小计 = 单价 × 数量：68dp 够放 "¥3999.00" -->
+    <TextView
+        android:id="@+id/tv_subtotal"
+        android:layout_width="68dp"
+        android:layout_height="wrap_content"
+        android:gravity="end"
+        android:maxLines="1"
+        android:textColor="#FF3B30"
+        android:textSize="12sp"
+        android:textStyle="bold" />
+</LinearLayout>

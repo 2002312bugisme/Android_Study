@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    公共顶部栏（可复用组件）
+    用法：在需要的页面里 <include layout="@layout/layout_top_bar" />
+    注意：
+    1. include 会把这份布局的【根节点】直接嵌进来，所以根节点必须是 RelativeLayout（尺寸/背景都在这里定义）。
+    2. 里面所有 id 会一起带进宿主布局，宿主 Activity 用 findViewById 就能拿到，不需要额外处理。
+    3. 标题文字默认"商品列表"，宿主页面在代码里 setText 覆盖即可（id: tv_title）。
+-->
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="50dp"
+    android:background="#FFFFFF"
+    android:paddingHorizontal="12dp">
+
+    <!-- 左上角返回键：统一的是"图标 + 位置"，点击行为由各页面自己决定 -->
+    <ImageView
+        android:id="@+id/iv_back"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:layout_centerVertical="true"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:contentDescription="返回"
+        android:src="@drawable/ic_back" />
+
+    <!-- 标题：给 id 是为了让每个页面能改成自己的标题 -->
+    <TextView
+        android:id="@+id/tv_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:text="商品列表"
+        android:textColor="#333333"
+        android:textSize="18sp"
+        android:textStyle="bold" />
+
+    <!-- 右上角购物车入口：图标 + 角标叠在一个 FrameLayout 里 -->
+    <FrameLayout
+        android:id="@+id/fl_cart"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true">
+
+        <ImageView
+            android:id="@+id/iv_cart"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_gravity="center"
+            android:contentDescription="购物车"
+            android:src="@drawable/ic_cart" />
+
+        <!-- 购物车计数角标：id 固定为 tv_cart_count，页面用 setText 更新数字 -->
+        <TextView
+            android:id="@+id/tv_cart_count"
+            android:layout_width="18dp"
+            android:layout_height="18dp"
+            android:layout_gravity="top|end"
+            android:background="@drawable/bg_cart_badge"
+            android:gravity="center"
+            android:text="0"
+            android:textColor="#FFFFFF"
+            android:textSize="10sp" />
+    </FrameLayout>
+</RelativeLayout>

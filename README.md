@@ -24,11 +24,11 @@
 | `:mytextapplication` | Java | `CalculatorActivity` | 文本 / 字号 / 颜色、四大布局（Linear / Relative / Grid / Scroll）、边距与对齐、按钮点击的三种写法、ImageView 的 8 种 scaleType、简易计算器 |
 | `:myactivityapplication` | Java | `ActStartActivity` | Activity 跳转与 `finish`、显式 / 隐式 Intent、Bundle 传值与结果回传、启动模式与 Intent Flag、读取资源、桌面快捷方式 |
 | `:intermediatecontrols` | Java | `LoginMainActivity` | 登录 / 忘记密码流程、CheckBox / Switch / RadioButton、EditText 校验与焦点监听、AlertDialog、DatePicker / TimePicker、Drawable（shape / selector / 点九图） |
-| `:datasharingapplication` | Java | `BookEntryActivity` | 数据存储：SharedPreferences、SQLite 建库与 `SQLiteOpenHelper` 增删改查、**Room 图书 CRUD**、Application 全局数据、内部 / 外部私有 / 外部公共三类目录读写与图片落盘 |
+| `:datasharingapplication` | Java | `ShoppingChannelActivity` | 数据存储：SharedPreferences、SQLite 建库与 `SQLiteOpenHelper` 增删改查、**Room 图书 CRUD**、Application 全局数据、内部 / 外部私有 / 外部公共三类目录读写与图片落盘；**商城 demo（商品列表 → 详情 → 购物车）**：公共顶部栏组件、`ListView + ViewHolder`、购物车增删改查 |
 
 > 各模块 `applicationId` 互不相同（均为 `com.zzz.*`），因此可以**同时安装到一台设备上**，方便横向对照。
 >
-> `:datasharingapplication` 的页面最多，launcher 只挂了 `BookEntryActivity`，其余 Activity 在清单里以注释形式保留 —— 想看哪个就取消对应注释或临时改 launcher。
+> `:datasharingapplication` 的页面最多，launcher 目前挂在商城列表页 `ShoppingChannelActivity`，其余 Activity（`BookEntryActivity`、SharedPreferences / SQLite / 存储相关页面）在清单里以注释形式保留 —— 想看哪个就取消对应注释或临时改 launcher。
 
 ---
 
@@ -200,6 +200,23 @@ values-w1240dp/   最小宽度 ≥ 1240dp（超大屏）
 
 **生命周期与数据库连接的配合**：`onStart()` 打开连接、`onStop()` 关闭连接（而不是在 `onCreate` 里开、`onDestroy` 里关），这样页面切到后台就释放数据库资源。
 
+**5.5 商城 demo —— 商品列表 → 详情 → 购物车**
+
+本模块的 launcher，把前面几节串成一条完整业务链路：建表 → 列表渲染 → Intent 传参 → 详情回显 → 购物车增删改查 → 角标同步。
+
+| 文件 | 演示要点 |
+|---|---|
+| `layout/layout_top_bar.xml` | **公共顶部栏组件**：返回键 / 标题 / 购物车图标 + 角标。其他页面一行 `<include layout="@layout/layout_top_bar"/>` 引入，**组件内的 id 在宿主里照样能 `findViewById`**；标题 `tv_title` 由各页面 `setText` 各自决定 |
+| `ShoppingChannelActivity` | 列表页：`ScrollView + GridLayout` 两列商品卡；`queryAllGoods()` 逐条 inflate `item_goods`；点图片 / 名称 / 描述都进详情页（三处行为相同，**共用一个 `OnClickListener`**，不复制三份 Intent） |
+| `ShoppingGoodDetailActivity` | 详情页：`getIntent().getIntExtra(EXTRA_GOODS_ID, -1)` 取参数 → `queryGoodById()` → 绑定大图 / 价格 / 名称 / 描述；`EXTRA_GOODS_ID` 抽成 public 常量，让"发"和"收"共用同一个 key |
+| `ShoppingCartActivity` | 购物车页：`ListView + BaseAdapter + ViewHolder`；`+ / −` 改数量（**数量为 1 时再点减号 = 删行**）；清空与结算都走 `AlertDialog` 二次确认；空车用 `setEmptyView()` 自动显示"哎呀，购物车空空如也" |
+| `layout/item_cart.xml` | 表格式行：图片 56dp / 名称 `weight=1` / 单价 60dp / 数量 72dp / 小计 68dp，**列宽必须与 `activity_shopping_cart.xml` 的表头完全一致**，否则"表"会对不齐 |
+| `database/ShoppingDBHelper` | `goods_info` / `cart_info` 两张表；`queryAllCart()` 用 **LEFT JOIN** 一次带出商品图片路径（避免在适配器里逐行查库的 N+1）；另有 `updateCartQuantity` / `deleteCartInfo` / `clearCartInfo` / `queryCartTotalPrice`（`SUM(quantity*price)`） |
+| `application/ShopApplication` | 启动时"模拟下载"商品图到外部私有目录再写库；是否初始化用 **`firstOpen` 标记 + `COUNT(*)` 双判据**（标志位可能被误写，数据才是权威事实） |
+| `pojo/Goods`、`pojo/Cart` | 实体类；`Goods.imageResIdOf(name)` 用于图片文件读不到时按商品名反查 drawable |
+
+**数据库连接归谁管**：`ShoppingDBHelper` 是进程级单例，读写连接由它自己**懒加载 + 自愈**（`dbRead()` / `dbWrite()` 每次先判 `isOpen()`，被关掉就重开）。业务代码**不要**调用 `closeLink()` —— 曾经在 `onResume` 里关过一次，把列表页正在用的连接一起置成 `null`，导致点"加入购物车"直接空指针闪退，Database Inspector 里也一直显示 `closed`。
+
 ---
 
 ## 🧰 技术栈与版本
@@ -232,7 +249,7 @@ Android_Study/
 │   └── src/main/res/             # 含 land / night / v23 / w600dp / w1240dp 多套限定符
 ├── myactivityapplication/        # Activity 与 Intent / Bundle / 启动模式
 ├── intermediatecontrols/         # 登录流程 + 常用控件 + Drawable
-├── datasharingapplication/       # SharedPreferences / SQLite / Room / Application 全局数据 / 文件存储
+├── datasharingapplication/       # SharedPreferences / SQLite / Room / Application 全局数据 / 文件存储 / 商城 demo
 │   └── schemas/                  # Room 导出的建表 DDL 快照（随代码一起提交）
 ├── docs/android-blog/            # 源码解读博客的写作工作区（结构分析 / 章节规划 / 草稿）
 ├── img/                          # 界面截图等素材
@@ -254,7 +271,7 @@ Android_Study/
    - 想看布局与计算器 → 选 `mytextapplication`
    - 想看 Intent / Bundle → 选 `myactivityapplication`
    - 想看登录流程与控件 → 选 `intermediatecontrols`
-   - 想看数据库与 Room → 选 `datasharingapplication`（launcher 是 `BookEntryActivity`；SharedPreferences / SQLite / 存储页面需先取消清单里的注释）
+   - 想看数据库与商城 demo → 选 `datasharingapplication`（launcher 是商城列表页 `ShoppingChannelActivity`；Room 图书页与 SharedPreferences / SQLite / 存储页面需先取消清单里的注释）
    - 想看 Compose → 选 `app`
 4. 命令行编译（不需要连设备）：
 
@@ -285,6 +302,7 @@ Android_Study/
 | 2026-10-14 | `b7a674b` | 为三个 Java 模块的手写代码与资源**补全行级注释**（104 个文件） |
 | 2026-10-15 | `be3ef31` | 数据共享：SharedPreferences 与 SQLite |
 | 2026-10-19 | `c9098f4` | Room 图书管理、Application 全局数据、多存储目录读写与图片存储 |
+| 2026-10-21 | `a0ff09f` | 商城 demo：公共顶部栏、商品列表 / 详情 / 购物车、购物车增删改查与角标同步 |
 
 ---
 
@@ -305,13 +323,24 @@ Android_Study/
 - `intermediatecontrols/src/main/res/layout/activity_drawable_state.xml`（不只是文字说明，还用同类控件做了对照组）
 - `intermediatecontrols/src/main/res/layout/activity_check_box.xml`
 
+### 一个 `NullPointerException` 查了两轮
+
+商城 demo 里连续踩了两个"代码看着没问题、一跑就闪退"的坑，都记在这里：
+
+| 坑 | 表现 | 根因 | 排查方法 |
+|---|---|---|---|
+| **`setContentView` 用错布局** | 点商品进详情页立刻 `NullPointerException: ... ImageView.setImageBitmap(...) on a null object reference`，堆栈指向 `loadGoodsImage()`，**不是**创建控件的那一行 | 详情页写成了 `setContentView(R.layout.activity_shopping_cart)`（购物车页布局），于是 `iv_ProductImage` / `tv_Price` / `tv_Description` / `btn_AddToCart` 全部 `findViewById` 到 `null`。**`findViewById` 找不到 id 不报错、只返回 null**，所以要等到"用"它时才炸 | ① 先核对 `setContentView` 的文件名；② 在 `bindViews()` 里给每个 `findViewById` 加 null 检查，让错误在赋值那一刻暴露，而不是几十行之后 |
+| **共享单例的连接被别处关掉** | 点"加入购物车"闪退，Database Inspector 里数据库一直显示 `closed` | `ShopApplication.refreshCartCount()` 里调了 `helper.closeLink()`，而 `closeLink()` 会把单例里的 `mRDB` / `mWDB` 一起置 `null`；Activity 里还留着一份"连接已打开"的假设 | 单例 + 可变连接 = 定时炸弹。谁负责"保证可用"，谁才有权关闭；读写方法内部先判 `isOpen()`（自愈），业务代码只"用"不"关" |
+
+> 这两个坑还有个共同点：购物车页和详情页都 include 了同一个顶部栏，所以 `iv_back` / `tv_title` 这类 id 能正常取到 —— **这个"碰巧能取到"反而让布局用错更难被发现**。
+
 ### 构建与架构上的三条
 
 | 坑 | 表现 | 解法 |
 |---|---|---|
 | **纯 Java 模块照抄 Kotlin 教程加 `kapt` / `ksp`** | 工程里没有 Kotlin 插件，`kapt(...)` 直接报 DSL 找不到方法；为此再加 Kotlin 插件属于为注解处理器引入整套 Kotlin 编译链 | 纯 Java 模块用 `annotationProcessor("androidx.room:room-compiler:x.y.z")`；`kapt` / `ksp` 只适用于 Kotlin 模块 |
 | **不配 `room.schemaLocation`** | 不报错，只打一条 warning「Schema export directory is not provided…」，等到要写 `Migration` 时已无历史 DDL 可比对 | 在 `defaultConfig` 里配 `javaCompileOptions.annotationProcessorOptions.arguments["room.schemaLocation"] = "$projectDir/schemas"`，并把 `schemas/` 提交进版本库 |
-| **一个 APK 只能注册一个 `Application`** | 清单 `android:name` 只有一个；另一个 `Application` 子类的 `onCreate` 永不执行，其单例只能靠 `new` 手动创建，拿到的实例并未 attach `Context` | 全局状态统一放进已注册的那个 Application，不要再写第二套单例 |
+| **一个 APK 只能注册一个 `Application`** | 清单 `android:name` 只有一个；另一个 `Application` 子类的 `onCreate` 永不执行，其单例只能靠 `new` 手动创建，拿到的实例并未 attach `Context` | 全局状态统一放进已注册的那个 Application，不要再写第二套单例；确有两个都要用时**用继承**（本仓库 `ShopApplication extends BookApplication`，`super.onCreate()` 里照样完成 Room 建库），而不是把两份 `onCreate` 复制一遍 |
 
 ---
 
@@ -334,4 +363,5 @@ Android_Study/
 - 个别已知但不影响运行的小问题（如误导入 `org.w3c.dom.Text`、某个 `textSize` 误用了 `dp`、`MainActivity` 未在清单中注册）已在对应文件的注释中说明。
 - `database/UserDBHelper#insertBatchWithTransaction` 在 `i == 1` 时故意执行 `10 / 0` 触发异常，用来演示事务回滚，因此该方法**当前必然返回 `false`** —— 是教学代码，不是可直接复用的接口。
 - `ShowActivity` 存在重复 import（`android.os.Bundle`、`AppCompatActivity` 各两次）且文件末尾缺换行，不影响编译，属于待清理。
-- 清单只注册了 `BookApplication`，`MyApplication` 的 `onCreate` 实际不会执行，而它的 `getInstance()` 用双重检查锁 `new` 了一个 Application 实例 —— `Application` 应由系统创建，后续若要保留这组全局数据演示，应把字段搬进 `BookApplication`。
+- 清单注册的 `Application` 是 `ShopApplication`（商城 demo 用），它**继承** `BookApplication`，因此 Room 的建库逻辑仍然执行、`BookEntryActivity` 里的 `BookApplication.getBookDao()` 依然可用；`MyApplication` 仍然不会被执行（一个 APK 只能注册一个），它的全局数据演示目前只是代码保留，要看效果需把它并入已注册的那个 Application。
+- `res/drawable/goods_1.png` ~ `goods_5.png` 五个文件的内容完全相同（md5 一致），所以列表里五个商品显示的是同一张图 —— 换素材即可，不是代码问题。

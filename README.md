@@ -303,6 +303,7 @@ Android_Study/
 | 2026-10-15 | `be3ef31` | 数据共享：SharedPreferences 与 SQLite |
 | 2026-10-19 | `c9098f4` | Room 图书管理、Application 全局数据、多存储目录读写与图片存储 |
 | 2026-10-21 | `a0ff09f` | 商城 demo：公共顶部栏、商品列表 / 详情 / 购物车、购物车增删改查与角标同步 |
+| 2026-10-21 | `0d6c3c6` | `:datasharingapplication` 全部 25 个 Java 文件补齐注释（类头 Javadoc + 方法 `@param` + 行内注释） |
 
 ---
 

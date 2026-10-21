@@ -10,16 +10,44 @@ import androidx.annotation.Nullable;
 
 import com.zzz.datasharingapplication.pojo.User;
 
+/**
+ * 用户表数据库帮助器（SQLiteOpenHelper 子类）：把"建库、建表、升级、增删改查"封装成一个单例
+ *
+ * <p>演示要点：
+ * 1. {@link SQLiteOpenHelper} 把三件事绑定在一起：库文件名、版本号、建表 SQL。
+ *    {@link #onCreate} 只在<b>数据库文件第一次创建</b>时执行一次；
+ *    {@link #onUpgrade} 只在<b>版本号变大</b>时执行，所以改表结构必须把 DB_VERSION +1；
+ * 2. 读写连接分离（{@link #openReadLink()} / {@link #openWriteLink()}）：读用可读库、
+ *    写用可写库，内部各自缓存句柄，避免反复打开；
+ * 3. <b>连接的开关由使用方（Activity 的 onStart / onStop）负责</b>，
+ *    这在本模块是最"教科书"的写法；
+ *    但要注意它是进程级单例——一旦某处 closeLink()，别处手里的连接就都变成已关闭状态，
+ *    所以商城那套（{@code ShoppingDBHelper}）改成了"每次操作前自愈式重开"，更抗误用；
+ * 4. {@link #insertBatchWithTransaction} 演示事务：全部成功才提交，中途异常整体回滚。
+ *
+ * <p>相关文件：{@code pojo/User}（实体）、{@code SqliteHelperActivity}（增删改查界面）
+ */
 public class UserDBHelper extends SQLiteOpenHelper {
 
+    // 数据库文件名：落盘为 /data/data/<包名>/databases/user.db
     private static final String DB_NAME = "user.db";
+    // 表名
     private static final String TABLE_NAME = "user_info";
+    // 单例对象
     private static UserDBHelper mHelper = null;
+    // 读连接（懒加载）
     private SQLiteDatabase mRDB = null;
+    // 写连接（懒加载）
     private SQLiteDatabase mWDB = null;
 
+    // 数据库版本号：改表结构时必须 +1，否则 onUpgrade 不会触发
     private static final int DB_VERSION = 1;
 
+    /**
+     * 构造方法（public，便于演示直接 new；实际都走 {@link #getInstance(Context)}）
+     *
+     * @param context 上下文；SQLiteOpenHelper 内部只用它定位 databases 目录
+     */
     public UserDBHelper(Context context) {
         super(context, DB_NAME, null, DB_VERSION);
     }
@@ -141,14 +169,23 @@ public class UserDBHelper extends SQLiteOpenHelper {
     }
 
     /**
-     * 按 id 删除，返回受影响行数
+     * 按 id 删除一条记录
+     *
+     * <p>whereClause 里的 {@code ?} 是占位符，真正的值放在 whereArgs 数组里，
+     * 这样能避免把用户输入直接拼进 SQL（SQL 注入）。
+     *
+     * @param id 要删除记录的主键
+     * @return 受影响行数：1 = 删掉了，0 = 没有这个 id
      */
     public int delete(int id) {
         return mWDB.delete(TABLE_NAME, "id = ?", new String[]{String.valueOf(id)});
     }
 
     /**
-     * 按 id 更新，返回受影响行数
+     * 按 id 更新一条记录（用传入对象的所有字段覆盖原行）
+     *
+     * @param user 要更新的用户；其中 {@code user.id} 决定"改哪一行"，必须已存在
+     * @return 受影响行数：1 = 改成功，0 = 没有这个 id
      */
     public int update(User user) {
         ContentValues values = new ContentValues();
@@ -162,7 +199,13 @@ public class UserDBHelper extends SQLiteOpenHelper {
     }
 
     /**
-     * 按 id 查询单条，找不到返回 null
+     * 按 id 查询单条记录
+     *
+     * <p>{@code query()} 的七个参数依次是：表名、要查的列（null=全部）、where、where 的占位值、
+     * groupBy、having、orderBy。
+     *
+     * @param id 主键
+     * @return 查到的用户；不存在时返回 null
      */
     public User queryById(int id) {
         User user = null;
@@ -170,8 +213,9 @@ public class UserDBHelper extends SQLiteOpenHelper {
                 TABLE_NAME, null, "id = ?",
                 new String[]{String.valueOf(id)},
                 null, null, null);
+        // Cursor 必须关闭，否则会泄漏游标（系统限制每个进程的游标数）
         if (cursor != null) {
-            if (cursor.moveToFirst()) {
+            if (cursor.moveToFirst()) {      // moveToFirst 返回 false 表示结果集为空
                 user = readUser(cursor);
             }
             cursor.close();
@@ -180,13 +224,16 @@ public class UserDBHelper extends SQLiteOpenHelper {
     }
 
     /**
-     * 查询全部
+     * 查询全部记录（按 id 升序）
+     *
+     * @return 用户列表；表为空时返回空 List（不是 null）
      */
     public java.util.List<User> queryAll() {
         java.util.List<User> list = new java.util.ArrayList<>();
         android.database.Cursor cursor = mRDB.query(
                 TABLE_NAME, null, null, null, null, null, "id ASC");
         if (cursor != null) {
+            // moveToNext 从第一行开始往下走，走到没有数据为止
             while (cursor.moveToNext()) {
                 list.add(readUser(cursor));
             }
@@ -196,7 +243,13 @@ public class UserDBHelper extends SQLiteOpenHelper {
     }
 
     /**
-     * 从 Cursor 当前行读取 User 对象
+     * 从 Cursor 的当前行读出一个 User 对象（三处查询共用的解析逻辑）
+     *
+     * <p>用 {@code getColumnIndexOrThrow} 而不是 {@code getColumnIndex}：
+     * 列名写错时前者会立刻抛异常，后者只会返回 -1 然后读出莫名其妙的值。
+     *
+     * @param c 已经 moveToFirst / moveToNext 到某一行的游标
+     * @return 该行对应的用户对象
      */
     private User readUser(android.database.Cursor c) {
         User u = new User();
@@ -205,6 +258,7 @@ public class UserDBHelper extends SQLiteOpenHelper {
         u.age = c.getInt(c.getColumnIndexOrThrow("age"));
         u.height = c.getLong(c.getColumnIndexOrThrow("height"));
         u.weight = c.getFloat(c.getColumnIndexOrThrow("weight"));
+        // SQLite 没有 boolean，约定 1=已婚、0=未婚
         u.married = c.getInt(c.getColumnIndexOrThrow("married")) == 1;
         return u;
     }

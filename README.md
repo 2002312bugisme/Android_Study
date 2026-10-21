@@ -352,7 +352,8 @@ Android_Study/
 - **XML**：根布局写页面结构总览，每个控件标注用途与引用关系，**关键属性在控件上方的注释块内逐条说明**；
 - 现有注释尽量保留，只做补充 —— 目的是让代码本身能当讲义读。
 
-> 注：`:datasharingapplication` 模块的 **Java 侧**已按上述规范补注释；新增的 `activity_book_entry.xml`、`item_book_list.xml` 等布局尚未逐条注释，属于待办。
+> 注：`:datasharingapplication` 模块的 **25 个 Java 文件**已全部按上述规范补齐（类头 Javadoc + 方法 `@param` + 行内注释）；
+> 布局文件里 `activity_book_entry.xml`、`item_book_list.xml`、`activity_shopping_*` 等尚未逐条注释，属于待办。
 
 ---
 
@@ -362,6 +363,6 @@ Android_Study/
 - 部分页面在 `AndroidManifest.xml` 中的注册被注释掉了（例如两个 `MainActivity`），想看对应页面时取消注释或改一下 launcher 即可；
 - 个别已知但不影响运行的小问题（如误导入 `org.w3c.dom.Text`、某个 `textSize` 误用了 `dp`、`MainActivity` 未在清单中注册）已在对应文件的注释中说明。
 - `database/UserDBHelper#insertBatchWithTransaction` 在 `i == 1` 时故意执行 `10 / 0` 触发异常，用来演示事务回滚，因此该方法**当前必然返回 `false`** —— 是教学代码，不是可直接复用的接口。
-- `ShowActivity` 存在重复 import（`android.os.Bundle`、`AppCompatActivity` 各两次）且文件末尾缺换行，不影响编译，属于待清理。
+- `ShowActivity` 原有的重复 import（`android.os.Bundle`、`AppCompatActivity` 各两次）已在补注释时一并清理。
 - 清单注册的 `Application` 是 `ShopApplication`（商城 demo 用），它**继承** `BookApplication`，因此 Room 的建库逻辑仍然执行、`BookEntryActivity` 里的 `BookApplication.getBookDao()` 依然可用；`MyApplication` 仍然不会被执行（一个 APK 只能注册一个），它的全局数据演示目前只是代码保留，要看效果需把它并入已注册的那个 Application。
 - `res/drawable/goods_1.png` ~ `goods_5.png` 五个文件的内容完全相同（md5 一致），所以列表里五个商品显示的是同一张图 —— 换素材即可，不是代码问题。

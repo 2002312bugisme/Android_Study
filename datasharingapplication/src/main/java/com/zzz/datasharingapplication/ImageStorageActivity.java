@@ -18,16 +18,41 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
+/**
+ * 图片存储演示：把 Bitmap 写成 PNG 文件，再读回来显示
+ *
+ * <p>演示要点：
+ * 1. 目标目录用 {@code getExternalFilesDir(DIRECTORY_PICTURES)}——应用专属外部目录，
+ *    <b>不需要任何运行时权限</b>（Android 10+ 尤其重要，公共目录已被分区存储限制）；
+ * 2. {@code getExternalFilesDir()} 可能返回 <b>null</b>（外部存储未挂载），
+ *    必须判空，否则 {@code new File(null, name)} 直接 NPE；
+ * 3. 写文件要处理三件事：目录不存在（先 mkdirs）、IO 异常（try/catch）、
+ *    流必须关闭（finally）；
+ * 4. 读回来有至少三种写法（{@code decodeFile} / 工具类封装 / {@code setImageURI}），
+ *    代码里保留了两条注释掉的写法，方便对照。
+ *
+ * <p>对应布局：{@code activity_image_storage.xml}
+ * <p>涉及 API：{@link Environment#DIRECTORY_PICTURES}、{@link Bitmap#compress}、
+ * {@link BitmapFactory#decodeFile}、{@link FileOutputStream}
+ */
 public class ImageStorageActivity extends AppCompatActivity {
 
+    // 存储卡上的文件名（与项目里已有的 drawable 同名，方便识别）
     private static final String FILE_NAME = "checkbox_checked.png";
 
-    private ImageView ivContent;
-    private Button btnSave;
-    private Button btnRead;
+    // ===== 控件 =====
+    private ImageView ivContent;   // 显示读取到的图片
+    private Button btnSave;        // 保存
+    private Button btnRead;        // 读取
 
+    // 图片文件的绝对路径；为 null 表示外部存储不可用
     private String filePath;
 
+    /**
+     * 页面创建：绑定控件 → 计算文件路径 → 注册按钮事件
+     *
+     * @param savedInstanceState 系统保存的临时状态（无需恢复）
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -64,7 +89,9 @@ public class ImageStorageActivity extends AppCompatActivity {
 
     /**
      * 保存图片到存储卡
-     * 这里用资源图片模拟，实际可以是拍照、网络下载得到的 Bitmap
+     *
+     * <p>这里用资源图片模拟，实际可以是拍照、网络下载得到的 Bitmap。
+     * {@code compress()} 返回 boolean：true 表示压缩并写入成功。
      */
     private void saveImage() {
         // 0. filePath 为 null 说明外部存储不可用（getExternalFilesDir 返回了 null）
@@ -102,7 +129,11 @@ public class ImageStorageActivity extends AppCompatActivity {
     }
 
     /**
-     * 从存储卡读取图片（三种方式）
+     * 从存储卡读取图片并显示（三种写法，见方法内注释）
+     *
+     * <p>逐层校验：路径是否可用 → 文件是否存在 → 再解码。
+     * {@code decodeFile} 解码失败会返回 null（例如文件损坏），此时 setImageBitmap(null) 不会崩，
+     * 只是界面空白，所以这里没有再判空。
      */
     private void readImage() {
         if (filePath == null) {

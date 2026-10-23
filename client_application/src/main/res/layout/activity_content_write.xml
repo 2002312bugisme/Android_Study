@@ -1,0 +1,196 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    客户端录入页：把表单数据通过 ContentResolver 写进服务端（另一个 App）的 SQLite
+    结构：标题 + 可滚动表单（姓名/年龄/身高/体重/已婚）+ 保存·查询按钮 + 结果展示
+-->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#F5F5F5"
+    android:orientation="vertical">
+
+    <!-- 页面标题 -->
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#FFFFFF"
+        android:paddingHorizontal="16dp"
+        android:paddingVertical="14dp"
+        android:text="用户信息 · 写入服务端"
+        android:textColor="#222222"
+        android:textSize="18sp"
+        android:textStyle="bold" />
+
+    <!-- 表单区：内容可能超出屏幕，所以放在 ScrollView 里 -->
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:fillViewport="true"
+        android:scrollbars="none">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="16dp">
+
+            <!-- 说明文字：这条链路到底做了什么 -->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="数据经 ContentResolver 交给 server 应用的 ContentProvider，最终写入它的 SQLite 表 user_info。"
+                android:textColor="#888888"
+                android:textSize="12sp" />
+
+            <!-- 姓名 -->
+            <EditText
+                android:id="@+id/et_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:background="#FFFFFF"
+                android:hint="姓名"
+                android:inputType="text"
+                android:padding="12dp"
+                android:textSize="14sp" />
+
+            <!-- 年龄：inputType 限制只能输入整数 -->
+            <EditText
+                android:id="@+id/et_age"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:background="#FFFFFF"
+                android:hint="年龄"
+                android:inputType="number"
+                android:padding="12dp"
+                android:textSize="14sp" />
+
+            <!-- 身高 -->
+            <EditText
+                android:id="@+id/et_height"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:background="#FFFFFF"
+                android:hint="身高（cm）"
+                android:inputType="number"
+                android:padding="12dp"
+                android:textSize="14sp" />
+
+            <!-- 体重：numberDecimal 允许小数 -->
+            <EditText
+                android:id="@+id/et_weight"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:background="#FFFFFF"
+                android:hint="体重（kg）"
+                android:inputType="numberDecimal"
+                android:padding="12dp"
+                android:textSize="14sp" />
+
+            <!-- 婚否：服务端表里用 INTEGER 0/1 存 -->
+            <CheckBox
+                android:id="@+id/cb_married"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="已婚"
+                android:textColor="#444444"
+                android:textSize="14sp" />
+
+            <!-- 操作按钮：各占一半宽度 -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:orientation="horizontal">
+
+                <Button
+                    android:id="@+id/btn_save"
+                    android:layout_width="0dp"
+                    android:layout_height="48dp"
+                    android:layout_weight="1"
+                    android:text="保存到服务端" />
+
+                <Button
+                    android:id="@+id/btn_query"
+                    android:layout_width="0dp"
+                    android:layout_height="48dp"
+                    android:layout_marginStart="10dp"
+                    android:layout_weight="1"
+                    android:text="查询全部" />
+            </LinearLayout>
+
+            <!-- ============ 按 ID 更新 / 删除（对应 provider 的 /user/# 分支） ============ -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:text="按 ID 操作单行（先查询拿到 ID）"
+                android:textColor="#666666"
+                android:textSize="13sp"
+                android:textStyle="bold" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="6dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <!-- 要操作的行 ID：对应 content://.../user/<id> 里最后那一段 -->
+                <EditText
+                    android:id="@+id/et_id"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:background="#FFFFFF"
+                    android:hint="行 ID，如 1"
+                    android:inputType="number"
+                    android:padding="12dp"
+                    android:textSize="14sp" />
+
+                <Button
+                    android:id="@+id/btn_update"
+                    android:layout_width="wrap_content"
+                    android:layout_height="48dp"
+                    android:layout_marginStart="8dp"
+                    android:text="更新" />
+
+                <Button
+                    android:id="@+id/btn_delete"
+                    android:layout_width="wrap_content"
+                    android:layout_height="48dp"
+                    android:layout_marginStart="8dp"
+                    android:text="删除" />
+            </LinearLayout>
+
+            <!-- 结果标题 -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:text="查询结果"
+                android:textColor="#666666"
+                android:textSize="13sp"
+                android:textStyle="bold" />
+
+            <!-- 结果展示：minHeight 保证没有数据时也有视觉块 -->
+            <TextView
+                android:id="@+id/tv_result"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="6dp"
+                android:background="#FFFFFF"
+                android:minHeight="140dp"
+                android:padding="12dp"
+                android:text="还没有查询"
+                android:textColor="#333333"
+                android:textSize="13sp" />
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>

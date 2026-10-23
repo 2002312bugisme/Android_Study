@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    添加联系人页：姓名 / 电话 / 邮箱 三个输入框 + 保存按钮
+    只负责界面结构，业务逻辑（写入 ContactsContract）在 Activity 里实现
+
+    根节点必须有 android:id="@+id/main"，Activity 用它做 EdgeToEdge 的系统栏内边距补偿。
+-->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#F5F5F5"
+    android:orientation="vertical">
+
+    <!-- 标题条：白底整宽，与其它页面保持一致 -->
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#FFFFFF"
+        android:paddingHorizontal="16dp"
+        android:paddingVertical="14dp"
+        android:text="添加联系人"
+        android:textColor="#222222"
+        android:textSize="18sp"
+        android:textStyle="bold" />
+
+    <!--
+        表单套 ScrollView：键盘弹出 + 小屏时内容会超出屏幕，
+        配合清单里的 windowSoftInputMode="adjustResize" 才不会被键盘挡住输入框
+    -->
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:fillViewport="true"
+        android:scrollbars="none">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="16dp">
+
+            <!-- 姓名：label 只做展示，不需要 id -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="姓名"
+                android:textColor="#888888"
+                android:textSize="12sp" />
+
+            <!--
+                inputType 决定键盘类型：textPersonName 会调出带首字母大写的普通键盘；
+                hint 是占位提示，用户一开始输入就消失
+            -->
+            <EditText
+                android:id="@+id/et_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:hint="张三"
+                android:importantForAutofill="no"
+                android:inputType="textPersonName"
+                android:textColor="#222222"
+                android:textSize="15sp" />
+
+            <!-- 电话：inputType="phone" 会调出数字键盘 -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="电话"
+                android:textColor="#888888"
+                android:textSize="12sp" />
+
+            <EditText
+                android:id="@+id/et_phone"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:hint="13800138000"
+                android:importantForAutofill="no"
+                android:inputType="phone"
+                android:textColor="#222222"
+                android:textSize="15sp" />
+
+            <!-- 邮箱：inputType="textEmailAddress" 会让键盘带 @ 和 . 键 -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="邮箱"
+                android:textColor="#888888"
+                android:textSize="12sp" />
+
+            <EditText
+                android:id="@+id/et_email"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:hint="name@example.com"
+                android:importantForAutofill="no"
+                android:inputType="textEmailAddress"
+                android:textColor="#222222"
+                android:textSize="15sp" />
+
+            <!-- 保存按钮：居中偏下，留出与最后一个输入框的距离 -->
+            <Button
+                android:id="@+id/btn_save"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:layout_marginTop="28dp"
+                android:text="保存" />
+
+            <Button
+                android:id="@+id/btn_query"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:layout_marginTop="12dp"
+                android:text="查询" />
+
+            <!--
+                查询结果展示区：内容由 Activity 的 readPhoneContacts() 填充。
+                lineSpacingExtra 拉开多行之间的行距，结果人多时更好读。
+            -->
+            <TextView
+                android:id="@+id/tv_result"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:background="#FFFFFF"
+                android:lineSpacingExtra="4dp"
+                android:padding="14dp"
+                android:text="查询结果会显示在这里"
+                android:textColor="#888888"
+                android:textSize="13sp" />
+
+        </LinearLayout>
+    </ScrollView>
+
+</LinearLayout>

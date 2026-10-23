@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    发送短信页：目标号码 / 标题 / 内容 / 图片附件 / 发送
+
+    根节点必须有 android:id="@+id/main"，Activity 用它做 EdgeToEdge 的系统栏内边距补偿。
+
+    注意 SMS 与 MMS 的能力边界（字段设计已经按这个区分）：
+    - 纯文本短信（SMS）：只有「号码 + 内容」，没有标题、没有附件；
+    - 带标题/图片（MMS）：需要走 MMS 通道，还要配 APN、走数据网络，比 SMS 复杂得多。
+    所以本页的「标题」「图片」只对 MMS 有意义，用 SmsManager 发 SMS 时它们会被忽略。
+-->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#F5F5F5"
+    android:orientation="vertical">
+
+    <!-- 标题条 -->
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#FFFFFF"
+        android:paddingHorizontal="16dp"
+        android:paddingVertical="14dp"
+        android:text="发送短信"
+        android:textColor="#222222"
+        android:textSize="18sp"
+        android:textStyle="bold" />
+
+    <!-- 表单套 ScrollView：内容框 + 图片预览会把高度撑得很高，小屏必须能滚 -->
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:fillViewport="true"
+        android:scrollbars="none">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="16dp">
+
+            <!-- ==================== 目标号码 ==================== -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="目标号码"
+                android:textColor="#888888"
+                android:textSize="12sp" />
+
+            <EditText
+                android:id="@+id/et_number"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:hint="10086"
+                android:importantForAutofill="no"
+                android:inputType="phone"
+                android:textColor="#222222"
+                android:textSize="15sp" />
+
+            <!-- ==================== 标题（仅 MMS 有效） ==================== -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="标题（仅彩信有效）"
+                android:textColor="#888888"
+                android:textSize="12sp" />
+
+            <EditText
+                android:id="@+id/et_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:hint="可不填"
+                android:importantForAutofill="no"
+                android:inputType="text"
+                android:textColor="#222222"
+                android:textSize="15sp" />
+
+            <!-- ==================== 内容 ==================== -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="内容"
+                android:textColor="#888888"
+                android:textSize="12sp" />
+
+            <!--
+                inputType="textMultiLine" 才能在框内换行；
+                gravity="top" 让光标从左上角开始（默认是垂直居中，多行时很别扭）；
+                minLines=4 给一个初始高度，否则空的时候只有一行高
+            -->
+            <EditText
+                android:id="@+id/et_content"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:gravity="top"
+                android:hint="短信内容"
+                android:importantForAutofill="no"
+                android:inputType="textMultiLine"
+                android:minLines="4"
+                android:textColor="#222222"
+                android:textSize="15sp" />
+
+            <!-- ==================== 图片附件（仅 MMS 有效） ==================== -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="图片附件（仅彩信有效）"
+                android:textColor="#888888"
+                android:textSize="12sp" />
+
+            <!--
+                加号式图片选择区：100dp 方块，整块可点，不需要额外的"选择图片"按钮。
+                未选图时显示"+",选完把 ImageView 显出来、加号隐藏（由 Activity 切换）。
+                foreground 是点击波纹（等价于系统默认的 list item 反馈）。
+            -->
+            <FrameLayout
+                android:id="@+id/fl_image_picker"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:layout_marginTop="8dp"
+                android:background="@drawable/bg_add_image"
+                android:clickable="true"
+                android:focusable="true"
+                android:foreground="?attr/selectableItemBackground">
+
+                <!-- 选中的图片：默认 gone，选完才显示并铺满整个方块 -->
+                <ImageView
+                    android:id="@+id/iv_image"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:contentDescription="已选图片"
+                    android:scaleType="centerCrop"
+                    android:visibility="gone" />
+
+                <!-- 加号占位：用矢量图 @drawable/ic_add_image（由用户提供的 SVG 转换而来） -->
+                <ImageView
+                    android:id="@+id/iv_add_icon"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_gravity="center"
+                    android:contentDescription="添加图片"
+                    android:src="@drawable/iv_add_image" />
+
+            </FrameLayout>
+
+            <!-- ==================== 发送 ==================== -->
+            <Button
+                android:id="@+id/btn_send"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:layout_marginTop="20dp"
+                android:text="发送" />
+
+        </LinearLayout>
+    </ScrollView>
+
+</LinearLayout>

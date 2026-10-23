@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    图片选择区的背景：白底 + 圆角 + 灰色虚线边框
+    虚线边框是"这里可以添加东西"的通用视觉暗示，比实线更像占位区。
+-->
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+
+    <!-- 填充色：白底，和页面 #F5F5F5 的灰底形成对比 -->
+    <solid android:color="#FFFFFF" />
+
+    <!-- 圆角半径 -->
+    <corners android:radius="8dp" />
+
+    <!--
+        边框：1dp 灰色虚线。
+        dashWidth 是每一段实线的长度，dashGap 是间隔长度，两者决定虚线的疏密。
+    -->
+    <stroke
+        android:width="1dp"
+        android:color="#DDDDDD"
+        android:dashWidth="4dp"
+        android:dashGap="3dp" />
+
+</shape>

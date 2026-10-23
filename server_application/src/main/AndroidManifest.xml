@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <application
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
+        android:theme="@style/Theme.MyFirstApp">
+        <activity
+            android:name=".MainActivity"
+            android:exported="true"
+            android:windowSoftInputMode="adjustResize">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <!--
+            ContentProvider 注册：
+            authorities 是别的应用访问本表时用的"域名"，必须与客户端契约类里的常量逐字符一致；
+            这里与本模块包名 com.zzz.server_application 保持一致（早期模块名拼错成 applition，2026-10-22 已统一修正）。
+            exported=true 才允许跨应用访问 —— 学习 demo 没加权限限制，
+            真实产品应配合 android:readPermission / writePermission 收紧。
+        -->
+        <provider
+            android:name=".provider.UserInfoContentProvider"
+            android:authorities="com.zzz.server_application.provider.UserInfoContentProvider"
+            android:enabled="true"
+            android:exported="true" />
+    </application>
+
+</manifest>

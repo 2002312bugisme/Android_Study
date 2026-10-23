@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!--
+        出于安全考虑，Android 11 (API 30) 起引入「包可见性」：默认看不到其它应用。
+        要访问别的应用的 ContentProvider，必须在这里声明它的 authority（不是自己的包名！）。
+        原来这里写的是 <package android:name="com.zzz.client_application" /> —— 那是本应用自己，
+        对访问服务端没有任何帮助。
+    -->
+    <uses-feature
+        android:name="android.hardware.telephony"
+        android:required="false" />
+
+    <queries>
+        <provider android:authorities="com.zzz.server_application.provider.UserInfoContentProvider" />
+    </queries>
+
+    <uses-permission android:name="android.permission.READ_CONTACTS" />
+    <uses-permission android:name="android.permission.WRITE_CONTACTS" />
+    <uses-permission android:name="android.permission.SEND_SMS" />
+    <uses-permission android:name="android.permission.READ_SMS" />
+
+    <application
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
+        android:theme="@style/Theme.MyFirstApp">
+
+        <!--
+            当前入口：饿汉式权限申请页（权限专题练习期间设成 launcher，方便直接启动调试）。
+
+            launcher 的 activity 必须 exported="true"：系统桌面是"其它应用"，
+            它要能拉起这个页面，exported 关掉的话装完在桌面上根本点不开。
+        -->
+        <activity
+            android:name=".SendMessagesActivity"
+            android:exported="true"
+            android:windowSoftInputMode="adjustResize">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <!--
+            懒汉式对照页：和饿汉式页用的是同一套 API，只有"申请时机"不同。
+            它不是 launcher，想进这一页有两种办法：
+            1. 在饿汉式页加个按钮 startActivity 过来；
+            2. 临时把上面的 intent-filter 挪到它这里，或者用命令行直接拉起：
+               adb shell am start -n com.zzz.client_application/.PermissionLazyActivity
+        -->
+        <activity
+            android:name=".PermissionLazyActivity"
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize" />
+
+        <!--
+            ⚠️ 这两个 Activity 必须注册，不是可选项：
+            1. MainActivity 的代码还在（客户端首页），一旦有地方跳它就会 ActivityNotFoundException；
+            2. ContentWriteActivity 被 MainActivity 引用（btn_open_write），同样必须注册。
+            都设 exported="false"：只允许本应用内部拉起。
+        -->
+        <activity
+            android:name=".MainActivity"
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize" />
+        <activity
+            android:name=".ContentWriteActivity"
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize" />
+        <!--
+            添加联系人页：只允许本应用内部拉起（exported="false"）。
+
+            windowSoftInputMode="adjustResize" 不能省：页面上有三个输入框，
+            用默认的 adjustPan 时键盘会把下方的输入框和保存按钮顶出屏幕，
+            adjustResize 则是压缩可用高度（配合布局里的 ScrollView 才能正常滚动）。
+        -->
+        <!-- <activity -->
+        <!-- android:name=".ContactAddActivity" -->
+        <!-- android:exported="false" -->
+        <!-- android:windowSoftInputMode="adjustResize" /> -->
+        <!-- <activity -->
+        <!-- android:name=".MonitorSmsActivity" -->
+        <!-- android:exported="false" -->
+        <!-- android:windowSoftInputMode="adjustResize" /> -->
+        <!--
+            发送短信页：只允许本应用内部拉起。
+            adjustResize 必须保留：页面上有号码、标题、内容三个输入框 + 图片预览，
+            键盘弹出时不压缩高度的话，下面的"发送"按钮会被顶出屏幕。
+        -->
+<!--        <activity-->
+<!--            android:name=".SendMessagesActivity"-->
+<!--            android:exported="false"-->
+<!--            android:windowSoftInputMode="adjustResize" />-->
+    </application>
+
+</manifest>

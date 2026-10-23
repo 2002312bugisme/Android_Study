@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    服务端首页：显示本应用 ContentProvider 暴露出去的那张表
+    用途：不用切到客户端，也能自检 provider + 数据库这条链路是否正常
+-->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#F5F5F5"
+    android:orientation="vertical">
+
+    <!-- 标题 -->
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#FFFFFF"
+        android:paddingHorizontal="16dp"
+        android:paddingVertical="14dp"
+        android:text="服务端 server_application"
+        android:textColor="#222222"
+        android:textSize="18sp"
+        android:textStyle="bold" />
+
+    <!-- 说明：authority 与 Uri 写出来，方便和客户端对照 -->
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingHorizontal="16dp"
+        android:paddingTop="12dp"
+        android:text="本应用通过 ContentProvider 把 user_info 表暴露给其它应用：\ncontent://com.zzz.server_application.provider.UserInfoContentProvider/user"
+        android:textColor="#888888"
+        android:textSize="12sp" />
+
+    <Button
+        android:id="@+id/btn_refresh"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:layout_marginHorizontal="16dp"
+        android:layout_marginTop="12dp"
+        android:text="刷新数据（通过 Provider 查询）" />
+
+    <!-- 数据展示区：内容多了可以滚动 -->
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginTop="12dp"
+        android:layout_weight="1"
+        android:paddingHorizontal="16dp">
+
+        <TextView
+            android:id="@+id/tv_data"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#FFFFFF"
+            android:minHeight="200dp"
+            android:padding="12dp"
+            android:text="点击上方按钮加载数据"
+            android:textColor="#333333"
+            android:textSize="13sp" />
+    </ScrollView>
+</LinearLayout>

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    FileProvider 的可访问路径白名单。
+
+    规则：只有 path 指向的目录（及其子目录）里的文件，才能被 FileProvider.getUriForFile()
+    翻译成 content:// Uri；不在白名单里的路径调用会抛 IllegalArgumentException。
+
+    ⚠️ 你原来只配了 Download 一个目录，结果是：MediaStore 里凡是放在根目录
+    （/storage/emulated/0/xxx.png）或其它目录的图片，都会被 FileUtil.checkFileUri()
+    判定为"不支持"而过滤掉，列表里只剩下 Download 下的那几张。
+-->
+<paths>
+    <!-- 整个外部存储根目录 = /storage/emulated/0（path="." 表示目录自身） -->
+    <!-- name 是"路径别名"（随便起，但要唯一），path 才是真实相对路径，两者别写反 -->
+    <external-path
+        name="external_storage_root"
+        path="." />
+
+    <!-- 下面这条其实已被上面那条覆盖，保留是为了演示"只开子目录"的写法 -->
+    <!-- <external-path name="external_storage_download" path="Download" /> -->
+
+</paths>

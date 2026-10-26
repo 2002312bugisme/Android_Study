@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">Client_Application</string>
+    <string name="file_provider">com.zzz.client_application.fileProvider</string>
 </resources>

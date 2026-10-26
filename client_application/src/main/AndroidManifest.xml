@@ -19,6 +19,15 @@
     <uses-permission android:name="android.permission.WRITE_CONTACTS" />
     <uses-permission android:name="android.permission.SEND_SMS" />
     <uses-permission android:name="android.permission.READ_SMS" />
+    <!-- 需要外部访问的权限 -->
+    <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
+    <uses-permission
+        android:name="android.permission.READ_EXTERNAL_STORAGE"
+        android:maxSdkVersion="32" />
+
+    <uses-permission android:name="android.permission.MANAGE_EXTERNAL_STORAGE" />
+    <!--    Android 8.0 需要，安装应用请求-->
+    <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" />
 
     <application
         android:allowBackup="true"
@@ -35,7 +44,7 @@
             它要能拉起这个页面，exported 关掉的话装完在桌面上根本点不开。
         -->
         <activity
-            android:name=".SendMessagesActivity"
+            android:name=".ProviderAPKActivity"
             android:exported="true"
             android:windowSoftInputMode="adjustResize">
             <intent-filter>
@@ -52,10 +61,7 @@
             2. 临时把上面的 intent-filter 挪到它这里，或者用命令行直接拉起：
                adb shell am start -n com.zzz.client_application/.PermissionLazyActivity
         -->
-        <activity
-            android:name=".PermissionLazyActivity"
-            android:exported="false"
-            android:windowSoftInputMode="adjustResize" />
+
 
         <!--
             ⚠️ 这两个 Activity 必须注册，不是可选项：
@@ -91,10 +97,30 @@
             adjustResize 必须保留：页面上有号码、标题、内容三个输入框 + 图片预览，
             键盘弹出时不压缩高度的话，下面的"发送"按钮会被顶出屏幕。
         -->
-<!--        <activity-->
-<!--            android:name=".SendMessagesActivity"-->
-<!--            android:exported="false"-->
-<!--            android:windowSoftInputMode="adjustResize" />-->
+        <!-- <activity -->
+        <!-- android:name=".SendMessagesActivity" -->
+        <!-- android:exported="false" -->
+        <!-- android:windowSoftInputMode="adjustResize" /> -->
+        <!-- <activity -->
+        <!-- android:name=".ProviderMmsActivity" -->
+        <!-- android:exported="false" -->
+        <!-- android:windowSoftInputMode="adjustResize" /> -->
+
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="@string/file_provider"
+            android:grantUriPermissions="true">
+
+            <!-- 配置那些路径是可以通过FileProvider访问的 -->
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths" />
+        </provider>
+
+        <!--        <activity-->
+        <!--            android:name=".ProviderAPKActivity"-->
+        <!--            android:exported="false"-->
+        <!--            android:windowSoftInputMode="adjustResize" />-->
     </application>
 
 </manifest>

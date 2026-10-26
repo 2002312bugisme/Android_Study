@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+    图片网格页（MediaStore 扫描 + 权限 + GridLayout 展示）
+
+    结构：白色标题条 + ScrollView + GridLayout
+    根节点必须有 android:id="@+id/main"，Activity 用它做 EdgeToEdge 的系统栏内边距补偿。
+
+    ⚠️ 为什么 GridLayout 要套 ScrollView：
+    图片数量不定（MediaStore 里有几百张也很正常），GridLayout 高度是 wrap_content，
+    不套 ScrollView 的话超出屏幕的部分直接被裁掉，用户看不到也滑不到。
+-->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#F5F5F5"
+    android:orientation="vertical">
+
+    <!-- 标题条 -->
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#FFFFFF"
+        android:paddingHorizontal="16dp"
+        android:paddingVertical="14dp"
+        android:text="发送短信"
+        android:textColor="#222222"
+        android:textSize="18sp"
+        android:textStyle="bold" />
+
+    <!-- 表单套 ScrollView：内容框 + 图片预览会把高度撑得很高，小屏必须能滚 -->
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:fillViewport="true"
+        android:scrollbars="none">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="16dp">
+
+            <!-- ==================== 目标号码 ==================== -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="目标号码"
+                android:textColor="#888888"
+                android:textSize="12sp" />
+
+            <EditText
+                android:id="@+id/et_number"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:hint="10086"
+                android:importantForAutofill="no"
+                android:inputType="phone"
+                android:textColor="#222222"
+                android:textSize="15sp" />
+
+            <!-- ==================== 标题（仅 MMS 有效） ==================== -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="标题（仅彩信有效）"
+                android:textColor="#888888"
+                android:textSize="12sp" />
+
+            <EditText
+                android:id="@+id/et_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:hint="可不填"
+                android:importantForAutofill="no"
+                android:inputType="text"
+                android:textColor="#222222"
+                android:textSize="15sp" />
+
+            <!-- ==================== 内容 ==================== -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="内容"
+                android:textColor="#888888"
+                android:textSize="12sp" />
+
+            <!--
+                inputType="textMultiLine" 才能在框内换行；
+                gravity="top" 让光标从左上角开始（默认是垂直居中，多行时很别扭）；
+                minLines=4 给一个初始高度，否则空的时候只有一行高
+            -->
+            <EditText
+                android:id="@+id/et_content"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:gravity="top"
+                android:hint="短信内容"
+                android:importantForAutofill="no"
+                android:inputType="textMultiLine"
+                android:minLines="4"
+                android:textColor="#222222"
+                android:textSize="15sp" />
+
+        </LinearLayout>
+
+    </ScrollView>
+
+    <!-- 标题条 -->
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#FFFFFF"
+        android:paddingHorizontal="16dp"
+        android:paddingVertical="14dp"
+        android:text="从相册选择图片"
+        android:textColor="#222222"
+        android:textSize="18sp"
+        android:textStyle="bold" />
+
+    <!-- 图片多时整页可滚 -->
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:fillViewport="true"
+        android:scrollbars="none">
+
+        <!--
+            网格容器：Activity 里通过 findViewById(R.id.gl_appendix) 拿到它，
+            再 addView(ImageView) 动态往里塞图。
+
+            列数与每格尺寸是配套的：
+            代码里每格写死 110dp（含 5dp padding），3 列 = 330dp；
+            加上左右各 16dp 内边距共 362dp，在 411dp 宽的屏幕上刚好放得下。
+            如果以后把 dp2px(110) 改成别的值，这里的 columnCount 要一起算。
+        -->
+        <GridLayout
+            android:id="@+id/gl_appendix"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:columnCount="3"
+            android:padding="16dp" />
+
+    </ScrollView>
+
+    <!-- ==================== 发送 ==================== -->
+    <!-- 补了左右边距：原来直接贴屏幕边缘，和上面 16dp 的表单区不对齐 -->
+    <Button
+        android:id="@+id/btn_send"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:layout_marginHorizontal="16dp"
+        android:layout_marginTop="12dp"
+        android:layout_marginBottom="12dp"
+        android:text="发送" />
+
+</LinearLayout>

@@ -25,6 +25,8 @@
 | `:myactivityapplication` | Java | `ActStartActivity` | Activity 跳转与 `finish`、显式 / 隐式 Intent、Bundle 传值与结果回传、启动模式与 Intent Flag、读取资源、桌面快捷方式 |
 | `:intermediatecontrols` | Java | `LoginMainActivity` | 登录 / 忘记密码流程、CheckBox / Switch / RadioButton、EditText 校验与焦点监听、AlertDialog、DatePicker / TimePicker、Drawable（shape / selector / 点九图） |
 | `:datasharingapplication` | Java | `ShoppingChannelActivity` | 数据存储：SharedPreferences、SQLite 建库与 `SQLiteOpenHelper` 增删改查、**Room 图书 CRUD**、Application 全局数据、内部 / 外部私有 / 外部公共三类目录读写与图片落盘；**商城 demo（商品列表 → 详情 → 购物车）**：公共顶部栏组件、`ListView + ViewHolder`、购物车增删改查 |
+| `:server_application` | Java | `MainActivity` | **ContentProvider 服务端**：SQLite `user_info` 表 + 自定义 `UserInfoContentProvider`；`UriMatcher` 区分整表 `.../user` 与单行 `.../user/#`，增删改后 `notifyChange` 广播变更 |
+| `:client_application` | Java | `ProviderMmsActivity` | **ContentProvider 客户端 + 权限专题**：`ContentResolver` 跨应用读写服务端数据、懒汉式 / 饿汉式动态权限对照、联系人增删查（`ContentProviderOperation` + `applyBatch`）、`ContentObserver` 监听短信、MediaStore 选图 + FileProvider 分享彩信与安装 APK |
 
 > 各模块 `applicationId` 互不相同（均为 `com.zzz.*`），因此可以**同时安装到一台设备上**，方便横向对照。
 >
@@ -217,6 +219,35 @@ values-w1240dp/   最小宽度 ≥ 1240dp（超大屏）
 
 **数据库连接归谁管**：`ShoppingDBHelper` 是进程级单例，读写连接由它自己**懒加载 + 自愈**（`dbRead()` / `dbWrite()` 每次先判 `isOpen()`，被关掉就重开）。业务代码**不要**调用 `closeLink()` —— 曾经在 `onResume` 里关过一次，把列表页正在用的连接一起置成 `null`，导致点"加入购物车"直接空指针闪退，Database Inspector 里也一直显示 `closed`。
 
+### 6. `:server_application` —— ContentProvider 服务端
+
+这个模块没有交互界面，作用是把自己 SQLite 里的数据通过 ContentProvider 暴露给 `:client_application` 访问。
+
+| 文件 | 演示要点 |
+|---|---|
+| `database/UserDBHelper` | `user_info` 表（主键列叫 `id`，不是 `_id`），建表与增删改查封装 |
+| `provider/UserInfoContentProvider` | 继承 `ContentProvider` 实现 6 个抽象方法；`UriMatcher` 注册 `user`（整表）与 `user/#`（单行）两种匹配，`#` 表示数字 id |
+| `AndroidManifest.xml` | `android:exported="true"` 才能被别的应用访问；`android:authorities` 全局唯一，且必须与客户端约定一致 |
+
+**authority 一共出现在 4 个地方**，改包名或改 authority 时必须同步：① 服务端清单 `android:authorities` ② provider 里的 `AUTHORITY` 常量（`UriMatcher` 用）③ 客户端契约类 `UserInfoContent.AUTHORITIES` ④ 客户端清单 `<queries><provider android:authorities>`。只改清单不改常量，请求能进 provider 但 `UriMatcher` 匹配不到，报「未知 Uri」。
+
+### 7. `:client_application` —— ContentProvider 客户端 + 权限专题
+
+launcher 目前挂在 `ProviderMmsActivity`，其余页面在清单里以 `exported="false"` 保留，可加按钮跳转或临时改 launcher。
+
+| Activity | 演示要点 |
+|---|---|
+| `ContentWriteActivity` | 通过 `ContentResolver` 跨应用 insert / query / update / delete；`UserInfoContent` 契约类统一 authority 与列名；Android 11+ 需用 `<queries>` 声明包可见性，否则看不到服务端 provider |
+| `PermissionLazyActivity` / `PermissionHungryActivity` | 动态权限两种时机对照：**懒汉式**（点按钮才申请）/ **饿汉式**（进页面就申请）。饿汉式一次申请 4 个权限会按权限组连弹 2 个框，但只回调一次 |
+| `util/PermissionUtil` | `checkPermission`（检查 + 必要时申请）、`checkGrant`（判读 `grantResults`）、`hasPermission`（纯检查不申请） |
+| `ContactAddActivity` | `ContentProviderOperation` + `applyBatch` 批量写联系人：先插 `RawContacts` 拿 id，再用 `withValueBackReference` 关联到 `Data` 表的姓名 / 电话 / 邮箱三行；另一条路径演示按 `raw_contact_id` 查回并展示 |
+| `MonitorSmsActivity` | `registerContentObserver(content://sms, true, observer)` 监听收件箱；`onChange` 拿到的是**单行 uri**，直接 query 就能读到新短信 |
+| `ProviderMmsActivity` | MediaStore 查图片 → `GridLayout` 三列网格 → 点击多选（`LinkedHashSet` 去重保序）→ 「发送」按钮走 `ACTION_SEND` / `ACTION_SEND_MULTIPLE` |
+| `ProviderAPKActivity` | 读取 Download 下的 apk → `FileProvider.getUriForFile` 转 `content://` → `ACTION_VIEW` + APK MIME 调起系统安装器 |
+| `res/xml/file_paths.xml` | FileProvider 的可访问路径白名单，决定哪些目录的文件能被翻译成 `content://` Uri |
+
+**两个 FileProvider 高频坑**：① 清单里 `android:authorities` 若误写成 `@strings/`（多一个 s），**编译不报错**但 authority 解析失败、provider 注册成包名，运行时 `getUriForFile` 抛 `Couldn't find meta-data`；② `file_paths.xml` 只配了 `Download` 子目录时，根目录的图片会被 `FileUtil.checkFileUri` 全部过滤掉，列表直接空白。
+
 ---
 
 ## 🧰 技术栈与版本
@@ -304,6 +335,8 @@ Android_Study/
 | 2026-10-19 | `c9098f4` | Room 图书管理、Application 全局数据、多存储目录读写与图片存储 |
 | 2026-10-21 | `a0ff09f` | 商城 demo：公共顶部栏、商品列表 / 详情 / 购物车、购物车增删改查与角标同步 |
 | 2026-10-21 | `0d6c3c6` | `:datasharingapplication` 全部 25 个 Java 文件补齐注释（类头 Javadoc + 方法 `@param` + 行内注释） |
+| 2026-10-23 | `caf56a8` | ContentProvider 跨应用通信（新增 `:server_application` / `:client_application` 两个模块）、动态权限懒汉式与饿汉式对照、联系人读写、`ContentObserver` 监听短信 |
+| 2026-10-26 | `1d51255` | MediaStore 图片网格选图（多选 + `ACTION_SEND`）、FileProvider 发送彩信与安装本地 APK、权限适配（`READ_MEDIA_IMAGES` / `MANAGE_EXTERNAL_STORAGE`） |
 
 ---
 

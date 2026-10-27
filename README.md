@@ -10,7 +10,7 @@
 这是一个**学习记录型仓库**，不是产品项目。特点是：
 
 - **每个知识点一个 Activity**，命名即用途（如 `MainTextSizeActivity` 看字号单位、`MainViewMarginPaddingActivity` 看边距区别），需要看哪个效果就运行哪个页面；
-- **5 个模块各自是独立 application**，各有自己的 launcher，互不依赖 —— 好处是每个模块都能单独安装、单独调试，不会互相干扰；
+- **8 个模块各自是独立 application**，各有自己的 launcher，互不依赖 —— 好处是每个模块都能单独安装、单独调试，不会互相干扰；
 - **能对照的尽量做成对照组**。例如同一个"按钮点击事件"用三种写法实现（匿名内部类 / 实现接口 / lambda）并排放在一起；同一个 `scaleType` 用同一张图排开 8 行对比；
 - **踩过的坑写在代码注释里**。Material3 主题下"自定义背景图不显示""勾选框变成纯色块"这两个经典坑，在对应布局文件里都有完整的原因分析与修复说明。
 
@@ -27,6 +27,7 @@
 | `:datasharingapplication` | Java | `ShoppingChannelActivity` | 数据存储：SharedPreferences、SQLite 建库与 `SQLiteOpenHelper` 增删改查、**Room 图书 CRUD**、Application 全局数据、内部 / 外部私有 / 外部公共三类目录读写与图片落盘；**商城 demo（商品列表 → 详情 → 购物车）**：公共顶部栏组件、`ListView + ViewHolder`、购物车增删改查 |
 | `:server_application` | Java | `MainActivity` | **ContentProvider 服务端**：SQLite `user_info` 表 + 自定义 `UserInfoContentProvider`；`UriMatcher` 区分整表 `.../user` 与单行 `.../user/#`，增删改后 `notifyChange` 广播变更 |
 | `:client_application` | Java | `ProviderMmsActivity` | **ContentProvider 客户端 + 权限专题**：`ContentResolver` 跨应用读写服务端数据、懒汉式 / 饿汉式动态权限对照、联系人增删查（`ContentProviderOperation` + `applyBatch`）、`ContentObserver` 监听短信、MediaStore 选图 + FileProvider 分享彩信与安装 APK |
+| `:advancedcontrolsapplication` | Java | `ListViewActivity` | **高级控件（AdapterView 家族）**：Spinner 的 dropdown / dialog 两种展开形态、SimpleAdapter 与自建 BaseAdapter 对照、ListView 的 divider / dividerHeight / listSelector 运行期切换、列表项焦点抢占（`descendantFocusability`）、GridView 四种 `stretchMode` |
 
 > 各模块 `applicationId` 互不相同（均为 `com.zzz.*`），因此可以**同时安装到一台设备上**，方便横向对照。
 >
@@ -247,6 +248,50 @@ launcher 目前挂在 `ProviderMmsActivity`，其余页面在清单里以 `expor
 | `res/xml/file_paths.xml` | FileProvider 的可访问路径白名单，决定哪些目录的文件能被翻译成 `content://` Uri |
 
 **两个 FileProvider 高频坑**：① 清单里 `android:authorities` 若误写成 `@strings/`（多一个 s），**编译不报错**但 authority 解析失败、provider 注册成包名，运行时 `getUriForFile` 抛 `Couldn't find meta-data`；② `file_paths.xml` 只配了 `Download` 子目录时，根目录的图片会被 `FileUtil.checkFileUri` 全部过滤掉，列表直接空白。
+### 8. `:advancedcontrolsapplication` —— 高级控件（AdapterView 家族）
+
+`Spinner` / `ListView` / `GridView` 都是 `AdapterView` 的子类（`ListView`、`GridView` 又同为 `AbsListView` 的兄弟），所以「数据靠 Adapter 喂、点击靠 `OnItemClickListener` 收」是同一套。本模块按「数据源 → 适配器 → 行样式 → 焦点 → 排版」的顺序把它们拆开看。
+
+**8.1 三种适配器，一条演进线**
+
+| 适配器 | 数据集 | 行布局 | 代价 / 限制 |
+|---|---|---|---|
+| `ArrayAdapter` | `List<T>` 或 `string-array` | 只能是一个 `TextView` | 一行字，做不了图文 |
+| `SimpleAdapter` | `List<Map<String, Object>>` | 任意，但靠 `from` / `to` 两个数组**逐位对齐** | 静态格子；**key 写错不报错，那一格静默空白** |
+| 自建 `BaseAdapter` | 任意实体类（如 `List<Planet>`） | 任意，`getView` 里自己填 | 什么都能做，代价是四个方法都得自己写 |
+
+对应页面：`SpinnerDropdownActivity` / `SimpleAdapterActivity` / `BaseAdapterActivity`。
+
+**8.2 `BaseAdapter` 的四件套**
+
+| 方法 | 职责 | 本仓库的写法要点 |
+|---|---|---|
+| `getCount()` | 行数，返回 0 列表空白 | 数据为 null 时返回 0，而不是抛 NPE |
+| `getItem(int)` | 取数据 | 返回值收窄成 `Planet`（协变返回类型），点击回调里不必强转 |
+| `getItemId(int)` | 行 id | 直接 return position，够用 |
+| `getView(...)` | 造/复用行视图 | `convertView == null` 才 inflate；ViewHolder 用 `setTag` 挂在行上；**无论新旧行都要整体重填数据** |
+
+`getView` 的三个固定动作：拿/复用行视图 → 按 position 取数据 → 塞进控件。`inflate(layout, parent, false)` 第三个参数必须 `false`，否则 `IllegalStateException`。
+
+**8.3 ListView 的两类样式**
+
+| 页面 | 演示要点 |
+|---|---|
+| `ListViewActivity` | 两个 CheckBox 切换 `divider` / `dividerHeight` 与 `listSelector`。**「未选中 = 默认状态」用快照还原**：`onCreate` 里先 `getDivider()` / `getDividerHeight()` / `getSelector()` 存下来，取消勾选时原样塞回去，而不是抄一份"看起来像默认"的写死颜色。另注意 `setDividerHeight` 单位是 **px** |
+| `ListFocusActivity` | 行里放 Button 后行点击失灵，用 `descendantFocusability="blocksDescendants"` 修复。三种取值：`FOCUS_BEFORE_DESCENDANTS`（默认）/ `FOCUS_AFTER_DESCENDANTS` / `FOCUS_BLOCK_DESCENDANTS`。**该属性由行布局根节点设置，不是 ListView**；Java 版要在 ViewHolder 里多缓存一个 `ViewGroup itemRoot` 再 `setDescendantFocusability(...)` |
+
+**8.4 GridView 的五个属性与四种 stretchMode**
+
+`numColumns` / `columnWidth` / `horizontalSpacing` / `verticalSpacing` / `stretchMode`，Java 侧对应 `setNumColumns` / `setColumnWidth` / `setHorizontalSpacing` / `setVerticalSpacing` / `setStretchMode`（后四个单位都是 **px**）。用下拉列表切换拉伸模式，实测（Pixel_7，density 2.625，3 列、列宽 90dp、间距 8dp）：
+
+| stretchMode | 格子宽度 | 列间距 | 左侧留白 | 剩余空间去了哪 |
+|---|---|---|---|---|
+| `none` | 236px | 21px | 0 | 全留在右边 |
+| `columnWidth` | **318px** | 21px | 0 | 撑宽格子，间距不变 |
+| `spacingWidth` | 236px | **144px** | 0 | 均分到列与列之间 |
+| `spacingWidthUniform` | 236px | 82px | **82px** | 连两侧边缘一起均分 |
+
+一句话：**`columnWidth` 改格子，另两种改缝隙，只有 `Uniform` 会在左右两边也留白。**
 
 ---
 
@@ -282,11 +327,15 @@ Android_Study/
 ├── intermediatecontrols/         # 登录流程 + 常用控件 + Drawable
 ├── datasharingapplication/       # SharedPreferences / SQLite / Room / Application 全局数据 / 文件存储 / 商城 demo
 │   └── schemas/                  # Room 导出的建表 DDL 快照（随代码一起提交）
+├── server_application/           # ContentProvider 服务端：SQLite `user_info` + 自定义 provider
+├── client_application/           # ContentProvider 客户端 + 权限专题：联系人 / 短信 / MediaStore / FileProvider
+├── advancedcontrolsapplication/  # 高级控件：Spinner / ListView / GridView，适配器三代对照与焦点抢占
 ├── docs/android-blog/            # 源码解读博客的写作工作区（结构分析 / 章节规划 / 草稿）
 ├── img/                          # 界面截图等素材
+│   └── activities/               # 各模块 Activity 实机截图（按模块分目录，INDEX.md 为索引）
 ├── gradle/libs.versions.toml     # 依赖版本目录
 ├── build.gradle.kts
-├── settings.gradle.kts           # include 了以上 5 个模块
+├── settings.gradle.kts           # include 了以上 8 个模块
 └── README.md
 ```
 
@@ -337,6 +386,7 @@ Android_Study/
 | 2026-10-21 | `0d6c3c6` | `:datasharingapplication` 全部 25 个 Java 文件补齐注释（类头 Javadoc + 方法 `@param` + 行内注释） |
 | 2026-10-23 | `caf56a8` | ContentProvider 跨应用通信（新增 `:server_application` / `:client_application` 两个模块）、动态权限懒汉式与饿汉式对照、联系人读写、`ContentObserver` 监听短信 |
 | 2026-10-26 | `1d51255` | MediaStore 图片网格选图（多选 + `ACTION_SEND`）、FileProvider 发送彩信与安装本地 APK、权限适配（`READ_MEDIA_IMAGES` / `MANAGE_EXTERNAL_STORAGE`） |
+| 2026-10-27 | `cd71599` | 新增 `:advancedcontrolsapplication` 高级控件模块：Spinner 的 dropdown / dialog 两种形态、SimpleAdapter 与自建 BaseAdapter 对照、ListView 分隔线与按压背景、列表项焦点抢占（`descendantFocusability`）、GridView 四种 `stretchMode`；另补 8 个模块共 77 张 Activity 实机截图与索引 |
 
 ---
 
@@ -375,6 +425,14 @@ Android_Study/
 | **纯 Java 模块照抄 Kotlin 教程加 `kapt` / `ksp`** | 工程里没有 Kotlin 插件，`kapt(...)` 直接报 DSL 找不到方法；为此再加 Kotlin 插件属于为注解处理器引入整套 Kotlin 编译链 | 纯 Java 模块用 `annotationProcessor("androidx.room:room-compiler:x.y.z")`；`kapt` / `ksp` 只适用于 Kotlin 模块 |
 | **不配 `room.schemaLocation`** | 不报错，只打一条 warning「Schema export directory is not provided…」，等到要写 `Migration` 时已无历史 DDL 可比对 | 在 `defaultConfig` 里配 `javaCompileOptions.annotationProcessorOptions.arguments["room.schemaLocation"] = "$projectDir/schemas"`，并把 `schemas/` 提交进版本库 |
 | **一个 APK 只能注册一个 `Application`** | 清单 `android:name` 只有一个；另一个 `Application` 子类的 `onCreate` 永不执行，其单例只能靠 `new` 手动创建，拿到的实例并未 attach `Context` | 全局状态统一放进已注册的那个 Application，不要再写第二套单例；确有两个都要用时**用继承**（本仓库 `ShopApplication extends BookApplication`，`super.onCreate()` 里照样完成 Room 建库），而不是把两份 `onCreate` 复制一遍 |
+
+### AdapterView 这一族的三条
+
+| 坑 | 表现 | 解法 |
+|---|---|---|
+| **行里有 `Button` / `CheckBox` 时 `setOnItemClickListener` 失灵** | 点行的文字区**完全没反应**（按住连按压高亮都没有），但点行内按钮却正常。实测确认：改行根布局的焦点属性就能修好，说明事件一直送到了 ListView，失效发生在焦点层 —— 行内有 `focusable` 子控件时，整行被视为"可聚焦的行"，ListView 不走行点击逻辑 | 行布局根节点加 `android:descendantFocusability="blocksDescendants"`；或在 ViewHolder 里多缓存一个 `ViewGroup itemRoot`，调 `setDescendantFocusability(ViewGroup.FOCUS_BLOCK_DESCENDANTS)`。**注意是 `ViewGroup` 的方法，声明成 `View` 编译不过** |
+| **Spinner `spinnerMode="dialog"` 并不是"自带 radio 的单选弹窗"** | 实测 API 33 + Material3 下，弹窗里是纯文字行，没有单选圆点，当前项也没有勾选标记 | 想要那种观感，得自己写一份含 `CheckedTextView` / `RadioButton` 的布局传给 `setDropDownViewResource()`。`android:prompt` 只在 dialog 模式下作为对话框标题可见 |
+| **切 `stretchMode` 后立刻量尺寸，拿到的是旧值** | `setStretchMode()` 之后马上 `getChildAt(0).getWidth()`，读到的还是上一帧的列宽 | 列宽在 `onMeasure` 里重算，必须用一次性的 `OnGlobalLayoutListener` 等这一帧布局结束再读，读完 `removeOnGlobalLayoutListener(this)`。另外 `setStretchMode` 的值没变时不会触发重排，需要时补一句 `requestLayout()` |
 
 ---
 

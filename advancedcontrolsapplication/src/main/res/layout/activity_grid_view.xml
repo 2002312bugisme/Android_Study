@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!--
+    GridView 五种属性实验页布局
+    对应 Java：advancedcontrolsapplication/src/main/java/com/zzz/advancedcontrolsapplication/GridViewActivity.java
+
+    结构说明：顶部一个 dropdown 形式的 Spinner（选拉伸模式）+ 一行实测数值 + 下面铺满的 GridView。
+
+    五个属性在这里一次性配齐，之后由 Java 只改 stretchMode，其余四项保持不变 ——
+    这样切换时屏幕上的差别就只来自 stretchMode 一个变量，才看得清。
+-->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <!-- 内层容器承担留白：根布局的 padding 会被 Java 里 setPadding(systemBars…) 覆盖掉 -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <!--
+            拉伸模式选择器：dropdown 形式（默认就是 dropdown，显式写出来便于和 dialog 对照）。
+            prompt 在 dropdown 模式下基本看不到，这里只给 dialog 模式留个余地，可写可不写。
+        -->
+        <Spinner
+            android:id="@+id/sp_stretch_mode"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:spinnerMode="dropdown" />
+
+        <!--
+            实测回显：把「当前格子宽度 / 列间距 / 左侧留白」用像素值打出来。
+            肉眼只能看出"变宽了"，数值才能看出"变的是列宽还是间距"。
+        -->
+        <TextView
+            android:id="@+id/tv_measure"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:lineSpacingExtra="2dp"
+            android:text="等待布局…"
+            android:textSize="13sp" />
+
+        <!--
+            GridView 本体，五个关键属性：
+              · android:numColumns="3"            —— 列数，写 AUTO_FIT(-1) 则按 columnWidth 自动算能放几列
+              · android:columnWidth="90dp"        —— 每列宽度，只在「不拉伸」或 spacingWidth 系列模式下
+                                                     才是最终列宽；STRETCH_COLUMN_WIDTH 下会被撑大
+              · android:horizontalSpacing="8dp"   —— 列与列之间的横向缝隙
+              · android:verticalSpacing="8dp"     —— 行与行之间的纵向缝隙
+              · android:stretchMode="none"        —— 剩余空间怎么处理，Java 里会被 Spinner 改写
+
+            高度 0dp + weight=1：交给外层 LinearLayout 分配，吃掉上方控件之外的剩余空间。
+        -->
+        <GridView
+            android:id="@+id/gv_planet"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginTop="8dp"
+            android:layout_weight="1"
+            android:columnWidth="90dp"
+            android:horizontalSpacing="8dp"
+            android:numColumns="3"
+            android:stretchMode="none"
+            android:verticalSpacing="8dp" />
+
+    </LinearLayout>
+
+</LinearLayout>

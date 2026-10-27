@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!--
+    带按钮的行布局（焦点实验用）。
+
+    对应 Java：advancedcontrolsapplication/src/main/java/com/zzz/advancedcontrolsapplication/adapter/PlanetWithButtonBaseAdapter.java
+    在 getView() 里被 inflate：R.layout.item_list_with_button
+
+    ⚠️ 这个布局故意**不写** android:descendantFocusability —— 保持默认值
+       （FOCUS_BEFORE_DESCENDANTS，即"行自己先处理焦点，再交给子控件"），
+       这样才能在界面上复现「行里有按钮 → 点行不响应」的现象。
+
+       两种修复写法（二选一，不要在同一个布局里同时用）：
+       ① XML：
+              <LinearLayout
+                  android:id="@+id/ll_item"
+                  android:descendantFocusability="blocksDescendants" ... >
+       ② Java（本 demo 采用这一种，因为要在运行期开关对比）：
+              holder.itemRoot.setDescendantFocusability(ViewGroup.FOCUS_BLOCK_DESCENDANTS);
+
+       ⚠️ 该属性由「行布局的根节点」设置，不是由 ListView 设置 ——
+          写成 listView.setDescendantFocusability(...) 是无效的，ListView 只管自己的后代。
+-->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/ll_item"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center_vertical"
+    android:orientation="horizontal"
+    android:paddingLeft="16dp"
+    android:paddingTop="10dp"
+    android:paddingRight="16dp"
+    android:paddingBottom="10dp">
+
+    <!-- 图标：纯装饰，48dp 与矢量图导出尺寸一致 -->
+    <ImageView
+        android:id="@+id/iv_icon"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:contentDescription="@null"
+        android:scaleType="fitCenter" />
+
+    <!-- 文字区：占据图标与按钮之间的剩余宽度（weight=1） -->
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="12dp"
+        android:layout_weight="1"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/tv_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="16sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/tv_desc"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="2dp"
+            android:textColor="?android:attr/textColorSecondary"
+            android:textSize="13sp" />
+
+    </LinearLayout>
+
+    <!--
+        罪魁祸首：Button。
+        它默认 android:clickable="true" 且 android:focusable="true" ——
+        · clickable 决定了它会在触摸事件分发时"消费"掉落在自己身上的点击；
+        · focusable 决定了它会参与焦点竞争，把整行的焦点抢走。
+        两者叠加，就是「点按钮只走按钮、点行没反应」的来源。
+
+        注意：这里不要去给 Button 加 android:focusable="false" 来"绕过"问题 ——
+        那只是把按钮变成不可聚焦，治不了机制；正确做法是在行根布局上控制
+        descendantFocusability（见文件头部说明）。
+    -->
+    <Button
+        android:id="@+id/btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="8dp"
+        android:minWidth="0dp"
+        android:text="查看" />
+
+</LinearLayout>

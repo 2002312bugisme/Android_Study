@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!--
+    BaseAdapter 的「行布局」——列表每一项长什么样。
+
+    对应 Java：advancedcontrolsapplication/src/main/java/com/zzz/advancedcontrolsapplication/adapter/PlanetBaseAdapter.java
+    在 getView() 里被 inflate：R.layout.item_base_adapter
+
+    ⚠️ 与 SimpleAdapter 的关键差别：
+       item_simple_adapter.xml 里的 id 必须和 Java 里 from/to 两个数组顺序一一对应；
+       这里的 id 则是 getView() 里用 findViewById 直接按名字取的，
+       对应关系写在代码里（holder.ivIcon = convertView.findViewById(R.id.iv_icon)），
+       改 id 只需改这一处，不必维护数组顺序。
+-->
+
+<!-- 一整行：左边图标，右边两行文字。高度由内容撑开，不写死 -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center_vertical"
+    android:orientation="horizontal"
+    android:paddingLeft="16dp"
+    android:paddingTop="10dp"
+    android:paddingRight="16dp"
+    android:paddingBottom="10dp">
+
+    <!--
+        图标位。固定 48dp x 48dp，与矢量图标的导出尺寸一致（1:1 不缩放最清晰）。
+        · android:scaleType="fitCenter" —— 兜底，将来换图不会被拉伸变形
+        · android:contentDescription="@null" —— 图标纯装饰，避免无障碍朗读重复旁边的文字
+    -->
+    <ImageView
+        android:id="@+id/iv_icon"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:contentDescription="@null"
+        android:scaleType="fitCenter" />
+
+    <!-- 文字区：占据图标右侧的剩余宽度 -->
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="12dp"
+        android:layout_weight="1"
+        android:orientation="vertical">
+
+        <!-- 主标题：对应 Planet#getTitle() -->
+        <TextView
+            android:id="@+id/tv_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="16sp"
+            android:textStyle="bold" />
+
+        <!--
+            副标题：对应 Planet#getDescription()。
+            颜色引用主题属性而不是写死 #757575 —— 本模块主题是 Material3 DayNight，
+            深色模式下写死的深灰会看不清。
+        -->
+        <TextView
+            android:id="@+id/tv_desc"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="2dp"
+            android:textColor="?android:attr/textColorSecondary"
+            android:textSize="13sp" />
+
+    </LinearLayout>
+
+</LinearLayout>

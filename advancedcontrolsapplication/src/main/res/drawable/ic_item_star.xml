@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!--
+    列表项图标：五角星（用于「我的收藏」这一行）
+    对应 Java：advancedcontrolsapplication/.../SimpleAdapterActivity.java（Map 里的 KEY_ICON）
+
+    五角星 pathData 的 10 个顶点是算出来的：以 (12,13) 为心，
+    奇数下标取外半径 7、偶数下标取内半径 3，起点朝正上方，每次转 36°。
+    手算容易错，画复杂图形时先用脚本把坐标算好再贴进来。
+-->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="48dp"
+    android:height="48dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+
+    <!-- 圆形底板 -->
+    <path
+        android:fillColor="#FF9800"
+        android:pathData="M2,12 a10,10 0 1,0 20,0 a10,10 0 1,0 -20,0 z" />
+
+    <!-- 五角星：外半径 7 / 内半径 3，10 个顶点依次连线后闭合 -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M12.00,6.00 L13.76,10.57 L18.66,10.84 L14.85,13.93 L16.11,18.66 L12.00,16.00 L7.89,18.66 L9.15,13.93 L5.34,10.84 L10.24,10.57 Z" />
+
+</vector>

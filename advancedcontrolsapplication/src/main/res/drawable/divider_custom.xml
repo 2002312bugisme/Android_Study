@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!--
+    自定义分隔线（选中 CheckBox 时生效）。
+
+    用法：Java 里 listView.setDivider(getDrawable(R.drawable.divider_custom));
+         再配 setDividerHeight(dp) 决定这条线有多粗。
+
+    说明：
+      · 分隔线本质就是一张「会被横向拉满、纵向拉伸到 dividerHeight」的 drawable，
+        所以用 <shape> 画一个纯色 / 渐变矩形最省事。
+      · <size android:height="12dp"> 给的是「固有高度」，只有 setDividerHeight 没设时才会用到；
+        这里写上纯属让资源自身语义完整，实际高度以 Java 里的 setDividerHeight 为准。
+-->
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+
+    <!-- angle=0 表示从左到右渐变（90 才是从上到下） -->
+    <gradient
+        android:angle="0"
+        android:endColor="#F4511E"
+        android:startColor="#FFB74D" />
+
+    <size android:height="12dp" />
+
+</shape>

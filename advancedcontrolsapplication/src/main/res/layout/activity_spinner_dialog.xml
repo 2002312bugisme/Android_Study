@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!--
+    对话框式下拉列表（Spinner，spinnerMode="dialog"）演示页布局
+    对应 Java：advancedcontrolsapplication/src/main/java/com/zzz/advancedcontrolsapplication/SpinnerDialogActivity.java
+
+    结构说明：和 activity_spinner_dropdown.xml 几乎一模一样 —— 数据装配也完全一样，
+             全页唯一的区别就是 Spinner 上那一个 android:spinnerMode 属性。
+-->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <!-- 内层容器只负责留白：根布局的 padding 会被 Java 里 setPadding(systemBars…) 覆盖掉 -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Spinner（spinnerMode=&quot;dialog&quot;）"
+            android:textSize="16sp" />
+
+        <!--
+            下拉列表控件本体，展开方式为「居中弹一个带标题栏的模态对话框」。
+
+            关键属性：
+              · android:spinnerMode="dialog" —— 与 dropdown 的唯一开关。改成 dialog 后，
+                用户点这个控件弹出的是居中的模态 AlertDialog + 可点列表，
+                而不是贴着控件向下弹的列表。
+              · android:prompt —— 对话框标题文案，只在 dialog 模式下有可见效果；
+                dropdown 模式下这个属性交给弹层当标题用，多数机型上看不到。
+                取值按约定用字符串资源引用（@string/...），此处指向 strings.xml 的 spinner_dialog_prompt。
+
+            ⚠️ 实测（API 33 + Material3 主题，截图见 img/activities/advancedcontrolsapplication/
+               SpinnerDialogActivity_dialog_open.png）：弹窗里是<b>纯文字行，没有单选圆点</b>，
+               当前选中项也没有勾选标记。想要「radio + 文字」的单选观感，
+               必须自己写一份含 CheckedTextView / RadioButton 的布局传给 setDropDownViewResource()。
+        -->
+        <Spinner
+            android:id="@+id/spinner_dialog"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:prompt="@string/spinner_dialog_prompt"
+            android:spinnerMode="dialog" />
+
+        <!-- 结果回显区：初始文案与 Java 拼出的文案格式保持一致 -->
+        <TextView
+            android:id="@+id/tv_dialog_result"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="选中的城市："
+            android:textSize="16sp" />
+
+    </LinearLayout>
+
+</LinearLayout>

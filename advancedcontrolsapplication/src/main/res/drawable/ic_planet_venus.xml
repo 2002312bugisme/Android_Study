@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!--
+    列表项图标：金星（琥珀色圆底 + 白色云带）
+    对应 Java：advancedcontrolsapplication/.../pojo/Planet.java
+-->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="48dp"
+    android:height="48dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+
+    <!-- 行星本体 -->
+    <path
+        android:fillColor="#FFB300"
+        android:pathData="M2,12 a10,10 0 1,0 20,0 a10,10 0 1,0 -20,0 z" />
+
+    <!-- 云带一：居中 (12,9.2) 的扁椭圆，rx 取 9.2 是为了保证两端仍在圆内 -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M2.8,9.2 a9.2,0.9 0 1,0 18.4,0 a9.2,0.9 0 1,0 -18.4,0 z" />
+
+    <!-- 云带二：居中 (12,13.6)、更窄的一条 -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M4.4,13.6 a7.6,0.7 0 1,0 15.2,0 a7.6,0.7 0 1,0 -15.2,0 z" />
+
+</vector>

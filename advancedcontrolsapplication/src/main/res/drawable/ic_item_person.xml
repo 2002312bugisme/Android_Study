@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!--
+    列表项图标：人物（用于「个人中心」这一行）
+    对应 Java：advancedcontrolsapplication/.../SimpleAdapterActivity.java（Map 里的 KEY_ICON）
+
+    说明：本模块列表配图统一采用矢量图标（VectorDrawable）而非位图。
+    好处是同一个文件在 mdpi / xxhdpi 上都清晰，不用准备多套密度图；
+    用法与位图一致 —— R.drawable.ic_item_person 就是一个 int 资源 id。
+
+    画布 24x24（标准单位方格），导出尺寸 48dp。
+    第一层 path：整圆底板；第二层 path：白色图形（头 + 肩）。
+-->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="48dp"
+    android:height="48dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+
+    <!-- 圆形底板。pathData 用两段半圆弧拼成整圆：从 (2,12) 到 (22,12) 再绕回来 -->
+    <path
+        android:fillColor="#3F51B5"
+        android:pathData="M2,12 a10,10 0 1,0 20,0 a10,10 0 1,0 -20,0 z" />
+
+    <!-- 头部：圆心 (12,10.1)、半径 2.9 的整圆 -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M12,7.2 a2.9,2.9 0 1,0 0,5.8 a2.9,2.9 0 1,0 0,-5.8 z" />
+
+    <!-- 肩部：底边 (5.4,19.2)→(18.6,19.2) 的弧形块，用两段三次贝塞尔压出圆肩 -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M5.4,19.2 c0,-3.5 2.9,-5.6 6.6,-5.6 c3.7,0 6.6,2.1 6.6,5.6 z" />
+
+</vector>

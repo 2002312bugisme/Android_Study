@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!--
+    列表项图标：菱形（用于「会员特权」这一行）
+    对应 Java：advancedcontrolsapplication/.../SimpleAdapterActivity.java（Map 里的 KEY_ICON）
+
+    菱形就是四个顶点连成的闭合多边形：上 (12,5.5)、右 (18.5,12)、下 (12,18.5)、左 (5.5,12)。
+-->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="48dp"
+    android:height="48dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+
+    <!-- 圆形底板 -->
+    <path
+        android:fillColor="#009688"
+        android:pathData="M2,12 a10,10 0 1,0 20,0 a10,10 0 1,0 -20,0 z" />
+
+    <!-- 白色菱形 -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M12,5.5 L18.5,12 L12,18.5 L5.5,12 Z" />
+
+</vector>

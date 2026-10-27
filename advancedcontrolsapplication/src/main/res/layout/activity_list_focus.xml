@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!--
+    列表项焦点抢占实验页布局
+    对应 Java：advancedcontrolsapplication/src/main/java/com/zzz/advancedcontrolsapplication/ListFocusActivity.java
+
+    结构说明：顶部一个 CheckBox 当开关（是否阻止子控件抢焦点），
+             下面 ListView 撑满剩余高度，底部一行「谁被点到了」的回显。
+-->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <!-- 内层容器承担留白：根布局的 padding 会被 Java 里 setPadding(systemBars…) 覆盖掉 -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <!--
+            开关：勾选 = 行根布局 setDescendantFocusability(FOCUS_BLOCK_DESCENDANTS)
+                         等价于 XML 里 android:descendantFocusability="blocksDescendants"
+                 取消 = 回到默认 FOCUS_BEFORE_DESCENDANTS（复现"点行没反应"）
+        -->
+        <CheckBox
+            android:id="@+id/cb_block_focus"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="blocksDescendants（阻止子控件抢焦点）"
+            android:textSize="15sp" />
+
+        <ListView
+            android:id="@+id/lv_list"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginTop="8dp"
+            android:layout_weight="1" />
+
+        <!-- 回显区：分别显示「行被点了」还是「按钮被点了」，用来判断有没有被抢 -->
+        <TextView
+            android:id="@+id/tv_result"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="点一下列表行，或行里的按钮"
+            android:textSize="15sp" />
+
+    </LinearLayout>
+
+</LinearLayout>

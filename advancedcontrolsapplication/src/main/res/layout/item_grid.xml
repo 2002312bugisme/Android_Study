@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!--
+    GridView 的「格子布局」——网格里每一个小方块长什么样。
+
+    对应 Java：advancedcontrolsapplication/src/main/java/com/zzz/advancedcontrolsapplication/adapter/PlanetGridAdapter.java
+    在 getView() 里被 inflate：R.layout.item_grid
+
+    ⚠️ 宽度写 match_parent 是有意的：GridView 会用「每一列的宽度」作为精确值去 measure 这个根节点，
+       所以这里的 match_parent 实际等于「撑满一列」，而不是撑满屏幕。
+       真正决定一列多宽的是 GridView 的 columnWidth + stretchMode（见 activity_grid_view.xml）。
+
+    另外注意：格子布局**不需要**写 margin 来留缝 ——
+    格子之间的横向/纵向缝隙由 GridView 的 horizontalSpacing / verticalSpacing 统一控制，
+    写在 margin 里会与 spacing 叠加，反而算不清。
+-->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center_horizontal"
+    android:orientation="vertical"
+    android:paddingTop="6dp"
+    android:paddingBottom="6dp">
+
+    <!-- 图标：48dp，与矢量图标导出尺寸一致 -->
+    <ImageView
+        android:id="@+id/iv_icon"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:contentDescription="@null"
+        android:scaleType="fitCenter" />
+
+    <!--
+        名称：格子很窄，单行显示、超出用省略号，避免把格子撑高导致每行高矮不一。
+        maxLines + ellipsize 是列表/网格里控制文字溢出的标准组合。
+    -->
+    <TextView
+        android:id="@+id/tv_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:ellipsize="end"
+        android:gravity="center_horizontal"
+        android:maxLines="1"
+        android:textSize="12sp" />
+
+</LinearLayout>

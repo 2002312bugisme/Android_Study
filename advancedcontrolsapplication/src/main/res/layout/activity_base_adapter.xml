@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!--
+    BaseAdapter 图文列表演示页布局
+    对应 Java：advancedcontrolsapplication/src/main/java/com/zzz/advancedcontrolsapplication/BaseAdapterActivity.java
+
+    结构说明：与 activity_simple_adapter.xml 完全同构 —— 标题 + ListView（撑满剩余高度）+ 底部点击回显。
+             两页唯一的差别在 Java 里「谁来写 getView()」，
+             页面骨架和行布局（item_base_adapter.xml）长得几乎一样，正好用来对照。
+
+    ⚠️ 原模板这里是 <LieanerLayout>（拼写错误，不是合法控件名），运行期 inflate 会直接抛
+       ClassNotFoundException 崩溃，已改成 LinearLayout。
+-->
+
+<!-- 根布局只负责铺满屏；内边距交给内层容器（原因见下） -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <!--
+        ⚠️ 内层容器承担 16dp 留白。
+        根布局上不要直接写 android:padding：Java 里 OnApplyWindowInsetsListener 调的是
+        setPadding(...)，会把 XML 设的内边距整体覆盖成系统栏尺寸，两者会打架。
+    -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <!-- 小标题只做说明，不参与逻辑 -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="BaseAdapter：图片 + 文字（自建适配器）"
+            android:textSize="16sp" />
+
+        <!--
+            列表本体。
+            关键属性：
+              · layout_height="0dp" + layout_weight="1" —— 高度交给 LinearLayout 分配，
+                把标题与底部回显之外的剩余空间全吃掉；行数变多时列表内部自己滚动。
+              · android:divider 引用 ?android:attr/listDivider（系统分隔线 drawable，
+                深浅色主题各自对应），比写死 #EEEEEE 更能适配深色模式。
+        -->
+        <ListView
+            android:id="@+id/list_view"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginTop="8dp"
+            android:layout_weight="1"
+            android:divider="?android:attr/listDivider"
+            android:dividerHeight="1dp" />
+
+        <!-- 点击结果回显：核心 API 的结论落在这句上 -->
+        <TextView
+            android:id="@+id/tv_result"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="点击列表项试试"
+            android:textSize="16sp" />
+
+    </LinearLayout>
+
+</LinearLayout>

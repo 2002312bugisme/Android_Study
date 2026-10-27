@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!--
+    ListView 分隔线与按压背景实验页布局
+    对应 Java：advancedcontrolsapplication/src/main/java/com/zzz/advancedcontrolsapplication/ListViewActivity.java
+
+    结构说明：顶部两个 CheckBox 当开关（未选中 = 主题默认样式，选中 = 自定义样式），
+             下面一个 ListView 撑满剩余高度，方便直接看出样式变化。
+
+    ⚠️ 这里刻意不写 android:divider / android:listSelector —— 让 ListView 用主题默认值，
+       这样「未选中 = 默认状态」才是真的默认，而不是抄了一份看不出差别的副本。
+       Java 里在 onCreate 时把默认值 getDivider() / getSelector() 存下来，取消选中时原样还原。
+-->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <!--
+        内层容器承担留白。
+        根布局上不要直接写 android:padding：Java 里 OnApplyWindowInsetsListener 调的是
+        setPadding(...)，会把 XML 设的内边距整体覆盖成系统栏尺寸，两者会打架。
+    -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <!-- 开关一：分隔线。选中 → 渐变橙色粗线；未选中 → 主题默认细线 -->
+        <CheckBox
+            android:id="@+id/cb_custom_divider"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="自定义分隔线（divider + dividerHeight）"
+            android:textSize="15sp" />
+
+        <!-- 开关二：按压背景。选中 → 半透明靛蓝色块；未选中 → 主题默认（通常是 ripple） -->
+        <CheckBox
+            android:id="@+id/cb_custom_selector"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="自定义按压背景（listSelector）"
+            android:textSize="15sp" />
+
+        <!--
+            列表本体。
+            关键属性：
+              · layout_height="0dp" + layout_weight="1" —— 高度交给外层 LinearLayout 分配，
+                吃掉两个 CheckBox 之外的剩余空间；行数多了由列表内部滚动。
+              · 不写 android:divider / android:dividerHeight —— 用主题默认值，
+                Java 侧会把默认值读出来存成快照，供"取消选中"时还原。
+        -->
+        <ListView
+            android:id="@+id/lv_list"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginTop="8dp"
+            android:layout_weight="1" />
+
+        <!-- 页面导航：跳到"列表项焦点抢占"实验页（该页 exported=false，应用内只能从这里进） -->
+        <Button
+            android:id="@+id/btn_open_list_focus"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="打开焦点抢占实验（行里带按钮）" />
+
+        <!-- 页面导航：跳到 GridView 拉伸模式实验页 -->
+        <Button
+            android:id="@+id/btn_open_grid_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="打开 GridView 拉伸模式实验" />
+
+    </LinearLayout>
+
+</LinearLayout>

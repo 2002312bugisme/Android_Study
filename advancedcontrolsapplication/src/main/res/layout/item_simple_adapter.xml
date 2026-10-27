@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!--
+    SimpleAdapter 的「行布局」——列表每一项长什么样。
+
+    对应 Java：advancedcontrolsapplication/src/main/java/com/zzz/advancedcontrolsapplication/SimpleAdapterActivity.java
+    被 SimpleAdapter 的第二个构造参数引用：R.layout.item_simple_adapter
+
+    ⚠️ 这个布局里被填充的控件，靠 id 与 Java 里 from/to 两个数组的对应关系被找到：
+         from = {"icon", "name", "desc"}          ← Map 里的 key
+         to   = {R.id.iv_icon, R.id.tv_name, R.id.tv_desc}   ← 这里的 id，顺序必须与 from 一一对应
+       所以下面三个 id 改名时，Java 那两个数组要跟着改。
+-->
+
+<!-- 一整行：左边图片，右边两行文字。高度不用写死，由内容撑开 -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center_vertical"
+    android:orientation="horizontal"
+    android:paddingLeft="16dp"
+    android:paddingTop="10dp"
+    android:paddingRight="16dp"
+    android:paddingBottom="10dp">
+
+    <!--
+        图标位。固定 48dp x 48dp，与矢量图标的导出尺寸一致（1:1 不缩放最清晰）。
+        · android:scaleType="fitCenter" —— 图与控件等大，这里只是兜底，避免将来换图被拉伸变形
+        · android:contentDescription —— 无障碍朗读；本节和知识点无关，写 null 也能跑，
+          但列表里的图标属于「纯装饰」，规范做法是给它一个空描述（null）以免重复朗读旁边的文字
+    -->
+    <ImageView
+        android:id="@+id/iv_icon"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:contentDescription="@null"
+        android:scaleType="fitCenter" />
+
+    <!-- 文字区：占据图标右侧剩余宽度 -->
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="12dp"
+        android:layout_weight="1"
+        android:orientation="vertical">
+
+        <!-- 主标题：对应 from 里的 "name" -->
+        <TextView
+            android:id="@+id/tv_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="16sp"
+            android:textStyle="bold" />
+
+        <!--
+            副标题：对应 from 里的 "desc"。
+            颜色不写死成 #757575，而是引用主题属性 ?android:attr/textColorSecondary ——
+            它本身是个随主题切换的选择器：浅色模式下是深灰、深色模式下自动变浅灰。
+            这个模块的主题是 Material3 DayNight（见 res/values-night/themes.xml），写死颜色在深色模式下会看不清。
+        -->
+        <TextView
+            android:id="@+id/tv_desc"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="2dp"
+            android:textColor="?android:attr/textColorSecondary"
+            android:textSize="13sp" />
+
+    </LinearLayout>
+
+</LinearLayout>

@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!--
+    下拉列表（Spinner + ArrayAdapter）演示页布局
+    对应 Java：advancedcontrolsapplication/src/main/java/com/zzz/advancedcontrolsapplication/SpinnerDropdownActivity.java
+
+    结构说明：上下两组「标题 + Spinner + 结果回显」，
+             分别演示 ArrayAdapter 的两种数据来源：string-array 资源 / Java 里的 List<String>。
+-->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <!--
+        内层容器只负责留白。
+        ⚠️ 根布局上不要直接写 android:padding：Java 里 OnApplyWindowInsetsListener 调的是
+           setPadding(...)，会把 XML 设的内边距整体覆盖掉（系统栏侵入量替换掉 16dp），
+           所以把 padding 放到内层容器上，两者互不干扰。
+    -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <!-- ========== 第一组：数据来自 res/values/arrays.xml 的 <string-array> ========== -->
+
+        <!-- 小标题只做分组说明，不参与逻辑 -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="1. ArrayAdapter.createFromResource（string-array 资源）"
+            android:textSize="16sp" />
+
+        <!--
+            下拉列表控件本体（Spinner）。
+            关键属性：
+              · android:spinnerMode="dropdown" —— 展开方式为「贴着控件向下弹出一块列表」。
+                默认值就是 dropdown，这里显式写出来，是为了和另一种写法
+                android:spinnerMode="dialog"（居中弹一个模态对话框）做对照。
+        -->
+        <Spinner
+            android:id="@+id/spinner_from_array"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:spinnerMode="dropdown" />
+
+        <!-- 结果回显区：初始文案与 Java 拼出的文案格式保持一致 -->
+        <TextView
+            android:id="@+id/tv_from_array_result"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="选中的城市："
+            android:textSize="16sp" />
+
+        <!-- ========== 第二组：数据来自 Java 代码里的 List ========== -->
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:text="2. new ArrayAdapter(context, resource, List)（内存集合）"
+            android:textSize="16sp" />
+
+        <!-- 同样的控件，只是数据源换成运行时才确定的集合；spinnerMode 依旧显式写 dropdown -->
+        <Spinner
+            android:id="@+id/spinner_from_list"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:spinnerMode="dropdown" />
+
+        <TextView
+            android:id="@+id/tv_from_list_result"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="选中的套餐："
+            android:textSize="16sp" />
+
+        <!--
+            页面导航按钮：跳到第二页 activity_spinner_dialog（spinnerMode="dialog"）。
+            那一页在清单里是 exported=false，adb 的 am start 拉不起来，只能从应用内显式 Intent 进入。
+        -->
+        <Button
+            android:id="@+id/btn_open_dialog"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="32dp"
+            android:text="打开 dialog 形式的下拉列表" />
+
+        <!--
+            页面导航按钮：跳到第三页 activity_simple_adapter（图文列表）。
+            同样是为了绕开 exported=false —— 应用内的显式 Intent 不受导出台限制。
+        -->
+        <Button
+            android:id="@+id/btn_open_simple_adapter"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="打开 SimpleAdapter 图文列表" />
+
+    </LinearLayout>
+
+</LinearLayout>

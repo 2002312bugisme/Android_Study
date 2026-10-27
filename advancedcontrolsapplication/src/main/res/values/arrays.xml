@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!--
+        Spinner 的数据源之一：<string-array> 字符串数组资源。
+        编译后它就是一个 int 型资源 id（R.array.spinner_cities），
+        ArrayAdapter.createFromResource() 正是靠这个 id 把数组读成 List<CharSequence>，
+        全程不用手写 Java 集合 —— 静态选项（城市、性别、单位…）优先走这里。
+    -->
+    <string-array name="spinner_cities">
+        <item>北京</item>
+        <item>上海</item>
+        <item>广州</item>
+        <item>深圳</item>
+        <item>杭州</item>
+        <item>成都</item>
+    </string-array>
+
+    <!--
+        GridView 四种拉伸模式的名字。
+        顺序必须与 GridViewActivity 里 STRETCH_MODES 数组逐位对应：
+        下标 0=none、1=columnWidth、2=spacingWidth、3=spacingWidthUniform。
+        改这里顺序时，那个常量数组要一起改，否则下拉选项和实际效果会错位。
+    -->
+    <string-array name="grid_stretch_modes">
+        <item>none（不拉伸）</item>
+        <item>columnWidth（拉伸列宽）</item>
+        <item>spacingWidth（拉伸列间隙）</item>
+        <item>spacingWidthUniform（含两侧）</item>
+    </string-array>
+
+</resources>

@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!--
+    自定义「按压背景」（选中 CheckBox 时生效），也就是 ListView 的 listSelector。
+
+    用法：Java 里 listView.setSelector(getDrawable(R.drawable.list_selector_custom));
+
+    说明：
+      · ListView 的 selector 就是「手指按住某一行时，铺在那一行底下的一层 drawable」。
+        XML 里对应 android:listSelector 属性，默认值来自主题的 ?android:attr/listSelector。
+      · 必须写成 <selector>（状态选择器），并按状态给不同 <item>：
+        state_pressed 命中时用半透明色块，其余状态用全透明 —— 否则这张图会常驻，
+        把每一行都染色。
+      · 颜色用 #AARRGGBB 八位写法，前两位 55 是透明度（0 全透明，FF 不透明）。
+      · 注意：ListView 在触摸模式下没有"选中(selected)"状态，只有 pressed/focused，
+        所以这里只需要 state_pressed。
+-->
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- 按住某一行时：半透明靛蓝色块 -->
+    <item android:state_pressed="true">
+        <shape android:shape="rectangle">
+            <solid android:color="#55673AB7" />
+        </shape>
+    </item>
+
+    <!-- 有实体键盘时焦点落在这行（真机基本用不到，写上是完整性） -->
+    <item android:state_focused="true">
+        <shape android:shape="rectangle">
+            <solid android:color="#33673AB7" />
+        </shape>
+    </item>
+
+    <!-- 其余状态：全透明，不影响正常显示 -->
+    <item>
+        <shape android:shape="rectangle">
+            <solid android:color="#00000000" />
+        </shape>
+    </item>
+
+</selector>

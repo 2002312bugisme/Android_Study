@@ -1,0 +1,6 @@
+<resources>
+    <string name="app_name">AdvancedControlsApplication</string>
+
+    <!-- dialog 模式 Spinner 的对话框标题，由 android:prompt="@string/spinner_dialog_prompt" 引用 -->
+    <string name="spinner_dialog_prompt">选择城市</string>
+</resources>

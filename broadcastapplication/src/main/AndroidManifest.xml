@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <uses-permission android:name="android.permission.VIBRATE" />
+
+    <application
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
+        android:theme="@style/Theme.MyFirstApp">
+
+        <!-- 静态注册的接收器：action 必须与 ShockReceiver.ACTION 完全一致 -->
+        <receiver
+            android:name=".receiver.ShockReceiver"
+            android:enabled="true"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="com.zzz.broadcastapplication.SHOCK" />
+            </intent-filter>
+        </receiver>
+
+        <activity
+            android:name=".BroadcastStaticActivity"
+            android:exported="true"
+            android:windowSoftInputMode="adjustResize" />
+        <!-- <activity -->
+        <!-- android:name=".BroadcastOrderActivity" -->
+        <!-- android:exported="false" -->
+        <!-- android:windowSoftInputMode="adjustResize" /> -->
+        <!-- <activity -->
+        <!-- android:name=".BroadcastStaticActivity" -->
+        <!-- android:exported="false" -->
+        <!-- android:windowSoftInputMode="adjustResize" /> -->
+
+        <activity
+            android:name=".AlarmActivity"
+            android:exported="true"
+            android:windowSoftInputMode="adjustResize">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <!-- <activity -->
+        <!-- android:name=".SystemNetworkActivity" -->
+        <!-- android:exported="false" -->
+        <!-- android:windowSoftInputMode="adjustResize" /> -->
+        <!--
+            生命周期观察页：故意不配 configChanges。
+            旋转手机时系统会销毁并重建它，从而看到完整的生命周期。
+        -->
+        <activity
+            android:name=".LifeCycleTestActivity"
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize" />
+
+        <!--
+            配置变更演示页：声明了 configChanges，旋转时 Activity 不重建，
+            只回调 onConfigurationChanged。
+            ⚠️ orientation 必须和 screenSize 一起写 —— Android 3.2 之后横竖屏切换
+               同时会改变 screenSize，漏了它照样会重建。
+        -->
+        <activity
+            android:name=".ChangeDirectionActivity"
+            android:configChanges="orientation|screenLayout|screenSize|keyboard"
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize" />
+
+        <!--
+            方向锁定页：screenOrientation 直接写死竖屏，旋转手机本页不动。
+            注意 Android 16 起在 sw>=600dp 的大屏设备上系统会忽略这个属性。
+        -->
+        <activity
+            android:name=".LockDirectionActivity"
+            android:exported="false"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustResize" />
+        <!--
+            画中画演示页：
+              · supportsPictureInPicture 必须为 true，否则 enterPictureInPictureMode 直接抛异常；
+              · configChanges 要带上 screenSize / smallestScreenSize —— 进入画中画时窗口尺寸
+                会变，不声明的话 Activity 会被重建，画中画状态就乱了。
+        -->
+        <activity
+            android:name=".ReturnDesktopActivity"
+            android:exported="false"
+            android:configChanges="screenSize|smallestScreenSize|screenLayout|orientation"
+            android:supportsPictureInPicture="true"
+            android:windowSoftInputMode="adjustResize" />
+    </application>
+
+</manifest>

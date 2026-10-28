@@ -505,8 +505,8 @@ Android_Study/
 | 2026-10-23 | `caf56a8` | ContentProvider 跨应用通信（新增 `:server_application` / `:client_application` 两个模块）、动态权限懒汉式与饿汉式对照、联系人读写、`ContentObserver` 监听短信 |
 | 2026-10-26 | `1d51255` | MediaStore 图片网格选图（多选 + `ACTION_SEND`）、FileProvider 发送彩信与安装本地 APK、权限适配（`READ_MEDIA_IMAGES` / `MANAGE_EXTERNAL_STORAGE`） |
 | 2026-10-27 | `cd71599` | 新增 `:advancedcontrolsapplication` 高级控件模块：Spinner 的 dropdown / dialog 两种形态、SimpleAdapter 与自建 BaseAdapter 对照、ListView 分隔线与按压背景、列表项焦点抢占（`descendantFocusability`）、GridView 四种 `stretchMode`；另补 8 个模块共 77 张 Activity 实机截图与索引 |
-| 2026-10-28 | `48c65c6` | 高级控件模块补齐翻页与碎片：ViewPager + PagerAdapter 轮播图（无限翻页、自动播放、`PagerTabStrip` 标签栏）、Fragment 静态与动态加载、两版启动引导页（纯 View / Fragment）、4 张 1080×2400 整屏引导图（`drawable-nodpi`） |
-| 2026-10-28 | `fbaf5ee` | 新增 `:broadcastapplication` 广播模块：标准广播与有序广播、静态注册（显式 `ComponentName` 绕开 8.0 隐式限制）、动态注册、`ACTION_TIME_TICK` 与网络变更广播、`AlarmManager` + `PendingIntent` 延迟广播、全生命周期时间线观察、横竖屏 `configChanges` 与方向锁定、画中画 |
+| 2026-10-28 | `a7d5693` | 高级控件模块补齐翻页与碎片：ViewPager + PagerAdapter 轮播图（无限翻页、自动播放、`PagerTabStrip` 标签栏）、Fragment 静态与动态加载、两版启动引导页（纯 View / Fragment）、4 张 1080×2400 整屏引导图（`drawable-nodpi`） |
+| 2026-10-28 | `ca9da9f` | 新增 `:broadcastapplication` 广播模块：标准广播与有序广播、静态注册（显式 `ComponentName` 绕开 8.0 隐式限制）、动态注册、`ACTION_TIME_TICK` 与网络变更广播、`AlarmManager` + `PendingIntent` 延迟广播、全生命周期时间线观察、横竖屏 `configChanges` 与方向锁定、画中画 |
 
 ---
 

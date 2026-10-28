@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <!--
+        图片铺满整页。
+        scaleType 用 centerCrop 而不是 fitXY：
+        ViewPager 的高度已经扣掉状态栏/导航栏，比图片的 2400 矮，
+        fitXY 会把图纵向压扁（手机图案变胖），centerCrop 只裁掉上下一点点、比例不变。
+    -->
+    <ImageView
+        android:id="@+id/iv_launch"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="centerCrop" />
+
+    <!--
+        底部圆点指示器：子 View 由 LaunchSimpleAdapter 动态添加。
+        ⚠️ width 必须 wrap_content —— 写 match_parent 时 layout_centerHorizontal 不生效，
+           整排圆点会贴到左下角。
+    -->
+    <RadioGroup
+        android:id="@+id/rg_indicate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:paddingBottom="20dp" />
+
+    <!--
+        最后一页的入口按钮。
+        原来没写任何定位属性，RelativeLayout 里默认贴在左上角、和图片重叠；
+        layout_above 把它顶到圆点上方，centerHorizontal 让它在中间。
+        @id/rg_indicate 必须写在它前面声明过（这里 RadioGroup 在上面，符合要求）。
+    -->
+    <Button
+        android:id="@+id/btn_start"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/rg_indicate"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="16dp"
+        android:text="立即开始美好生活"
+        android:textColor="#FF3300"
+        android:textSize="22sp"
+        android:visibility="gone" />
+
+
+</RelativeLayout>

@@ -75,6 +75,14 @@
             android:layout_marginTop="8dp"
             android:text="打开 GridView 拉伸模式实验" />
 
+        <!-- 页面导航：跳到 ViewPager 轮播图实验页（同样 exported=false，只能从这里进） -->
+        <Button
+            android:id="@+id/btn_open_view_pager"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="打开 ViewPager 轮播图实验" />
+
     </LinearLayout>
 
 </LinearLayout>

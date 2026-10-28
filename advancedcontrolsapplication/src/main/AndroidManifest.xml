@@ -11,7 +11,7 @@
 
         <!-- 模块入口页（launcher）：ListView 分隔线 / 按压背景实验页 -->
         <activity
-            android:name=".ListViewActivity"
+            android:name=".FragmentDynamicActivity"
             android:exported="true"
             android:windowSoftInputMode="adjustResize">
             <intent-filter>
@@ -25,10 +25,10 @@
              第二页：spinnerMode="dialog"。exported=false —— 只能由应用内 Intent 显式跳转，
              不能用 adb am start 直接拉起，所以入口按钮加在 SpinnerDropdownActivity 上
         -->
-        <activity
-            android:name=".SpinnerDialogActivity"
-            android:exported="false"
-            android:windowSoftInputMode="adjustResize" />
+        <!-- <activity -->
+        <!-- android:name=".FragmentDynamicActivity" -->
+        <!-- android:exported="false" -->
+        <!-- android:windowSoftInputMode="adjustResize" /> -->
         <!-- <activity -->
         <!-- android:name=".SimpleAdapterActivity" -->
         <!-- android:exported="false" -->
@@ -47,6 +47,30 @@
             android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".GridViewActivity"
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize" />
+        <activity
+            android:name=".ViewPagerActivity"
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize" />
+        <activity
+            android:name=".PaperTagStripActivity"
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize" />
+        <!-- <activity -->
+        <!-- android:name=".LaunchSimpleActivity" -->
+        <!-- android:exported="false" -->
+        <!-- android:windowSoftInputMode="adjustResize" /> -->
+        <!-- <activity -->
+        <!-- android:name=".FragmentStaticActivity" -->
+        <!-- android:exported="false" -->
+        <!-- android:windowSoftInputMode="adjustResize" /> -->
+        <!-- <activity -->
+        <!-- android:name=".FragmentDynamicActivity" -->
+        <!-- android:exported="false" -->
+        <!-- android:windowSoftInputMode="adjustResize" /> -->
+        <activity
+            android:name=".LaunchSimpleImproveActivity"
             android:exported="false"
             android:windowSoftInputMode="adjustResize" />
     </application>

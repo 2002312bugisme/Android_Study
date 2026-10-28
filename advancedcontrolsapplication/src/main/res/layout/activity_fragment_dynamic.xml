@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!--
+    动态加载 Fragment 演示页
+    对应 FragmentDynamicActivity：ViewPager 装 Fragment + PagerTabStrip 显示标签
+-->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <!--
+        子页由 UserPageAdapter 动态创建，XML 里只放标签栏。
+        PagerTabStrip 必须是 ViewPager 的直接子元素，ViewPager 不会把它当成一页。
+    -->
+    <androidx.viewpager.widget.ViewPager
+        android:id="@+id/vp_content"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <androidx.viewpager.widget.PagerTabStrip
+            android:id="@+id/pts_tab"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+    </androidx.viewpager.widget.ViewPager>
+
+</LinearLayout>

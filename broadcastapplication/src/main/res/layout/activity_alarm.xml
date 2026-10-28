@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!--
+    闹钟广播演示页布局
+    对应 AlarmActivity：一个按钮，点一下设一个 1 秒后触发的闹钟
+-->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".AlarmActivity">
+
+    <!--
+        视觉留白写在内层容器上。
+        ⚠️ 根布局不能直接写 android:padding：Activity 里 insets 监听调的是 setPadding(...)，
+           会把 XML 设的 padding 整体覆盖掉，按钮就会贴着屏幕边缘。
+    -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <Button
+            android:id="@+id/btn_alarm"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="设置闹钟（1 秒后发广播）" />
+
+    </LinearLayout>
+
+</LinearLayout>

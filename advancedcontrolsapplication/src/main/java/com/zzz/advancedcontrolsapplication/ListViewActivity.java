@@ -126,6 +126,10 @@ public class ListViewActivity extends AppCompatActivity {
         // 跳到「GridView 拉伸模式」实验页
         findViewById(R.id.btn_open_grid_view).setOnClickListener(
                 v -> startActivity(new Intent(this, GridViewActivity.class)));
+
+        // 跳到「ViewPager 轮播图」实验页（exported=false，同样只能应用内跳）
+        findViewById(R.id.btn_open_view_pager).setOnClickListener(
+                v -> startActivity(new Intent(this, ViewPagerActivity.class)));
     }
 
     /**

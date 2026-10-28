@@ -3,4 +3,6 @@
 
     <!-- dialog 模式 Spinner 的对话框标题，由 android:prompt="@string/spinner_dialog_prompt" 引用 -->
     <string name="spinner_dialog_prompt">选择城市</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

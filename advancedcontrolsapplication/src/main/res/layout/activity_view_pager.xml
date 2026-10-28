@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!--
+    翻页视图（ViewPager + PagerAdapter）演示页布局
+    对应 Java：ViewPagerActivity
+
+    结构说明：一个标题 + 一个 ViewPager 撑满剩余空间，
+             翻页标签栏直接用 ViewPager 自带的 PagerTabStrip。
+-->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <!-- 小标题只做分组说明，不参与逻辑 -->
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="ViewPager 轮播图"
+        android:textSize="16sp" />
+
+    <!--
+        ViewPager 的子页由 Adapter 动态添加，XML 里不放图片。
+        PagerTabStrip 是 ViewPager 认得的「标签栏」，不会被当成一页；
+        它的文字来自 ImagePageAdapter#getPageTitle。
+    -->
+    <androidx.viewpager.widget.ViewPager
+        android:id="@+id/vp_banner"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <androidx.viewpager.widget.PagerTabStrip
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+    </androidx.viewpager.widget.ViewPager>
+
+</LinearLayout>

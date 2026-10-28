@@ -10,7 +10,7 @@
 这是一个**学习记录型仓库**，不是产品项目。特点是：
 
 - **每个知识点一个 Activity**，命名即用途（如 `MainTextSizeActivity` 看字号单位、`MainViewMarginPaddingActivity` 看边距区别），需要看哪个效果就运行哪个页面；
-- **8 个模块各自是独立 application**，各有自己的 launcher，互不依赖 —— 好处是每个模块都能单独安装、单独调试，不会互相干扰；
+- **9 个模块各自是独立 application**，各有自己的 launcher，互不依赖 —— 好处是每个模块都能单独安装、单独调试，不会互相干扰；
 - **能对照的尽量做成对照组**。例如同一个"按钮点击事件"用三种写法实现（匿名内部类 / 实现接口 / lambda）并排放在一起；同一个 `scaleType` 用同一张图排开 8 行对比；
 - **踩过的坑写在代码注释里**。Material3 主题下"自定义背景图不显示""勾选框变成纯色块"这两个经典坑，在对应布局文件里都有完整的原因分析与修复说明。
 
@@ -27,7 +27,8 @@
 | `:datasharingapplication` | Java | `ShoppingChannelActivity` | 数据存储：SharedPreferences、SQLite 建库与 `SQLiteOpenHelper` 增删改查、**Room 图书 CRUD**、Application 全局数据、内部 / 外部私有 / 外部公共三类目录读写与图片落盘；**商城 demo（商品列表 → 详情 → 购物车）**：公共顶部栏组件、`ListView + ViewHolder`、购物车增删改查 |
 | `:server_application` | Java | `MainActivity` | **ContentProvider 服务端**：SQLite `user_info` 表 + 自定义 `UserInfoContentProvider`；`UriMatcher` 区分整表 `.../user` 与单行 `.../user/#`，增删改后 `notifyChange` 广播变更 |
 | `:client_application` | Java | `ProviderMmsActivity` | **ContentProvider 客户端 + 权限专题**：`ContentResolver` 跨应用读写服务端数据、懒汉式 / 饿汉式动态权限对照、联系人增删查（`ContentProviderOperation` + `applyBatch`）、`ContentObserver` 监听短信、MediaStore 选图 + FileProvider 分享彩信与安装 APK |
-| `:advancedcontrolsapplication` | Java | `ListViewActivity` | **高级控件（AdapterView 家族）**：Spinner 的 dropdown / dialog 两种展开形态、SimpleAdapter 与自建 BaseAdapter 对照、ListView 的 divider / dividerHeight / listSelector 运行期切换、列表项焦点抢占（`descendantFocusability`）、GridView 四种 `stretchMode` |
+| `:advancedcontrolsapplication` | Java | `ListViewActivity` | **高级控件（AdapterView 家族）**：Spinner 的 dropdown / dialog 两种展开形态、SimpleAdapter 与自建 BaseAdapter 对照、ListView 的 divider / dividerHeight / listSelector 运行期切换、列表项焦点抢占（`descendantFocusability`）、GridView 四种 `stretchMode`、**ViewPager + PagerAdapter 轮播图（无限翻页 + PagerTabStrip）**、**Fragment 静态/动态加载与 FragmentPagerAdapter**、**两版启动引导页** |
+| `:broadcastapplication` | Java | `SystemNetworkActivity` | **广播与页面状态**：标准广播 / 有序广播的发送与拦截、静态注册（显式 `ComponentName` 绕开 8.0 隐式广播限制）、动态注册、`ACTION_TIME_TICK` 分钟广播、网络变更广播与 `getSubtype` 数字映射、`AlarmManager` + `PendingIntent` 延迟广播、**全生命周期时间线观察**、横竖屏 `configChanges` 与方向锁定、**画中画（Picture in Picture）** |
 
 > 各模块 `applicationId` 互不相同（均为 `com.zzz.*`），因此可以**同时安装到一台设备上**，方便横向对照。
 >
@@ -248,7 +249,7 @@ launcher 目前挂在 `ProviderMmsActivity`，其余页面在清单里以 `expor
 | `res/xml/file_paths.xml` | FileProvider 的可访问路径白名单，决定哪些目录的文件能被翻译成 `content://` Uri |
 
 **两个 FileProvider 高频坑**：① 清单里 `android:authorities` 若误写成 `@strings/`（多一个 s），**编译不报错**但 authority 解析失败、provider 注册成包名，运行时 `getUriForFile` 抛 `Couldn't find meta-data`；② `file_paths.xml` 只配了 `Download` 子目录时，根目录的图片会被 `FileUtil.checkFileUri` 全部过滤掉，列表直接空白。
-### 8. `:advancedcontrolsapplication` —— 高级控件（AdapterView 家族）
+### 8. `:advancedcontrolsapplication` —— 高级控件、翻页与碎片
 
 `Spinner` / `ListView` / `GridView` 都是 `AdapterView` 的子类（`ListView`、`GridView` 又同为 `AbsListView` 的兄弟），所以「数据靠 Adapter 喂、点击靠 `OnItemClickListener` 收」是同一套。本模块按「数据源 → 适配器 → 行样式 → 焦点 → 排版」的顺序把它们拆开看。
 
@@ -293,6 +294,122 @@ launcher 目前挂在 `ProviderMmsActivity`，其余页面在清单里以 `expor
 
 一句话：**`columnWidth` 改格子，另两种改缝隙，只有 `Uniform` 会在左右两边也留白。**
 
+**8.5 ViewPager 与 PagerAdapter**
+
+ViewPager（`androidx.viewpager.widget`，**不是** ViewPager2）只管三件事：横向滑动、预加载左右各一页、回调滑动状态；页面长什么样全交给 `PagerAdapter`。
+
+| 方法 | 是抽象方法吗 | 职责 |
+|---|---|---|
+| `getCount()` | ✅ 抽象 | 一共几页 |
+| `isViewFromObject()` | ✅ 抽象 | `return view == object`，写成 false 会**静默白屏** |
+| `instantiateItem()` | ❌ 有默认实现，但必须重写 | inflate 布局 → 赋值 → `addView` → 返回页面 |
+| `destroyItem()` | ❌ 有默认实现，但必须重写 | `container.removeView(...)` |
+| `getPageTitle()` | ❌ 可选 | 配 `PagerTabStrip` 时才需要 |
+
+无限轮播的做法：`getCount()` 报 `Integer.MAX_VALUE / 2`，`instantiateItem` 里用 `position % 真实张数` 折回真实数据下标。
+
+> ⚠️ **起始位置必须取中点再对齐**。写成 `(getCount() / size) * size` 算出来是贴着末尾的位置（1073741820，上限 1073741822），只能再往前翻两页就到头了。正确写法是先 `getCount() / 2` 取中点，再减去余数对齐。
+
+对应页面：`ViewPagerActivity`（轮播图）、`PaperTagStripActivity`（标签栏）。
+
+**8.6 Fragment 的两种加载方式**
+
+| 方式 | 声明位置 | 数据怎么传 | 对应类 |
+|---|---|---|---|
+| 静态 | 布局里的 `<fragment android:name="...">` | 无法传参，只能读自身 XML | `StaticFragment` |
+| 动态 | 代码里 `FragmentTransaction.add()`，或交给 Adapter 创建 | `newInstance(参数...)` → `setArguments(Bundle)` → `onCreateView` 里 `getArguments()` 取 | `DynamicFragment` + `UserPageAdapter` |
+
+生命周期实测顺序（Pixel_7 / API 33）：
+
+```
+创建：onAttach → onCreate → onCreateView → onViewCreated → onStart → onResume
+销毁：onDestroyView → onDestroy → onDetach
+```
+
+`onActivityCreated` 在 AndroidX Fragment 1.3 起已废弃，对应逻辑应写到 `onViewCreated`。
+
+**8.7 启动引导页（两版对照）**
+
+| 版本 | 适配器 | 单页布局 |
+|---|---|---|
+| ViewPager + 纯 View | `LaunchSimpleAdapter extends PagerAdapter` | `item_launch.xml` |
+| ViewPager + Fragment | `LaunchSimpleImproveAdapter extends FragmentPagerAdapter` | `fragment_launch.xml` + `LaunchFragment` |
+
+两版都把「圆点指示器」放在**每页布局内部**，所以滑动过渡时屏幕底部会同时出现两组圆点。标准做法是把 `RadioGroup` 提到 Activity 布局里只留一份，在 `onPageSelected` 里切换选中项。
+
+引导图 `guide_1~4.png` 是 1080×2400 的整屏图，放在 **`drawable-nodpi`** 而不是 `drawable`——`res/drawable` 等价于 mdpi，420dpi 设备会把它放大 2.625 倍到 2835×6300，单张解码 71MB，ViewPager 预载三页直接 OOM。
+
+---
+
+### 9. `:broadcastapplication` —— 广播、生命周期与画中画
+
+模块入口是 `SystemNetworkActivity`，其余页面在清单里以 `exported="false"` 注册（`adb am start` 拉不起来，需要 `adb root` 或从应用内跳转）。
+
+**9.1 广播的两种注册方式**
+
+| 方式 | 生命周期 | 8.0+ 的限制 | 本模块示例 |
+|---|---|---|---|
+| 静态注册 | 清单里 `<receiver>`，随应用常驻 | **收不到隐式广播**，必须用 `setComponent(new ComponentName(this, XxxReceiver.class))` 把它变成显式广播 | `ShockReceiver` + `BroadcastStaticActivity` |
+| 动态注册 | `registerReceiver` / `unregisterReceiver` 成对出现 | `targetSdk 34+` 必须声明 `RECEIVER_EXPORTED` / `RECEIVER_NOT_EXPORTED` | `AlarmReceiver`、`NetworkReceiver` |
+
+`ComponentName` 的第二个参数是**完整类名**，写成包名（`com.zzz.xxx.receiver`）会指向一个不存在的组件——广播发出去没有任何接收者，**且不报任何错**。
+
+**9.2 静态广播收不到的两个原因**
+
+| 原因 | 现象 | 解法 |
+|---|---|---|
+| `ComponentName` 传了包名 | 日志一片空白 | 传 `XxxReceiver.class` |
+| 8.0+ 隐式广播限制 | 同上 | `intent.setComponent(...)` 改成显式 |
+
+**9.3 闹钟：`AlarmManager` + `PendingIntent`**
+
+| 坑 | 现象 | 解法 |
+|---|---|---|
+| `new IntentFilter()` 空 filter | 收不到任何广播（filter 里没有 action） | `new IntentFilter(ALARM_ACTION)` |
+| `RECEIVER_NOT_EXPORTED` | 闹钟触发了（`dumpsys alarm` 有 wakeups）但接收器一声不响 | 用 **`RECEIVER_EXPORTED`** |
+| `triggerAtMillis` 写裸 `1000` | 表示 1970 年的时间戳，属于过去，会立刻触发 | `System.currentTimeMillis() + delay` |
+
+第二条的原因是：**AlarmManager 是「代替」应用发广播，实际发送方是系统进程（uid 1000）**，对接收器来说属于外部来源，`NOT_EXPORTED` 会直接丢弃。口诀：`sendBroadcast()` 自己发的用 `NOT_EXPORTED`；`AlarmManager` / `Notification` 代发的必须 `EXPORTED`。
+
+**9.4 `getSubtype()` 返回的是数字**
+
+`NetworkInfo.getSubtype()` 返回 `TelephonyManager.NETWORK_TYPE_*` 的 int（LTE = 13）。想调 `TelephonyManager.getNetworkTypeName(int)` **不行**——那是隐藏 API，运行时报 `NoSuchMethodError`。只能自己 switch 映射（见 `NetworkReceiver#getSubtypeText`，输出形如 `LTE（4G）`）。
+
+> `NETWORK_TYPE_LTE_CA` 标了 `@SystemApi`，公开 SDK 里没有这个常量，编译报「找不到符号」，只能写 `case 19:` 字面量。
+
+**9.5 生命周期与配置变更**
+
+| 页面 | 清单配置 | 旋转时的表现 |
+|---|---|---|
+| `LifeCycleTestActivity` | 不配 `configChanges` | 销毁重建，界面上的 `hashCode` 会变 |
+| `ChangeDirectionActivity` | `configChanges="orientation\|screenLayout\|screenSize\|keyboard"` | 不重建，只回调 `onConfigurationChanged` |
+| `LockDirectionActivity` | `screenOrientation="portrait"` | 方向锁死，旋转手机本页不动 |
+
+旋转实测顺序：
+
+```
+旧实例：onPause → onStop → onSaveInstanceState → onDestroy
+新实例：onCreate → onStart → onRestoreInstanceState → onResume
+```
+
+> ⚠️ **`onSaveInstanceState` 在 `onStop` 之后**，不是教材常写的「onPause 之后、onStop 之前」。Android 9（API 28）起顺序改过。
+
+> ⚠️ 光写 `orientation` 不够：Android 3.2（API 13）起横竖屏切换同时会改变 `screenSize`，漏声明照样重建。
+
+**9.6 画中画（Picture in Picture）**
+
+进入画中画有三条路，模块里都写了：
+
+| 路径 | 说明 |
+|---|---|
+| `ACTION_CLOSE_SYSTEM_DIALOGS` 广播 + `reason` | 教材做法。`reason=homekey` 回到桌面，`recentapps` 打开任务列表 |
+| `onUserLeaveHint()` | **Android 12+ 推荐做法**，用户主动离开页面时由系统回调 |
+| 按钮手动调用 | 不依赖系统事件，方便验证画中画本身有没有配好 |
+
+清单必须两行：`android:supportsPictureInPicture="true"` + `configChanges` 里带上 `screenSize|smallestScreenSize`，否则进画中画时 Activity 会重建。
+
+> ⚠️ `ACTION_CLOSE_SYSTEM_DIALOGS` 按官方说明从 Android 12 起不再发给非系统应用。实测 API 33 模拟器**仍能收到**（userdebug 镜像没严格执行），但真机大概率收不到——所以 `onUserLeaveHint()` 才是可靠路径。两条路会同时触发，靠 `!isInPictureInPictureMode()` 防止重复进入。
+
 ---
 
 ## 🧰 技术栈与版本
@@ -329,13 +446,14 @@ Android_Study/
 │   └── schemas/                  # Room 导出的建表 DDL 快照（随代码一起提交）
 ├── server_application/           # ContentProvider 服务端：SQLite `user_info` + 自定义 provider
 ├── client_application/           # ContentProvider 客户端 + 权限专题：联系人 / 短信 / MediaStore / FileProvider
-├── advancedcontrolsapplication/  # 高级控件：Spinner / ListView / GridView，适配器三代对照与焦点抢占
+├── advancedcontrolsapplication/  # 高级控件：Spinner / ListView / GridView，ViewPager 轮播、Fragment、引导页
+├── broadcastapplication/         # 广播：静态/动态注册、系统广播、AlarmManager、生命周期与画中画
 ├── docs/android-blog/            # 源码解读博客的写作工作区（结构分析 / 章节规划 / 草稿）
 ├── img/                          # 界面截图等素材
 │   └── activities/               # 各模块 Activity 实机截图（按模块分目录，INDEX.md 为索引）
 ├── gradle/libs.versions.toml     # 依赖版本目录
 ├── build.gradle.kts
-├── settings.gradle.kts           # include 了以上 8 个模块
+├── settings.gradle.kts           # include 了以上 9 个模块
 └── README.md
 ```
 
@@ -387,6 +505,8 @@ Android_Study/
 | 2026-10-23 | `caf56a8` | ContentProvider 跨应用通信（新增 `:server_application` / `:client_application` 两个模块）、动态权限懒汉式与饿汉式对照、联系人读写、`ContentObserver` 监听短信 |
 | 2026-10-26 | `1d51255` | MediaStore 图片网格选图（多选 + `ACTION_SEND`）、FileProvider 发送彩信与安装本地 APK、权限适配（`READ_MEDIA_IMAGES` / `MANAGE_EXTERNAL_STORAGE`） |
 | 2026-10-27 | `cd71599` | 新增 `:advancedcontrolsapplication` 高级控件模块：Spinner 的 dropdown / dialog 两种形态、SimpleAdapter 与自建 BaseAdapter 对照、ListView 分隔线与按压背景、列表项焦点抢占（`descendantFocusability`）、GridView 四种 `stretchMode`；另补 8 个模块共 77 张 Activity 实机截图与索引 |
+| 2026-10-28 | `48c65c6` | 高级控件模块补齐翻页与碎片：ViewPager + PagerAdapter 轮播图（无限翻页、自动播放、`PagerTabStrip` 标签栏）、Fragment 静态与动态加载、两版启动引导页（纯 View / Fragment）、4 张 1080×2400 整屏引导图（`drawable-nodpi`） |
+| 2026-10-28 | `fbaf5ee` | 新增 `:broadcastapplication` 广播模块：标准广播与有序广播、静态注册（显式 `ComponentName` 绕开 8.0 隐式限制）、动态注册、`ACTION_TIME_TICK` 与网络变更广播、`AlarmManager` + `PendingIntent` 延迟广播、全生命周期时间线观察、横竖屏 `configChanges` 与方向锁定、画中画 |
 
 ---
 
@@ -433,6 +553,15 @@ Android_Study/
 | **行里有 `Button` / `CheckBox` 时 `setOnItemClickListener` 失灵** | 点行的文字区**完全没反应**（按住连按压高亮都没有），但点行内按钮却正常。实测确认：改行根布局的焦点属性就能修好，说明事件一直送到了 ListView，失效发生在焦点层 —— 行内有 `focusable` 子控件时，整行被视为"可聚焦的行"，ListView 不走行点击逻辑 | 行布局根节点加 `android:descendantFocusability="blocksDescendants"`；或在 ViewHolder 里多缓存一个 `ViewGroup itemRoot`，调 `setDescendantFocusability(ViewGroup.FOCUS_BLOCK_DESCENDANTS)`。**注意是 `ViewGroup` 的方法，声明成 `View` 编译不过** |
 | **Spinner `spinnerMode="dialog"` 并不是"自带 radio 的单选弹窗"** | 实测 API 33 + Material3 下，弹窗里是纯文字行，没有单选圆点，当前项也没有勾选标记 | 想要那种观感，得自己写一份含 `CheckedTextView` / `RadioButton` 的布局传给 `setDropDownViewResource()`。`android:prompt` 只在 dialog 模式下作为对话框标题可见 |
 | **切 `stretchMode` 后立刻量尺寸，拿到的是旧值** | `setStretchMode()` 之后马上 `getChildAt(0).getWidth()`，读到的还是上一帧的列宽 | 列宽在 `onMeasure` 里重算，必须用一次性的 `OnGlobalLayoutListener` 等这一帧布局结束再读，读完 `removeOnGlobalLayoutListener(this)`。另外 `setStretchMode` 的值没变时不会触发重排，需要时补一句 `requestLayout()` |
+
+### 广播与页面状态的四条
+
+| 坑 | 表现 | 解法 |
+|---|---|---|
+| **`ComponentName` 传了包名** | 静态注册的接收器收不到广播，**日志一片空白且不报任何错** | 第二个参数必须是完整类名：`new ComponentName(this, ShockReceiver.class)`；用 `.class` 写错编译期就报错 |
+| **`new IntentFilter()` 空 filter** | 接收器注册成功，但永远收不到任何广播 | filter 里必须 `addAction(...)` 或构造时传入 action —— 没有 action 就匹配不上任何 Intent |
+| **`RECEIVER_NOT_EXPORTED` 拦掉 AlarmManager 广播** | `dumpsys alarm` 里能看到闹钟已触发（有 wakeups 计数），但接收器一声不响 | 用 `RECEIVER_EXPORTED`。原因：闹钟是 AlarmManager **代替**应用发的，实际发送方是系统进程（uid 1000），对接收器来说属于外部来源 |
+| **`ACTION_CLOSE_SYSTEM_DIALOGS` 检测 Home 键** | Android 12 起官方不再发给非系统应用，真机上收不到 | 改用 `onUserLeaveHint()` —— 用户主动离开页面时由系统回调，是目前唯一可靠的方式 |
 
 ---
 

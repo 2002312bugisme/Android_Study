@@ -691,6 +691,17 @@ Android_Study/
 | **`RECEIVER_NOT_EXPORTED` 拦掉 AlarmManager 广播** | `dumpsys alarm` 里能看到闹钟已触发（有 wakeups 计数），但接收器一声不响 | 用 `RECEIVER_EXPORTED`。原因：闹钟是 AlarmManager **代替**应用发的，实际发送方是系统进程（uid 1000），对接收器来说属于外部来源 |
 | **`ACTION_CLOSE_SYSTEM_DIALOGS` 检测 Home 键** | Android 12 起官方不再发给非系统应用，真机上收不到 | 改用 `onUserLeaveHint()` —— 用户主动离开页面时由系统回调，是目前唯一可靠的方式 |
 
+### Service 与前台服务的四条
+
+| 坑 | 表现 | 解法 |
+|---|---|---|
+| **前台服务只在清单写 `<service>`** | API 34+ 调 `startForeground()` 直接抛 `MissingForegroundServiceTypeException`，服务起不来 | 声明 `android:foregroundServiceType="dataSync"` + 权限 `FOREGROUND_SERVICE_DATA_SYNC`；API 33+ 还要 `POST_NOTIFICATIONS` 并在运行时申请，否则服务是前台状态但通知栏什么都不显示 |
+| **大图标塞了 VectorDrawable** | `BitmapFactory.decodeResource()` **解不了 vector**，返回 `null`，`setLargeIcon(null)` 不报错也不显示 —— 通知里只有小图标 | 大图标用位图（PNG，放 `drawable-xxhdpi` 之类密度目录）；反过来小图标必须**纯色**（系统只取 alpha 当遮罩，彩色图会糊成白块），两者要求正好相反 |
+| **互拉保活的 `startService(对方)` 写在 `onStartCommand()` 里** | A→B→A 无限循环，几秒内刷出几十 KB 日志，设备发热 | 只能放 `onCreate()`：`onCreate` 一个实例只执行一次，而 `onStartCommand` **每次启动都回调** |
+| **指望 `onDestroy()` 里发广播把自己救回来** | 用户「强行停止」后**一条日志都没有** —— `onDestroy` 根本不回调，广播发不出去，进程直接消失；应用还被标记为 stopped 状态 | 现代 Android 已无通用保活方案。长期后台任务用前台服务 + 通知，或交给 WorkManager 这类由系统调度的机制 |
+
+> 附一条排查经验：`am stopservice -n 包名/类名` 对**非本 UID 的应用**没有权限，会一直返回 `Error stopping service`；要验证服务被停止的行为，只能用应用内的 `stopService()` 加日志，或干脆 `am force-stop`（但那样拿不到 `onDestroy`）。
+
 ---
 
 ## 📝 代码注释约定

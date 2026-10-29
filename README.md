@@ -413,6 +413,131 @@ ViewPager（`androidx.viewpager.widget`，**不是** ViewPager2）只管三件�
 
 ---
 
+### 10. `:serviceapplication` —— Service 的生命周期、跨进程与保活
+
+模块入口是 `MessengerActivity`，它同时充当导航页；其余演示页都注册为 `exported="false"`，只能从首页跳转。所有 demo 统一用 `ZZZ` 作为日志 TAG，一条命令即可观察全部输出：
+
+```bash
+adb logcat -s ZZZ
+```
+
+**10.1 两条生命周期路径**
+
+| 操作 | 回调顺序 | 实测现象 |
+|---|---|---|
+| 首次 `startService()` | `onCreate → onStartCommand` | `onCreate` 打印 `thread=main`，服务跑在主线程 |
+| 再次 `startService()` | **只有** `onStartCommand` | `startId` 递增为 2，`onCreate` 不再出现 |
+| `stopService()` | `onDestroy` | 服务销毁后重新 start，`onCreate` 会**再次**执行 |
+| 首次 `bindService()` | `onCreate → onBind → onServiceConnected` | 客户端的 `onServiceConnected` 总在服务端之后 |
+| 再次 `bindService()` | **什么都不回调** | `onBind` 全程只走一次 |
+| `unbindService()` | `onUnbind → onDestroy` | 不需要 `stopService()`，全部解绑即销毁 |
+
+> ⚠️ `startId` 是「当前实例内」的计数。服务销毁重建后会从 1 重新开始，不能用它统计累计启动次数。
+
+**10.2 `onStartCommand` 的三个参数与三种返回值**
+
+`intent` 是启动方传来的数据（服务被系统重建时可能为 **null**）；`flags` 区分本次是正常启动、重投递（`START_FLAG_REDELIVERY`）还是重试（`START_FLAG_RETRY`）；`startId` 配合 `stopSelfResult(int)` 可以做到「最后一个启动请求完成时才停服务」。
+
+返回值决定服务被 kill 之后怎么办：
+
+| 返回值 | 被杀后 | 重建时 `intent` | 适用场景 |
+|---|---|---|---|
+| `START_STICKY` | 内存空闲时重建 | **null** | 长期待命、不执行具体命令（音乐播放器） |
+| `START_NOT_STICKY` | 不重建 | — | 最安全，等下次 `startService()` |
+| `START_REDELIVER_INTENT` | 重建并重投递最后一个非空 Intent | 有值 | 必须立即恢复的作业（下载） |
+
+**10.3 三种绑定方式怎么选**
+
+| 方式 | 范围 | 代价 | 本模块 |
+|---|---|---|---|
+| 扩展 Binder 类 | 同应用**同进程** | 跨进程强转会直接崩 | `LocalService` |
+| Messenger | 可跨进程 | 单线程串行，并发请求会排队 | `MessengerService` |
+| AIDL | 可跨进程 | 需自行处理多线程与线程安全，要写 `.aidl` | 未实现（绝大多数应用用不到） |
+
+`MessengerService` 在清单里加了 `android:process=":remote"`，实测客户端与服务端是两个 PID（7149 / 7304），`Message` 的 `what` 与 `Bundle` 能跨进程，`obj` 字段只对同进程有用。
+
+> ⚠️ `onServiceDisconnected()` **只在连接意外中断时**回调（服务崩溃、进程被系统杀死）。客户端主动 `unbindService()` 时系统**绝对不会**调用它——把清理逻辑写在那里等于永远不执行。
+
+**10.4 启动 + 绑定组合：存活条件模型**
+
+这是整个模块最值得记的一条。四按钮操作台（`HybridActivity`）可以自由组合 start / bind / stop / unbind：
+
+> **服务存活 = 「曾被 `startService()` 启动过」 或 「还有客户端绑着」。**
+> `stopService()` 只清掉前一个条件，`unbindService()` 只清掉后一个条件。
+
+两种顺序下「看起来该销毁、实际没有」的那一步正好互换：
+
+| 组合 | 无效的那一步 | `dumpsys` 服务记录数 | 真正销毁 |
+|---|---|---|---|
+| start → bind → stop → unbind | `stopService()`，**零回调** | 3 → 8 → **8** → 0 | 解绑之后 |
+| bind → start → unbind → stop | `unbindService()`，服务仍在 | 8 → 8 → **4** → 0 | 停止之后 |
+
+这就是「调了 `stopService()` 服务没死、通知还挂着」的成因。
+
+**10.5 前台服务：`stopForeground()` 不停止服务**
+
+`startForeground(id, notification)` 要求 id **不能为 0**；`stopForeground(true)` 只撤销前台状态并移除通知，**服务本身继续运行**：
+
+```
+dumpsys activity services → isForeground=true foregroundId=1   ← 启动后
+点「停止前台服务」后      → ServiceRecord 仍在，isForeground 字段消失，通知计数归 0
+```
+
+原文写于 2016 年，直接照抄会撞三处版本变化：
+
+| 原写法 | 现在 | 改法 |
+|---|---|---|
+| 清单不声明 `foregroundServiceType` | API 34+ 抛 `MissingForegroundServiceTypeException` | 声明 `dataSync` + `FOREGROUND_SERVICE_DATA_SYNC` 权限 |
+| `new NotificationCompat.Builder(this)` | 单参数构造已废弃，通知无渠道 | 建 `NotificationChannel(IMPORTANCE_LOW)` |
+| `startService()` 启动前台服务 | 应用在后台时抛 `IllegalStateException` | `startForegroundService()`，且 5 秒内必须 `startForeground()` |
+
+> ⚠️ 停止前台状态**不能**走 `startForegroundService()`：它要求 5 秒内调用 `startForeground()`，而撤销操作恰好不调用，会被系统判违规。本模块的「停止」按钮刻意保留 `startService()`。
+
+> ⚠️ 大小图标的要求正好相反：`setLargeIcon()` 要**位图**（`BitmapFactory` 解不了 VectorDrawable，传 vector 返回 null，大图标静默不显示）；`setSmallIcon()` 要**纯色**（系统只取 alpha 当遮罩，彩色图或 adaptive icon 会糊成一团白块）。
+
+**10.6 IntentService：已废弃，但值得看一眼**
+
+连发 3 个任务，线程名全是 `IntentService[my-intent-service]`，且首尾严格相接：
+
+```
+任务 1 开始 → 任务 1 结束（04.888）
+任务 2 开始（04.889） → 任务 2 结束
+任务 3 开始 → 任务 3 结束 → onDestroy    ← 全部跑完自动 stopSelf()
+```
+
+单 worker 线程串行排队，决定了它只适合「一次一个」的任务。Android 11（API 30）起 `android.app.IntentService` 被标记 `@Deprecated`，替代方案是 WorkManager（需要保证执行）或 Service + 自行管理的线程/协程。`MyIntentService` 里保留完整类头说明，仅作历史观察。
+
+**10.7 隐式启动：从警告到异常**
+
+`RemoteService` 声明了 `exported="true"` 与 `intent-filter`，用来复现这个问题。裸隐式启动（只设 action、不设 package 和 component）在 5.0+ 直接抛异常：
+
+```
+IllegalArgumentException: Service Intent must be explicit: Intent { act=com.zzz.service.ACTION_REMOTE_START }
+    at android.app.ContextImpl.validateServiceIntent(ContextImpl.java:1851)
+```
+
+Android 4.4 及以前同样条件下只打一条 `Log.w("Implicit intents with startService are not safe")` 就放行——差异就在 `ContextImpl.validateServiceIntent()` 里的版本判断。两种修复：
+
+| 方案 | 做法 | 适用 |
+|---|---|---|
+| `setPackage()` | 补一个包名，component 仍为空 | 知道目标应用，一行搞定 |
+| `queryIntentServices()` 转 ComponentName | 查出匹配项，要求**唯一**，再拼 `ComponentName` | 不确定由哪个应用响应 |
+
+**10.8 保活：文章那套方案现在基本失效**
+
+双服务互拉的做法是：`onDestroy()` 里发一条自定义广播，另一个服务收到后把死掉的那个重新 `startService()` 起来。实测结果分两种情况：
+
+| 场景 | 结果 |
+|---|---|
+| 应用在前台，`stopService(A)` | 有效：A 发死讯 → B 收到 → 3 秒内 A 被拉回 |
+| 用户「强行停止」（`am force-stop`） | **完全失效**：日志一条都没有，`onDestroy` 不回调，广播发不出去，进程直接消失 |
+
+再叠加 Android 8.0 起「应用在后台不允许 `startService()`」的限制，这套写法只在应用处于前台时跑得通。真正的长期后台任务应该用前台服务 + 通知，或交给 WorkManager 这类由系统调度的机制。
+
+> ⚠️ 互拉的 `startService(对方)` **只能写在 `onCreate()`**。写在 `onStartCommand()` 里会形成 A→B→A 无限循环——`onCreate` 只执行一次，而 `onStartCommand` 每次启动都回调。第一版代码就踩了这个坑，注释里留了反面示例。
+
+---
+
 ## 🧰 技术栈与版本
 
 | 项 | 版本 |

@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <!-- 四种启动方式的执行结果都打印在这里，异常信息也原样显示 -->
+    <TextView
+        android:id="@+id/tv_status"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="16dp"
+        android:text="点下面的按钮试四种启动方式"
+        android:textSize="14sp" />
+
+    <Button
+        android:id="@+id/btn_explicit"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="1. 显式启动（正常）" />
+
+    <Button
+        android:id="@+id/btn_implicit"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="2. 裸隐式启动（预期抛异常）" />
+
+    <Button
+        android:id="@+id/btn_implicit_pkg"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="3. 隐式 + setPackage（修复）" />
+
+    <Button
+        android:id="@+id/btn_convert"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="4. 隐式转显式 ComponentName" />
+
+</LinearLayout>

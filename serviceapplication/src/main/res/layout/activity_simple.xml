@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <Button
+        android:id="@+id/btn_startService"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="startService" />
+
+    <Button
+        android:id="@+id/btn_stopService"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="stopService" />
+
+    <!-- 进入绑定态演示页；BindActivity 未对外暴露，只能从这里跳过去 -->
+    <Button
+        android:id="@+id/btn_gotoBind"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="进入绑定态演示" />
+
+</LinearLayout>

@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- 前台服务基础权限，API 28+ 不声明直接抛 SecurityException -->
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <!-- API 34+ 按 foregroundServiceType 细分权限，声明了 dataSync 就必须有这一条 -->
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_DATA_SYNC" />
+    <!-- API 33+ 通知需要用户授权，没有它前台服务的通知不显示（服务本身仍是前台状态） -->
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+
+    <application
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
+        android:theme="@style/Theme.MyFirstApp">
+
+        <!-- 无 intent-filter，仅应用内使用；targetSdk 31+ 要求显式声明 exported -->
+        <service
+            android:name=".service.SimpleService"
+            android:exported="false" />
+        <service
+            android:name=".service.LocalService"
+            android:exported="false" />
+        <!-- 既能 start 又能 bind 的结合体，用于验证第 5 章的生命周期差异 -->
+        <service
+            android:name=".service.HybridService"
+            android:exported="false" />
+        <!-- android:process=":remote"代表该Service在单独的进程中创建 -->
+        <service
+            android:name=".service.MessengerService"
+            android:process=":remote" />
+        <!-- 前台服务必须声明 type；API 34+ 缺少它会抛 MissingForegroundServiceTypeException。
+             dataSync 对应「数据同步/下载」类任务，与本例的下载进度语义一致 -->
+        <service
+            android:name=".service.ForegroundService"
+            android:exported="false"
+            android:foregroundServiceType="dataSync" />
+
+        <!-- IntentService 已废弃，这里只为演示其单线程排队特征 -->
+        <service
+            android:name=".service.MyIntentService"
+            android:exported="false" />
+        <!-- 隐式启动演示：有 intent-filter 时 exported 默认就是 true，这里显式写出来
+             ⚠️ 真实项目必须再加 android:permission 做访问控制，否则任何应用都能启动它 -->
+        <service
+            android:name=".service.RemoteService"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="com.zzz.service.ACTION_REMOTE_START" />
+            </intent-filter>
+        </service>
+        <!-- 双服务互拉保活，两者都不对外暴露 -->
+        <service
+            android:name=".service.KeepAliveServiceA"
+            android:exported="false" />
+        <service
+            android:name=".service.KeepAliveServiceB"
+            android:exported="false" />
+
+        <activity
+            android:name=".MessengerActivity"
+            android:exported="true"
+            android:windowSoftInputMode="adjustResize">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".SimpleActivity"
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize" />
+        <activity
+            android:name=".BindActivity"
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize" />
+        <activity
+            android:name=".ForegroundActivity"
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize" />
+        <activity
+            android:name=".HybridActivity"
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize" />
+        <activity
+            android:name=".IntentServiceActivity"
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize" />
+        <activity
+            android:name=".ImplicitStartActivity"
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize" />
+        <activity
+            android:name=".KeepAliveActivity"
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize" />
+    </application>
+
+</manifest>

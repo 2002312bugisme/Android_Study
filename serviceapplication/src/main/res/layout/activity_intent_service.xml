@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <!-- 提示观察点：日志里三个任务的线程名相同，且首尾相接，说明是单线程排队 -->
+    <TextView
+        android:id="@+id/tv_status"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="16dp"
+        android:text="未提交任务"
+        android:textSize="18sp" />
+
+    <Button
+        android:id="@+id/btn_one_task"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="提交 1 个任务" />
+
+    <Button
+        android:id="@+id/btn_three_tasks"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="连发 3 个任务" />
+
+</LinearLayout>

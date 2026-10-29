@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 首页兼做导航页：演示页逐步增多，用 ScrollView 包一层避免按钮被挤出屏幕 -->
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <!-- 一行状态输出：Messenger 绑定/发送/解绑的结果都落在这里 -->
+        <TextView
+            android:id="@+id/tv_status"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="16dp"
+            android:text="未绑定"
+            android:textSize="18sp" />
+
+        <!-- ========== Messenger 跨进程通信 ========== -->
+
+        <Button
+            android:id="@+id/btn_bindService"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="btn_bind_service" />
+
+        <Button
+            android:id="@+id/btn_unbindService"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="btn_unbindService" />
+
+        <Button
+            android:id="@+id/btn_sendMsgToService"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="btn_sendMsgToService" />
+
+        <!-- ========== 其余演示页入口（均为 exported=false，只能从这里进） ========== -->
+
+        <Button
+            android:id="@+id/btn_gotoSimple"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="进入启动/绑定服务演示" />
+
+        <Button
+            android:id="@+id/btn_gotoHybrid"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="进入启动+绑定组合演示" />
+
+        <Button
+            android:id="@+id/btn_gotoForeground"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="进入前台服务演示" />
+
+        <Button
+            android:id="@+id/btn_gotoIntentService"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="进入 IntentService 演示（已废弃）" />
+
+        <Button
+            android:id="@+id/btn_gotoImplicit"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="进入隐含/跨应用启动演示" />
+
+        <Button
+            android:id="@+id/btn_gotoKeepAlive"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="进入双服务互拉保活演示" />
+
+    </LinearLayout>
+</ScrollView>

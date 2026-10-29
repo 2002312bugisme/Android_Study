@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <!-- 提示观察点：停掉一个之后，日志里会出现另一个服务「收到死讯」并把对方拉回来 -->
+    <TextView
+        android:id="@+id/tv_status"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="16dp"
+        android:text="未启动任何服务"
+        android:textSize="16sp" />
+
+    <Button
+        android:id="@+id/btn_start_a"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="启动 A（会顺带拉起 B）" />
+
+    <Button
+        android:id="@+id/btn_stop_a"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="停掉 A（看 B 会不会拉回来）" />
+
+    <Button
+        android:id="@+id/btn_stop_b"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="停掉 B（看 A 会不会拉回来）" />
+
+</LinearLayout>

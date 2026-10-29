@@ -509,7 +509,7 @@ Android_Study/
 | 2026-10-27 | `cd71599` | 新增 `:advancedcontrolsapplication` 高级控件模块：Spinner 的 dropdown / dialog 两种形态、SimpleAdapter 与自建 BaseAdapter 对照、ListView 分隔线与按压背景、列表项焦点抢占（`descendantFocusability`）、GridView 四种 `stretchMode`；另补 8 个模块共 77 张 Activity 实机截图与索引 |
 | 2026-10-28 | `a7d5693` | 高级控件模块补齐翻页与碎片：ViewPager + PagerAdapter 轮播图（无限翻页、自动播放、`PagerTabStrip` 标签栏）、Fragment 静态与动态加载、两版启动引导页（纯 View / Fragment）、4 张 1080×2400 整屏引导图（`drawable-nodpi`） |
 | 2026-10-28 | `ca9da9f` | 新增 `:broadcastapplication` 广播模块：标准广播与有序广播、静态注册（显式 `ComponentName` 绕开 8.0 隐式限制）、动态注册、`ACTION_TIME_TICK` 与网络变更广播、`AlarmManager` + `PendingIntent` 延迟广播、全生命周期时间线观察、横竖屏 `configChanges` 与方向锁定、画中画 |
-| 2026-10-29 | `02f92e8` | 新增 `:serviceapplication` Service 模块：启动态 / 绑定态两条生命周期的实测对照、`onStartCommand` 三参数与三种返回值、扩展 Binder（同进程）与 Messenger（`:remote` 跨进程）、前台服务 + `NotificationChannel`（适配 API 34 `foregroundServiceType`）、**启动与绑定组合时的存活条件模型**、IntentService 单线程排队验证（API 30 已废弃）、隐式启动被禁与两种现代修复、双服务互拉保活及强行停止不回调 `onDestroy` 的现状 |
+| 2026-10-29 | `4410898` | 新增 `:serviceapplication` Service 模块：启动态 / 绑定态两条生命周期的实测对照、`onStartCommand` 三参数与三种返回值、扩展 Binder（同进程）与 Messenger（`:remote` 跨进程）、前台服务 + `NotificationChannel`（适配 API 34 `foregroundServiceType`）、**启动与绑定组合时的存活条件模型**、IntentService 单线程排队验证（API 30 已废弃）、隐式启动被禁与两种现代修复、双服务互拉保活及强行停止不回调 `onDestroy` 的现状 |
 
 ---
 

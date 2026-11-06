@@ -1,6 +1,6 @@
 # Android_Study
 
-> 一个从零起步的 Android 入门练习仓库：**11 个互相独立的模块**，把 Android 基础知识点拆开逐个练一遍。
+> 一个从零起步的 Android 入门练习仓库：**13 个互相独立的模块**，把 Android 基础知识点拆开逐个练一遍。
 > 所有手写代码与资源文件均带**行级中文注释**（讲逻辑、讲调用的 API、标注每个形参的含义）。
 
 ---
@@ -10,7 +10,7 @@
 这是一个**学习记录型仓库**，不是产品项目。特点是：
 
 - **每个知识点一个 Activity**，命名即用途（如 `MainTextSizeActivity` 看字号单位、`MainViewMarginPaddingActivity` 看边距区别），需要看哪个效果就运行哪个页面；
-- **11 个模块各自是独立 application**，各有自己的 launcher，互不依赖 —— 好处是每个模块都能单独安装、单独调试，不会互相干扰；
+- **13 个模块各自是独立 application**，各有自己的 launcher，互不依赖 —— 好处是每个模块都能单独安装、单独调试，不会互相干扰；
 - **能对照的尽量做成对照组**。例如同一个"按钮点击事件"用三种写法实现（匿名内部类 / 实现接口 / lambda）并排放在一起；同一个 `scaleType` 用同一张图排开 8 行对比；
 - **踩过的坑写在代码注释里**。Material3 主题下"自定义背景图不显示""勾选框变成纯色块"这两个经典坑，在对应布局文件里都有完整的原因分析与修复说明。
 
@@ -31,6 +31,8 @@
 | `:broadcastapplication` | Java | `SystemNetworkActivity` | **广播与页面状态**：标准广播 / 有序广播的发送与拦截、静态注册（显式 `ComponentName` 绕开 8.0 隐式广播限制）、动态注册、`ACTION_TIME_TICK` 分钟广播、网络变更广播与 `getSubtype` 数字映射、`AlarmManager` + `PendingIntent` 延迟广播、**全生命周期时间线观察**、横竖屏 `configChanges` 与方向锁定、**画中画（Picture in Picture）** |
 | `:serviceapplication` | Java | `MessengerActivity` | **四大组件之 Service**：`startService` / `bindService` 两条生命周期的实测对照、`onStartCommand` 的三个参数与三种返回值、扩展 Binder（同进程）/ Messenger（`android:process=":remote"` 跨进程）/ 前台服务 + `NotificationChannel`、**启动与绑定组合时的销毁时机**、IntentService（API 30 已废弃）单线程排队验证、隐式启动被禁与现代修复方案、双服务互拉保活及其失效原因 |
 | `:okhttpapplication` | Java | `OkHttpActivity` | **OkHttp 网络请求**：GET / POST × `execute()` 同步（子线程）/ `enqueue()` 异步（Callback）四种组合、`RequestBody` 发 JSON、`FormBody` 表单提交、`MultipartBody` + 相册选图做文件上传；配套服务端在仓库根目录的 `HttpClient/`（Spring Boot 4 + Java 17，接口都在 `/api` 下） |
+| `:retrofitapplication` | Java | `RetrofitActivity` | **Retrofit + RxJava3 + Hilt**：注解式接口（`@Query` / `@Path` / `@Header` / `@Body`）、`@FormUrlEncoded` 表单与 `@Multipart` 上传、`GsonConverterFactory` 解包泛型 `ResponseData<T>`、RxJava3 适配 + `ResponseTransformer` 把切线程 / 判业务码 / 异常归一收在一处；`@HiltAndroidApp` + `@InstallIn(SingletonComponent)` 声明单例 `OkHttpClient` / `Retrofit` |
+| `:daggerapplication` | Java | `DaggerActivity` | **Dagger 手写依赖注入**：`@Inject` 构造函数 / `@Module` + `@Provides` / `@Component` 三种方式对照、`@Singleton` 的组件级作用域实测（两次 `create()` 就是两套实例，改用 Application 持有的 component 后跨 Activity 同一个） |
 
 > 各模块 `applicationId` 互不相同（均为 `com.zzz.*`），因此可以**同时安装到一台设备上**，方便横向对照。
 >
@@ -539,6 +541,57 @@ Android 4.4 及以前同样条件下只打一条 `Log.w("Implicit intents with s
 
 ---
 
+### 11. `:okhttpapplication` —— OkHttp 原生用法
+
+入口 `OkHttpActivity`，六个按钮把「请求方法 × 同步/异步」铺开，下方 `ScrollView` + `TextView` 接输出，日志 TAG 统一为 `OkHttpDemo`。
+
+| 按钮 | 关键 API | 要点 |
+|---|---|---|
+| GET 同步 | `newCall(request).execute()` | 阻塞当前线程，必须丢进线程池；主线程直接发网络请求会抛 `NetworkOnMainThreadException` |
+| GET 异步 | `newCall(request).enqueue(callback)` | 回调跑在 OkHttp 的调度线程，刷新 UI 要自己切回主线程 |
+| POST 同步 | `RequestBody.create(json, MediaType)` | `Content-Type: application/json` 决定服务端按 `@RequestBody` 还是表单解析 |
+| POST 异步 | 同上，只把 `execute()` 换成 `enqueue()` | 对照组：请求体完全一样，只有提交方式不同 |
+| 表单提交 | `FormBody.Builder` | 固定 `application/x-www-form-urlencoded`，中文与空格自动 URL 编码 |
+| 文件上传 | `MultipartBody.Builder` + `ContentResolver` | 用 `BufferedSink` 以流写 `RequestBody`，相册大图也不必整块进内存 |
+
+服务端地址给了三套写法（注释里都写了）：模拟器用 `10.0.2.2:8080` 指向宿主机；真机填电脑的局域网 IP；或 `adb reverse tcp:8080 tcp:8080` 之后写 `127.0.0.1`。
+
+### 12. `:retrofitapplication` —— Retrofit、RxJava3 与 Hilt
+
+三个页面串成一条演进路线，入口是 `RetrofitActivity`：
+
+| 页面 | 依赖从哪来 | 演示重点 |
+|---|---|---|
+| `RetrofitActivity` | 页面里手写 `new Retrofit.Builder()` | 注解怎么变成 URL：`@Query` 拼查询串、`@Path` 填路径段（注意双重编码）、`@Header` 加请求头、`@Body` 交给 Gson、`@FormUrlEncoded` + `@Field`/`@FieldMap` 走表单、`@Multipart` + `@Part` 传文件 |
+| `NetWorkModuleActivity` | `@Inject ApiService`，由 `di/NetWorkModule` 提供 | 同样的接口调用，构造过程搬到 Hilt：`@Module` + `@InstallIn(SingletonComponent)`，`@Singleton` 让 `OkHttpClient` 只有一份（连接池 / 线程池复用），换 baseUrl、加拦截器只改一处 |
+| `NetWorkWithRxJavaActivity` | `@Inject ApiWithRxJavaService` | `Observable` 版接口 + `ResponseTransformer`：`compose()` 里统一切线程（`subscribeOn(io)` / `observeOn(main)`）、判业务码、`onErrorResumeNext` 归一异常，页面只写一次 |
+
+泛型解包靠 Gson 读 `ResponseData<T>` 的泛型签名完成，所以 `Call<ResponseData<User>>` 能直接拿到 `User`，不需要手动 `JSON.parseObject`。
+
+> ⚠️ `@AndroidEntryPoint` 不是普通注解：Hilt 的 Gradle 插件要为它生成 `Hilt_XXX` 父类并改写字节码。三个前提缺一不可 —— 模块 `apply` Hilt 插件、`Application` 标 `@HiltAndroidApp`、清单里 `android:name` 指向它，否则运行时报 "Hilt Activity must be attached to an @HiltAndroidApp Application"。
+
+### 13. `:daggerapplication` —— Dagger 手写依赖注入
+
+四个文件就是一个最小闭环：
+
+| 文件 | 角色 |
+|---|---|
+| `pojo/User` | 构造函数标 `@Inject`：Dagger 知道怎么 new 它 |
+| `module/NetModule` | `OkHttpClient` / `Retrofit` / `ApiService` 这类第三方类改不了构造函数，用 `@Provides` 方法告诉 Dagger 怎么造；`provideApiService` 上加了 `@Singleton` |
+| `common/ApplicationComponent` | `@Singleton @Component(modules = NetModule.class)`，用 `inject(...)` 声明哪些类需要被注入 |
+| `common/MyApplication` | 持有唯一的 component 实例，两个 Activity 都走 `MyApplication.getApplicationComponent().inject(this)` |
+
+**两阶段实测**（日志 TAG 为 `TAG`，页面切换时对比同一个 `apiService` 的 hash）：
+
+| 写法 | `apiService1` / `apiService2` | 第二个 Activity 的 `apiService3` | 结论 |
+|---|---|---|---|
+| 每个 Activity 各自 `DaggerApplicationComponent.create()` | 相同 | **不同** | `@Singleton` 只覆盖同一个 component 实例 |
+| 两个 Activity 都用 Application 持有的 component | 相同 | **相同** | 组件随进程存活，才是进程级单例 |
+
+`user1/2/3` 始终是三个不同对象 —— `User` 没标 `@Singleton`，每次注入都新建，正好当对照组。另外：scope 注解只是「名字」，自定义 `@AppScope`（同样标 `@Scope` 元注解）挂在根 component 上，效果与 `@Singleton` 完全一致；但绑定上的 scope 必须与 component 上的 scope 相同，否则编译期就报错。
+
+---
+
 ## 🧰 技术栈与版本
 
 | 项 | 版本 |
@@ -554,6 +607,10 @@ Android 4.4 及以前同样条件下只打一条 `Log.w("Implicit intents with s
 | ConstraintLayout | 2.1.4 |
 | Activity KTX | 1.13.0 |
 | Room | 2.8.5（`:datasharingapplication` 以 `annotationProcessor` 接入，`schemaLocation` 指向模块内 `schemas/`） |
+| Dagger / Hilt | 2.60.1（`:daggerapplication` 用 `annotationProcessor` 接 `dagger-compiler`；`:retrofitapplication` 另 apply Hilt Gradle 插件） |
+| Retrofit | 3.0.0（`:retrofitapplication`，配 `converter-gson` / `adapter-rxjava3`）；2.9.0（`:daggerapplication`） |
+| OkHttp | 4.12.0（含 `logging-interceptor`） |
+| RxJava / RxAndroid | 3.1.12 / 3.0.2 |
 | Gradle 依赖集中管理 | `gradle/libs.versions.toml`（版本目录 / Version Catalog） |
 
 主题统一为 `Theme.Material3.DayNight.NoActionBar`（定义在各模块 `res/values/themes.xml`，深色版在 `values-night/themes.xml`）。
@@ -576,12 +633,16 @@ Android_Study/
 ├── advancedcontrolsapplication/  # 高级控件：Spinner / ListView / GridView，ViewPager 轮播、Fragment、引导页
 ├── broadcastapplication/         # 广播：静态/动态注册、系统广播、AlarmManager、生命周期与画中画
 ├── serviceapplication/           # Service：启动/绑定/组合生命周期、Messenger 跨进程、前台服务、IntentService、隐式启动、双服务保活
+├── okhttpapplication/            # OkHttp：GET/POST × 同步/异步、FormBody 表单、MultipartBody 上传
+├── retrofitapplication/          # Retrofit + RxJava3 + Hilt：注解接口全家桶、泛型解包、统一响应处理
+├── daggerapplication/            # Dagger：@Inject / @Provides / @Component、@Singleton 作用域实测
+├── HttpClient/                   # 配套本地后端（Spring Boot 4 + Java 17，接口在 /api 下；独立 Maven 工程，不是 Gradle 模块）
 ├── docs/android-blog/            # 源码解读博客的写作工作区（结构分析 / 章节规划 / 草稿）
 ├── img/                          # 界面截图等素材
 │   └── activities/               # 各模块 Activity 实机截图（按模块分目录，INDEX.md 为索引）
 ├── gradle/libs.versions.toml     # 依赖版本目录
 ├── build.gradle.kts
-├── settings.gradle.kts           # include 了以上 10 个模块
+├── settings.gradle.kts           # include 了以上 13 个模块
 └── README.md
 ```
 
@@ -598,6 +659,8 @@ Android_Study/
    - 想看 Intent / Bundle → 选 `myactivityapplication`
    - 想看登录流程与控件 → 选 `intermediatecontrols`
    - 想看数据库与商城 demo → 选 `datasharingapplication`（launcher 是商城列表页 `ShoppingChannelActivity`；Room 图书页与 SharedPreferences / SQLite / 存储页面需先取消清单里的注释）
+   - 想看网络请求 → 选 `okhttpapplication` 或 `retrofitapplication`（先把下面的 `HttpClient/` 后端起起来）
+   - 想看依赖注入 → 选 `daggerapplication`
    - 想看 Compose → 选 `app`
 4. 命令行编译（不需要连设备）：
 
@@ -606,7 +669,17 @@ Android_Study/
 ./gradlew :myactivityapplication:assembleDebug
 ./gradlew :intermediatecontrols:assembleDebug
 ./gradlew :datasharingapplication:assembleDebug
+./gradlew :daggerapplication:assembleDebug
 ```
+
+5. 网络模块需要配套后端（`:okhttpapplication` / `:retrofitapplication` 的按钮才有响应）：
+
+```bash
+cd HttpClient
+mvn spring-boot:run          # 端口 8080，接口都在 /api 下
+```
+
+> 地址按设备选：模拟器写 `http://10.0.2.2:8080`（宿主机别名）；真机写电脑局域网 IP，或执行 `adb reverse tcp:8080 tcp:8080` 后写 `http://127.0.0.1:8080`。
 
 > `local.properties`（内含本机 SDK 路径）未纳入版本控制，首次打开由 Android Studio 自动生成，或手动写入 `sdk.dir=...`。
 
@@ -636,6 +709,7 @@ Android_Study/
 | 2026-10-28 | `a7d5693` | 高级控件模块补齐翻页与碎片：ViewPager + PagerAdapter 轮播图（无限翻页、自动播放、`PagerTabStrip` 标签栏）、Fragment 静态与动态加载、两版启动引导页（纯 View / Fragment）、4 张 1080×2400 整屏引导图（`drawable-nodpi`） |
 | 2026-10-28 | `ca9da9f` | 新增 `:broadcastapplication` 广播模块：标准广播与有序广播、静态注册（显式 `ComponentName` 绕开 8.0 隐式限制）、动态注册、`ACTION_TIME_TICK` 与网络变更广播、`AlarmManager` + `PendingIntent` 延迟广播、全生命周期时间线观察、横竖屏 `configChanges` 与方向锁定、画中画 |
 | 2026-10-29 | `4410898` | 新增 `:serviceapplication` Service 模块：启动态 / 绑定态两条生命周期的实测对照、`onStartCommand` 三参数与三种返回值、扩展 Binder（同进程）与 Messenger（`:remote` 跨进程）、前台服务 + `NotificationChannel`（适配 API 34 `foregroundServiceType`）、**启动与绑定组合时的存活条件模型**、IntentService 单线程排队验证（API 30 已废弃）、隐式启动被禁与两种现代修复、双服务互拉保活及强行停止不回调 `onDestroy` 的现状 |
+| 2026-11-06 | `bfa5a13` | 新增 `:okhttpapplication` / `:retrofitapplication` / `:daggerapplication` 三个模块与 `HttpClient/` 本地后端（Spring Boot 4 + Java 17）：OkHttp 六种请求组合与三套服务端地址写法、Retrofit 注解全家桶 + `GsonConverterFactory` 泛型解包 + RxJava3 `ResponseTransformer` + Hilt 单例、Dagger `@Inject`/`@Provides`/`@Component` 三种方式对照与 `@Singleton` 的组件级作用域实测 |
 
 ---
 
@@ -702,6 +776,14 @@ Android_Study/
 | **指望 `onDestroy()` 里发广播把自己救回来** | 用户「强行停止」后**一条日志都没有** —— `onDestroy` 根本不回调，广播发不出去，进程直接消失；应用还被标记为 stopped 状态 | 现代 Android 已无通用保活方案。长期后台任务用前台服务 + 通知，或交给 WorkManager 这类由系统调度的机制 |
 
 > 附一条排查经验：`am stopservice -n 包名/类名` 对**非本 UID 的应用**没有权限，会一直返回 `Error stopping service`；要验证服务被停止的行为，只能用应用内的 `stopService()` 加日志，或干脆 `am force-stop`（但那样拿不到 `onDestroy`）。
+
+### 网络与依赖注入的三条
+
+| 坑 | 表现 | 解法 |
+|---|---|---|
+| **Activity 忘了在清单注册** | `startActivity()` 抛 `ActivityNotFoundException`，被包成 `RuntimeException: Unable to start activity`，栈顶指向调用 `startActivity` 的那一行；页面表现为「新页面没有任何日志 + 应用直接退出」，很容易误判成框架问题 | 任何会被 `startActivity` 拉起的 Activity 都必须在 `AndroidManifest.xml` 声明，哪怕是同模块内部跳转、`exported="false"`；看 `adb logcat -b crash` 或 `AndroidRuntime` 里的 `Caused by` 第一行 |
+| **`baseUrl` 忘了结尾的 `/`** | Retrofit 抛 `IllegalArgumentException: baseUrl must end in /`，但它**只对带子路径的地址生效**：`http://host/api` 会炸，裸域名 `http://host` 会被 `HttpUrl` 自动补成 `http://host/`，反而不炸 —— 所以「有时报有时不报」 | baseUrl 一律按「目录」写，结尾带 `/`；接口方法里的路径不要再以 `/` 开头，否则会把 baseUrl 的路径前缀整段丢掉 |
+| **以为 `@Singleton` 是进程级单例** | 两次 `DaggerApplicationComponent.create()` 就是两张独立对象图，同一个 `@Singleton` 类型的 hash 不同；换个 Activity 重新 `create().inject(this)` 就「不单例」了 | `@Singleton` 的作用域边界是 **component 实例**。要进程级唯一，就把 component 提到 `Application` 里持有，各页面统一用 `MyApplication.getApplicationComponent().inject(this)`；另外 scope 只是名字（自定义 `@AppScope` 等价于 `@Singleton`），绑定的 scope 必须与 component 的 scope 一致，否则编译期报错 |
 
 ---
 

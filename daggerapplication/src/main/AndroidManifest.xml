@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <application
+            android:name=".common.MyApplication"
+            android:allowBackup="true"
+            android:icon="@mipmap/ic_launcher"
+            android:label="@string/app_name"
+            android:roundIcon="@mipmap/ic_launcher_round"
+            android:supportsRtl="true"
+            android:theme="@style/Theme.MyFirstApp">
+        <activity
+                android:name=".DaggerActivity"
+                android:exported="true"
+                android:windowSoftInputMode="adjustResize">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <!-- SecondActivity 只在应用内部由 DaggerActivity 跳转（隐式 Intent 都不需要），
+             因此 exported=false；但只要是被 startActivity 启动的 Activity，
+             无论 exported 取值如何，都必须在清单里声明，否则抛 ActivityNotFoundException -->
+        <activity
+                android:name=".SecondActivity"
+                android:exported="false" />
+    </application>
+
+</manifest>

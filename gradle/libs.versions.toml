@@ -1,6 +1,8 @@
 [versions]
 agp = "9.3.2"
+converterGson = "2.9.0"
 coreKtx = "1.10.1"
+dagger = "2.60.1"
 junit = "4.13.2"
 junitVersion = "1.1.5"
 espressoCore = "3.5.1"
@@ -14,10 +16,20 @@ activityKtx = "1.13.0"
 constraintlayout = "2.1.4"
 navigationFragment = "2.6.0"
 navigationUi = "2.6.0"
+retrofitVersion = "2.9.0"
 room = "2.8.5"
+okhttp = "4.12.0"
+retrofit = "3.0.0"
+hilt = "2.60.1"
+rxjava = "3.1.12"
+rxandroid = "3.0.2"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
+converter-gson-v290 = { module = "com.squareup.retrofit2:converter-gson", version.ref = "converterGson" }
+converter-scalars = { module = "com.squareup.retrofit2:converter-scalars", version.ref = "converterGson" }
+dagger = { module = "com.google.dagger:dagger", version.ref = "dagger" }
+dagger-compiler = { module = "com.google.dagger:dagger-compiler", version.ref = "dagger" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
 androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }
@@ -39,8 +51,25 @@ androidx-navigation-fragment = { group = "androidx.navigation", name = "navigati
 androidx-navigation-ui = { group = "androidx.navigation", name = "navigation-ui", version.ref = "navigationUi" }
 androidx-room-runtime = { group = "androidx.room", name = "room-runtime", version.ref = "room" }
 androidx-room-compiler = { group = "androidx.room", name = "room-compiler", version.ref = "room" }
+okhttp = { group = "com.squareup.okhttp3", name = "okhttp", version.ref = "okhttp" }
+# Retrofit 三个件版本必须一致（retrofit / converter-* / adapter-*），故共用 version.ref = "retrofit"
+retrofit = { group = "com.squareup.retrofit2", name = "retrofit", version.ref = "retrofit" }
+retrofit-converter-gson = { group = "com.squareup.retrofit2", name = "converter-gson", version.ref = "retrofit" }
+# RxJava3 适配器：让接口方法可以返回 Observable / Flowable（注意不是 rxjava2 的 adapter-rxjava2）
+retrofit-adapter-rxjava3 = { group = "com.squareup.retrofit2", name = "adapter-rxjava3", version.ref = "retrofit" }
+# RxJava 本体 + Android 调度器（AndroidSchedulers.mainThread() 靠它，纯 rxjava 里没有）
+retrofit-v290 = { module = "com.squareup.retrofit2:retrofit", version.ref = "retrofitVersion" }
+rxjava = { group = "io.reactivex.rxjava3", name = "rxjava", version.ref = "rxjava" }
+rxandroid = { group = "io.reactivex.rxjava3", name = "rxandroid", version.ref = "rxandroid" }
+# 日志拦截器属于 OkHttp 的扩展包，版本要跟 okhttp 本体对齐（4.x 与 5.x 不可混用）
+okhttp-logging-interceptor = { group = "com.squareup.okhttp3", name = "logging-interceptor", version.ref = "okhttp" }
+# Hilt（Dagger 的 Android 封装）：hilt-android 是运行时库，hilt-android-compiler 是注解处理器
+hilt-android = { group = "com.google.dagger", name = "hilt-android", version.ref = "hilt" }
+hilt-android-compiler = { group = "com.google.dagger", name = "hilt-android-compiler", version.ref = "hilt" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
 kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
+# 新插件 id；老写法 dagger.hilt.android.plugin / classpath 'com.google.dagger:hilt-android-gradle-plugin' 已被取代
+hilt = { id = "com.google.dagger.hilt.android", version.ref = "hilt" }
 

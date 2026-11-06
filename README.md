@@ -1,6 +1,6 @@
 # Android_Study
 
-> 一个从零起步的 Android 入门练习仓库：**10 个互相独立的模块**，把 Android 基础知识点拆开逐个练一遍。
+> 一个从零起步的 Android 入门练习仓库：**11 个互相独立的模块**，把 Android 基础知识点拆开逐个练一遍。
 > 所有手写代码与资源文件均带**行级中文注释**（讲逻辑、讲调用的 API、标注每个形参的含义）。
 
 ---
@@ -10,7 +10,7 @@
 这是一个**学习记录型仓库**，不是产品项目。特点是：
 
 - **每个知识点一个 Activity**，命名即用途（如 `MainTextSizeActivity` 看字号单位、`MainViewMarginPaddingActivity` 看边距区别），需要看哪个效果就运行哪个页面；
-- **10 个模块各自是独立 application**，各有自己的 launcher，互不依赖 —— 好处是每个模块都能单独安装、单独调试，不会互相干扰；
+- **11 个模块各自是独立 application**，各有自己的 launcher，互不依赖 —— 好处是每个模块都能单独安装、单独调试，不会互相干扰；
 - **能对照的尽量做成对照组**。例如同一个"按钮点击事件"用三种写法实现（匿名内部类 / 实现接口 / lambda）并排放在一起；同一个 `scaleType` 用同一张图排开 8 行对比；
 - **踩过的坑写在代码注释里**。Material3 主题下"自定义背景图不显示""勾选框变成纯色块"这两个经典坑，在对应布局文件里都有完整的原因分析与修复说明。
 
@@ -30,6 +30,7 @@
 | `:advancedcontrolsapplication` | Java | `ListViewActivity` | **高级控件（AdapterView 家族）**：Spinner 的 dropdown / dialog 两种展开形态、SimpleAdapter 与自建 BaseAdapter 对照、ListView 的 divider / dividerHeight / listSelector 运行期切换、列表项焦点抢占（`descendantFocusability`）、GridView 四种 `stretchMode`、**ViewPager + PagerAdapter 轮播图（无限翻页 + PagerTabStrip）**、**Fragment 静态/动态加载与 FragmentPagerAdapter**、**两版启动引导页** |
 | `:broadcastapplication` | Java | `SystemNetworkActivity` | **广播与页面状态**：标准广播 / 有序广播的发送与拦截、静态注册（显式 `ComponentName` 绕开 8.0 隐式广播限制）、动态注册、`ACTION_TIME_TICK` 分钟广播、网络变更广播与 `getSubtype` 数字映射、`AlarmManager` + `PendingIntent` 延迟广播、**全生命周期时间线观察**、横竖屏 `configChanges` 与方向锁定、**画中画（Picture in Picture）** |
 | `:serviceapplication` | Java | `MessengerActivity` | **四大组件之 Service**：`startService` / `bindService` 两条生命周期的实测对照、`onStartCommand` 的三个参数与三种返回值、扩展 Binder（同进程）/ Messenger（`android:process=":remote"` 跨进程）/ 前台服务 + `NotificationChannel`、**启动与绑定组合时的销毁时机**、IntentService（API 30 已废弃）单线程排队验证、隐式启动被禁与现代修复方案、双服务互拉保活及其失效原因 |
+| `:okhttpapplication` | Java | `OkHttpActivity` | **OkHttp 网络请求**：GET / POST × `execute()` 同步（子线程）/ `enqueue()` 异步（Callback）四种组合、`RequestBody` 发 JSON、`FormBody` 表单提交、`MultipartBody` + 相册选图做文件上传；配套服务端在仓库根目录的 `HttpClient/`（Spring Boot 4 + Java 17，接口都在 `/api` 下） |
 
 > 各模块 `applicationId` 互不相同（均为 `com.zzz.*`），因此可以**同时安装到一台设备上**，方便横向对照。
 >

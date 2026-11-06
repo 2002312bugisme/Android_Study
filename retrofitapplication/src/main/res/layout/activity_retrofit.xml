@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!--
+    Retrofit 演示页布局
+    对应 Java：retrofitapplication/src/main/java/com/zzz/retrofitapplication/RetrofitActivity.java
+    对应接口：retrofitapplication/src/main/java/com/zzz/retrofitapplication/retrofit/ApiService.java
+    服务端：D:\Code\Android\HttpClient（Spring Boot，默认 http://<电脑IP>:8080）
+
+    结构说明：整页可滚动，从上到下依次是
+             服务端地址输入框 → 七个演示按钮 → 结果输出区。
+             七个按钮覆盖：GET 同步/异步、POST(@Body 实体 / RequestBody)、表单(@Field / @FieldMap)、文件上传。
+-->
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fillViewport="true"
+    tools:context=".ui.RetrofitActivity">
+
+    <!--
+        内层容器负责留白。
+        ⚠️ 根布局（ScrollView）不要写 android:padding：Java 里 OnApplyWindowInsetsListener
+        会调 setPadding(...) 把 XML 设的值整体覆盖掉，所以 padding 放到内层。
+    -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Retrofit 用法演示"
+            android:textSize="22sp"
+            android:textStyle="bold" />
+
+        <!-- 副标题只说明数据去哪了，不参与逻辑 -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:text="请求发往 HttpClient（Spring Boot）的 /api/* 接口"
+            android:textColor="?android:attr/textColorSecondary"
+            android:textSize="12sp" />
+
+        <!-- ========== 服务端地址 ========== -->
+
+        <!--
+            地址做成可编辑：真机和模拟器要用不同 IP，改这里比改代码重新安装快得多。
+              · 模拟器：http://10.0.2.2:8080/（10.0.2.2 是模拟器指向宿主机的固定别名）
+              · 真机（同一局域网）：电脑的局域网 IP，例如 http://192.168.0.45:8080/
+            ⚠️ 易错点：Retrofit 的 baseUrl 结尾必须有 /，代码里会自动补。
+        -->
+        <EditText
+            android:id="@+id/et_base_url"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:hint="http://10.0.2.2:8080/"
+            android:importantForAutofill="no"
+            android:inputType="textUri"
+            android:maxLines="1"
+            android:textSize="14sp" />
+
+        <!-- ========== 九个演示按钮 ========== -->
+
+        <!-- 1. GET 同步：Call.execute() 阻塞当前线程，所以跑在子线程里 -->
+        <Button
+            android:id="@+id/btn_get_sync"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:text="1. GET 同步（execute）" />
+
+        <!-- 2. GET 异步：Call.enqueue() 马上返回，结果走 Callback -->
+        <Button
+            android:id="@+id/btn_get_async"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="2. GET 异步（enqueue）" />
+
+        <!-- 3. GET 路径变量：@Path 的值替换 URL 里的一段，中文自动 URL 编码 -->
+        <Button
+            android:id="@+id/btn_get_path"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="3. GET 路径变量（@Path）" />
+
+        <!-- 4. GET 自定义头：@Header 把参数放进请求头，与 URL、请求体都无关 -->
+        <Button
+            android:id="@+id/btn_get_header"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="4. GET 自定义头（@Header）" />
+
+        <!-- 5. POST JSON：@Body 传实体，Gson 转换器负责变成 JSON -->
+        <Button
+            android:id="@+id/btn_post_json"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="5. POST JSON（@Body 实体）" />
+
+        <!-- 6. POST 原始请求体：@Body 直接传 RequestBody，绕过 Gson -->
+        <Button
+            android:id="@+id/btn_post_body"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="6. POST 原始体（@Body RequestBody）" />
+
+        <!-- 7. 表单：@FormUrlEncoded + @Field，一个字段一个参数 -->
+        <Button
+            android:id="@+id/btn_form_field"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="7. 表单提交（@Field）" />
+
+        <!-- 8. 表单：@FormUrlEncoded + @FieldMap，字段来自一个 Map -->
+        <Button
+            android:id="@+id/btn_form_map"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="8. 表单提交（@FieldMap）" />
+
+        <!-- 9. 文件上传：@Multipart + @Part，先拉起系统相册选图，文件流边读边发 -->
+        <Button
+            android:id="@+id/btn_upload"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="9. 上传图片（@Multipart，流式）" />
+
+        <!-- 第二步入口：这一页是「手写 Retrofit」，下一页是「Hilt 注入同一个网络模块」 -->
+        <Button
+            android:id="@+id/btn_go_network"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="→ 第二步：Hilt 组装网络模块" />
+
+        <!-- 分隔线：颜色跟随主题，深色模式下不会变成一条突兀的白线 -->
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginTop="16dp"
+            android:background="?android:attr/listDivider" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="输出（HTTP 状态码、耗时、执行线程、解析后的响应）"
+            android:textSize="14sp"
+            android:textStyle="bold" />
+
+        <!--
+            结果输出区：
+              · fontFamily="monospace" 让 JSON 对齐，便于阅读
+              · textIsSelectable 方便长按复制日志
+              · 高度写 wrap_content，内容变长时由外层 ScrollView 滚动
+        -->
+        <TextView
+            android:id="@+id/tv_result"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:fontFamily="monospace"
+            android:lineSpacingExtra="4dp"
+            android:text="（点上面的按钮，结果会追加到这里）"
+            android:textColor="?android:attr/textColorSecondary"
+            android:textIsSelectable="true"
+            android:textSize="12sp" />
+
+    </LinearLayout>
+
+</ScrollView>

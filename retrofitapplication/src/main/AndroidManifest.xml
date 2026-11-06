@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!--
+        联网权限：Retrofit 只是「接口 → 请求」的编排层，真正开 socket 的仍是 OkHttp。
+        不声明这条会直接抛 SecurityException（missing INTERNET permission）；
+        它属于普通权限，安装时自动授予，不需要运行时申请。
+    -->
+    <uses-permission android:name="android.permission.INTERNET" />
+
+    <!--
+        usesCleartextTraffic="true" —— 允许明文 http:// 请求。
+        Android 9（API 28）起系统默认只放行 https，练习时用 http 测试接口（或本机 http 服务）
+        会报 "CLEARTEXT communication to ... not permitted by network security policy"。
+        正式项目应改用 https，或用 network_security_config.xml 只对特定域名放开。
+    -->
+    <!--
+        android:name 指向加了 @HiltAndroidApp 的 Application。
+        不写这行，启动 @AndroidEntryPoint 的页面会崩：
+        "Hilt Activity must be attached to an @HiltAndroidApp Application"
+    -->
+    <application
+            android:name=".MyApplication"
+            android:allowBackup="true"
+            android:icon="@mipmap/ic_launcher"
+            android:label="@string/app_name"
+            android:roundIcon="@mipmap/ic_launcher_round"
+            android:supportsRtl="true"
+            android:theme="@style/Theme.MyFirstApp"
+            android:usesCleartextTraffic="true">
+        <activity
+                android:name=".ui.RetrofitActivity"
+                android:exported="true"
+                android:windowSoftInputMode="adjustResize">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <!-- 第二步页面：exported=false，只能从第一步页面的按钮进去 -->
+        <activity
+                android:name=".ui.NetWorkModuleActivity"
+                android:exported="false"
+                android:windowSoftInputMode="adjustResize" />
+        <!-- 第三步页面：同样只能从第二步页面的按钮进去 -->
+        <activity
+                android:name=".ui.NetWorkWithRxJavaActivity"
+                android:exported="false"
+                android:windowSoftInputMode="adjustResize" />
+    </application>
+
+</manifest>

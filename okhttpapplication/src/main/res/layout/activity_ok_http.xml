@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!--
+    OkHttp 演示页布局
+    对应 Java：okhttpapplication/src/main/java/com/zzz/okhttpapplication/OkHttpActivity.java
+    服务端：D:\Code\Android\HttpClient（Spring Boot，默认 http://<电脑IP>:8080）
+
+    结构说明：整页可滚动，从上到下依次是
+             服务端地址输入框 → 六个演示按钮 → 结果输出区。
+             六个按钮覆盖：GET/POST × 同步/异步、RequestBody(JSON)、表单(FormBody)、文件上传。
+-->
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fillViewport="true"
+    tools:context=".OkHttpActivity">
+
+    <!--
+        内层容器负责留白。
+        ⚠️ 根布局（ScrollView）不要写 android:padding：Java 里 OnApplyWindowInsetsListener
+        会调 setPadding(...) 把 XML 设的值整体覆盖掉，所以 padding 放到内层。
+    -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="OkHttp 五种用法"
+            android:textSize="22sp"
+            android:textStyle="bold" />
+
+        <!-- 副标题只说明数据去哪了，不参与逻辑 -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:text="请求发往 HttpClient（Spring Boot）的 /api/* 接口"
+            android:textColor="?android:attr/textColorSecondary"
+            android:textSize="12sp" />
+
+        <!-- ========== 服务端地址 ========== -->
+
+        <!--
+            地址做成可编辑：真机和模拟器要用不同 IP，改这里比改代码重新安装快得多。
+              · 模拟器：http://10.0.2.2:8080（10.0.2.2 是模拟器指向宿主机的固定别名）
+              · 真机（同一局域网）：电脑的局域网 IP，例如 http://192.168.0.45:8080
+            默认值在 Java 的 DEFAULT_BASE_URL 里给。
+        -->
+        <EditText
+            android:id="@+id/et_base_url"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:hint="http://10.0.2.2:8080"
+            android:importantForAutofill="no"
+            android:inputType="textUri"
+            android:maxLines="1"
+            android:textSize="14sp" />
+
+        <!-- ========== 六个演示按钮 ========== -->
+
+        <!-- 1. 同步 GET：execute() 会阻塞当前线程，所以跑在子线程里 -->
+        <Button
+            android:id="@+id/btn_get_sync"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:text="1. GET 同步（execute，阻塞子线程）" />
+
+        <!-- 2. 异步 GET：enqueue() 马上返回，结果走 Callback 回调 -->
+        <Button
+            android:id="@+id/btn_get_async"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="2. GET 异步（enqueue，回调）" />
+
+        <!-- 3. 同步 POST：请求体是 JSON 字符串，演示 RequestBody -->
+        <Button
+            android:id="@+id/btn_post_sync"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="3. POST 同步（RequestBody 发 JSON）" />
+
+        <!-- 4. 异步 POST：同样是 JSON，只是换成 enqueue -->
+        <Button
+            android:id="@+id/btn_post_async"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="4. POST 异步（RequestBody 发 JSON）" />
+
+        <!-- 5. 表单提交：FormBody 就是 application/x-www-form-urlencoded 的 RequestBody -->
+        <Button
+            android:id="@+id/btn_form"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="5. 表单提交（FormBody）" />
+
+        <!-- 6. 文件上传：先拉起系统相册，选完图再用 MultipartBody 上传 -->
+        <Button
+            android:id="@+id/btn_upload"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="6. 上传图片（相册 → MultipartBody）" />
+
+        <!-- 分隔线：颜色跟随主题，深色模式下不会变成一条突兀的白线 -->
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginTop="16dp"
+            android:background="?android:attr/listDivider" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="输出（含 HTTP 状态码、耗时、执行线程）"
+            android:textSize="14sp"
+            android:textStyle="bold" />
+
+        <!--
+            结果输出区：
+              · fontFamily="monospace" 让 JSON 对齐，便于阅读
+              · textIsSelectable 方便长按复制日志
+              · 高度写 wrap_content，内容变长时由外层 ScrollView 滚动
+        -->
+        <TextView
+            android:id="@+id/tv_result"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:fontFamily="monospace"
+            android:lineSpacingExtra="4dp"
+            android:text="（点上面的按钮，结果会追加到这里）"
+            android:textColor="?android:attr/textColorSecondary"
+            android:textIsSelectable="true"
+            android:textSize="12sp" />
+
+    </LinearLayout>
+
+</ScrollView>

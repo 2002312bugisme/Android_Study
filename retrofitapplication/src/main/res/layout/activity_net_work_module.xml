@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!--
+    第二步（网络模块 / Hilt 注入）演示页布局
+    对应 Java：retrofitapplication/src/main/java/com/zzz/retrofitapplication/ui/NetWorkModuleActivity.java
+    这一步页面里不再出现 new Retrofit，ApiService 由 @Inject 注入。
+
+    结构：标题 → 说明 → 两个按钮 → 结果输出区
+-->
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fillViewport="true"
+    tools:context=".ui.NetWorkModuleActivity">
+
+    <!-- 内层容器负责留白（根布局的 padding 会被 Java 里的 setPadding 覆盖） -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="第二步：Hilt 组装网络模块"
+            android:textSize="22sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:text="ApiService 由 @Inject 注入，OkHttpClient / Retrofit 在 NetWorkModule 里创建"
+            android:textColor="?android:attr/textColorSecondary"
+            android:textSize="12sp" />
+
+        <!-- 1. 直接调用注入进来的接口对象，验证 DI 链路是通的 -->
+        <Button
+            android:id="@+id/btn_call_get"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="1. 调用注入的 ApiService（GET 异步）" />
+
+        <!-- 2. 打印三个注入对象的地址，两次点击结果相同即说明是单例 -->
+        <Button
+            android:id="@+id/btn_show_instances"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="2. 打印注入的实例（看是不是同一个）" />
+
+        <!-- 3. 进入第三步（RxJava），页面 exported=false，只能从这里进 -->
+        <Button
+            android:id="@+id/btn_go_rxjava"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="→ 第三步：RxJava 改造" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginTop="16dp"
+            android:background="?android:attr/listDivider" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="输出"
+            android:textSize="14sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/tv_result"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:fontFamily="monospace"
+            android:lineSpacingExtra="4dp"
+            android:text="（点上面的按钮，结果会追加到这里）"
+            android:textColor="?android:attr/textColorSecondary"
+            android:textIsSelectable="true"
+            android:textSize="12sp" />
+
+    </LinearLayout>
+
+</ScrollView>

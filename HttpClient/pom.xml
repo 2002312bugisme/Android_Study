@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>org.springframework.boot</groupId>
+		<artifactId>spring-boot-starter-parent</artifactId>
+		<version>4.1.2</version>
+		<relativePath/> <!-- lookup parent from repository -->
+	</parent>
+	<groupId>com.zzz</groupId>
+	<artifactId>HttpClient</artifactId>
+	<version>0.0.1-SNAPSHOT</version>
+	<name>HttpClient</name>
+	<description>HttpClient</description>
+	<url/>
+	<licenses>
+		<license/>
+	</licenses>
+	<developers>
+		<developer/>
+	</developers>
+	<scm>
+		<connection/>
+		<developerConnection/>
+		<tag/>
+		<url/>
+	</scm>
+	<properties>
+		<!-- 编译/运行目标的 JDK 版本。Spring Boot 4.x 的基线就是 17（向上兼容到 25），
+		     所以本机 JDK 17 足够，不需要装 25。 -->
+		<java.version>17</java.version>
+		<!-- 显式写 release（而不是 source/target）：保证用 17 的 API 编译，
+		     同时让 IDEA 导入 Maven 项目时把模块语言级别固定为 17。 -->
+		<maven.compiler.release>17</maven.compiler.release>
+	</properties>
+	<dependencies>
+		<!-- 4.x 起 spring-boot-starter-web 已标记为过时，官方推荐 spring-boot-starter-webmvc，
+		     它内部已包含 spring-boot-starter + Jackson + Tomcat，无需再单独引 starter。 -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-webmvc</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-test</artifactId>
+			<scope>test</scope>
+		</dependency>
+	</dependencies>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-maven-plugin</artifactId>
+			</plugin>
+		</plugins>
+	</build>
+
+</project>

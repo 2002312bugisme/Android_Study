@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!--
+    第三步（Hilt + Retrofit + RxJava）演示页布局
+    对应 Java：retrofitapplication/src/main/java/com/zzz/retrofitapplication/ui/NetWorkWithRxJavaActivity.java
+    接口返回 Observable，页面 compose(ResponseTransformer) 之后直接拿业务对象。
+
+    结构：标题 → 说明 → 四个按钮 → 结果输出区
+-->
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fillViewport="true"
+    tools:context=".ui.NetWorkWithRxJavaActivity">
+
+    <!-- 内层容器负责留白（根布局的 padding 会被 Java 里的 setPadding 覆盖） -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="第三步：RxJava 串起网络请求"
+            android:textSize="22sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:text="接口返回 Observable，compose(ResponseTransformer) 统一剥壳、判码、转异常、切线程"
+            android:textColor="?android:attr/textColorSecondary"
+            android:textSize="12sp" />
+
+        <!-- 1. GET：最基本的用法，验证注入 + 适配器 + 转换器整条链路 -->
+        <Button
+            android:id="@+id/btn_rx_get"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="1. GET（Observable → compose → subscribe）" />
+
+        <!-- 2. POST JSON：@Body 实体，Gson 序列化 -->
+        <Button
+            android:id="@+id/btn_rx_post"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="2. POST JSON（@Body）" />
+
+        <!-- 3. 表单：@FormUrlEncoded + @FieldMap -->
+        <Button
+            android:id="@+id/btn_rx_form"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="3. 表单（@FieldMap）" />
+
+        <!-- 4. 故意 404：看 ErrorConsumer 如何统一兜住 HTTP 异常 -->
+        <Button
+            android:id="@+id/btn_rx_error"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="4. 故意 404（看统一异常处理）" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginTop="16dp"
+            android:background="?android:attr/listDivider" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="输出（成功时拿到的已经是剥壳后的 data）"
+            android:textSize="14sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/tv_result"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:fontFamily="monospace"
+            android:lineSpacingExtra="4dp"
+            android:text="（点上面的按钮，结果会追加到这里）"
+            android:textColor="?android:attr/textColorSecondary"
+            android:textIsSelectable="true"
+            android:textSize="12sp" />
+
+    </LinearLayout>
+
+</ScrollView>
